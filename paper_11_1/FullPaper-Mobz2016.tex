@@ -1,0 +1,165 @@
+\documentclass[12pt]{article}
+
+
+%
+% Packages
+%
+
+\usepackage{etoolbox}
+\usepackage[capposition=top]{floatrow}
+\usepackage{graphicx}
+%\usepackage{caption}
+%\usepackage{subcaption}
+\usepackage{placeins}
+\usepackage{setspace}
+\usepackage{array}
+\usepackage{fullpage}
+%\usepackage[margin=1.5in]{geometry}
+\usepackage{hyperref}
+\usepackage{natbib}
+\usepackage{microtype}
+\usepackage{rotating}
+\usepackage{amsmath}
+\usepackage{morefloats}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{xcolor}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{authblk}
+\usepackage{lmodern}
+
+\hypersetup{
+    colorlinks,
+    linkcolor={black},
+    citecolor={black},
+    urlcolor={blue}
+}
+\usepackage{color,colortbl}
+\usepackage{geometry}
+
+\newcommand{\red}{\color{red}}
+\newcommand{\blue}{\color{blue}}
+\newtoggle{final}
+%\togglefalse{final}
+\toggletrue{final}
+
+
+%
+% Some utilities
+%
+%\usepackage{todonotes} % doesn't work - tikz lib too old
+% define a mc=margincomment command
+\iftoggle{final}{
+   \newcommand{\mc}[2]{#1} % make margincomments go away
+   \newcommand{\tc}[2]{#1} % make text comments go away
+}%else
+{
+   \newcommand{\mc}[2]{% 1 referenced text 2 initials 3 comment
+       \textcolor{blue}{#1}
+       \marginpar{\scriptsize\textbf\raggedright\textcolor{red}{#2}}}
+  \newcommand{\tc}[2]{\textcolor{blue}{#1}[\textcolor{red}{#2}]}
+}
+
+%
+% Layout
+%
+\iftoggle{final}{
+  \geometry{left=1.0in,right=1.0in,top=1.0in,bottom=1.0in}
+}%else
+{
+  \geometry{left=0.5in,right=2.0in,top=1.0in,bottom=1.0in,marginparwidth=1.5in}
+  }
+
+
+\begin{document}
+
+\title{Driving Past Commuting Zones: Re-examining Local Labor Market Definitions\thanks{Any opinions and conclusions expressed herein are those of the author(s) and do not necessarily represent the views of the U.S. Census Bureau. All results have been reviewed to ensure that no confidential information is disclosed, and no confidential data was used in this paper. This document is released to inform interested parties of ongoing research and to encourage discussion of work in progress.}}
+\author[1]{Andrew Foote}
+\author[1]{Mark Kutzbach}
+\author[1,2]{Lars Vilhuber}
+\affil[1]{Center for Economic Studies, U.S. Census Bureau}
+\affil[2]{Labor Dynamics Institute, Cornell University}
+\maketitle
+
+
+\textbf{[Preliminary Draft - Do not cite without authors' permission]}
+
+
+\begin{abstract}
+This paper evaluates the suitability of local labor market definitions for representing the theoretical and empirical goal of assigning workers to distinct loci of commuting, wages, and employment opportunities. First, we revisit the commuting zone definitions from \citet{TS1996}. We discuss their methodology, highlighting two main weaknesses that affect the resulting labor market definitions. We then demonstrate how these weaknesses affect empirical estimates from a prominent paper using commuting zones. Finally, we define an objective function to measure the degree of integration in local labor markets and maximize it over an alternative clustering method. We conclude by comparing our method to other candidate local labor market definitions in the literature, and show that it is competitive with these definitions.
+\end{abstract}
+
+
+\doublespacing
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+
+\input{./sections/mobz_intro.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Data \label{sec:data}}
+
+\input{./sections/mobz_data.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Commuting Zone Methodology \label{sec:definitions}}
+
+\input{./sections/mobz_llm.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Sensitivity Analysis of the Commuting Zone Methodology \label{sec:issues}}
+
+\input{./sections/mobz_weaknesses.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Robustness of Empirical Estimates to Commuting Zone Uncertainty \label{sec:adhreplication}}
+
+\input{./sections/mobz_replication.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Objective Function for Measuring Local Labor Market Integration \label{sec:objfn}}
+
+\input{./sections/mobz_objfn.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Our Proposed Methodology \label{sec:ourmeth}}
+
+\input{./sections/mobz_methodology.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Summary and Next Steps \label{sec:conclusion}}
+
+\input{./sections/mobz_conclusion.tex}
+	
+
+%%%%%%%%%%%%%%%
+% BIBLIOGRAPHY
+%%%%%%%%%%%%%%%
+\clearpage
+\singlespacing
+
+\bibliographystyle{aea}
+\bibliography{bibliography}
+
+\newpage
+\appendix
+\section*{Tables and Figures Appendix}
+\FloatBarrier
+
+\input{./sections/tab_fig_appendix.tex}
+
+
+
+
+
+\end{document}
