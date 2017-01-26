@@ -17,10 +17,10 @@ We chose the files sorted by "residence county" for the entire US, at https://ww
 - Renamed to : jtw2000_raw.txt
 - Program: module/00.dataprep/module_prepjtw2000.sas
 
-2009 ACS flows
+2009-2013 ACS flows
 --------------
 
-- Source: 
+- Source: http://www.census.gov/hhes/commuting/files/2013/Table%201%20County%20to%20County%20Commuting%20Flows-%20ACS%202009-2013.xlsx
 - Renamed to: acs_2009_2013.csv
 - Program: module/00.dataprep/module_prepjtw2009.sas
 
@@ -34,13 +34,14 @@ LODES
 LODES data is published as block-to-block. We map each block to the associated county (SOURCE?) and then aggregate to the county level. 
 
 
-- Source
+- Source: https://lehd.ces.census.gov/data/lodes/LODES7/[state]/od/
+  Notes: We use 2006-2012 data in the paper
 - Program: module/00.dataprep/module_preplodes.sas 
 
 Unemployment rates
 ------------------
 
-- Source:
+- Source:https://www.bls.gov/lau/laucnty15.txt (and other files, back to 1990, with similar year suffix)
 - Renamed to: urates_counties.csv
 - Program: module/00.dataprep/module_otherdata.sas
 
