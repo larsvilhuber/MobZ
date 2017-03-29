@@ -24,10 +24,6 @@ We chose the files sorted by "residence county" for the entire US, at https://ww
 - Renamed to: acs_2009_2013.csv
 - Program: module/00.dataprep/module_prepjtw2009.sas
 
-2006 ACS flows (not used in the paper)
---------------------------------------
-
-- Source: https://www.census.gov/population/metro/files/commuting/Table1.xlsx
 
 LODES
 -----
@@ -44,4 +40,19 @@ Unemployment rates
 - Source:https://www.bls.gov/lau/laucnty15.txt (and other files, back to 1990, with similar year suffix)
 - Renamed to: urates_counties.csv
 - Program: module/00.dataprep/module_otherdata.sas
+
+Alternate:
+https://download.bls.gov/pub/time.series/la/la.data.0.CurrentU$arg,  for arg in 00-04 05-09 10-14 15-19 90-94 95-99
+(still working on it)
+
+Additional sources
+------------------
+Not used, but of interest:
+
+1980 Journey to work: http://doi.org/10.3886/ICPSR08465.v2
+
+2006 ACS flows (not used in the paper)
+--------------------------------------
+
+- Source: https://www.census.gov/population/metro/files/commuting/Table1.xlsx
 
