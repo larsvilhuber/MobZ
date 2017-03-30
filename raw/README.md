@@ -6,6 +6,7 @@ Most of the JTW data can be found at https://www.census.gov/hhes/commuting/data/
 --------
 
 - Source: https://www.census.gov/hhes/commuting/files/1990/resco/USresco.txt
+- Permanent source: n.a.
 - Renamed to: 1990jtw_raw.txt
 - Program: module/00.dataprep/module_prepjtw1990.sas
 
@@ -14,6 +15,7 @@ Most of the JTW data can be found at https://www.census.gov/hhes/commuting/data/
 We chose the files sorted by "residence county" for the entire US, at https://www.census.gov/population/www/cen2000/commuting/index.html
 
 - Source: https://www.census.gov/population/www/cen2000/commuting/files/2KRESCO_US.txt
+- Permanent source: http://doi.org/10.3886/ICPSR13405.v1
 - Renamed to : jtw2000_raw.txt
 - Program: module/00.dataprep/module_prepjtw2000.sas
 
@@ -21,6 +23,7 @@ We chose the files sorted by "residence county" for the entire US, at https://ww
 --------------
 
 - Source: http://www.census.gov/hhes/commuting/files/2013/Table%201%20County%20to%20County%20Commuting%20Flows-%20ACS%202009-2013.xlsx
+- Permanent source: n.a. (pending on openICPSR or DataLumos)
 - Renamed to: acs_2009_2013.csv
 - Program: module/00.dataprep/module_prepjtw2009.sas
 
@@ -31,19 +34,18 @@ LODES data is published as block-to-block. We map each block to the associated c
 
 
 - Source: https://lehd.ces.census.gov/data/lodes/LODES7/[state]/od/
-  Notes: We use 2006-2012 data in the paper
+- Alternate source: (not public) ecco:/data/lodes/v7.2
+- Notes: We use 2006-2012 data in the paper
 - Program: module/00.dataprep/module_preplodes.sas 
 
 Unemployment rates
 ------------------
 
 - Source:https://www.bls.gov/lau/laucnty15.txt (and other files, back to 1990, with similar year suffix)
+- Alternate data: https://download.bls.gov/pub/time.series/la/la.data.0.CurrentU$arg for arg in 00-04 05-09 10-14 15-19 90-94 95-99
 - Renamed to: urates_counties.csv
 - Program: module/00.dataprep/module_otherdata.sas
 
-Alternate:
-https://download.bls.gov/pub/time.series/la/la.data.0.CurrentU$arg,  for arg in 00-04 05-09 10-14 15-19 90-94 95-99
-(still working on it)
 
 Additional sources
 ------------------
