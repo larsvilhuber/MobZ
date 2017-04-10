@@ -1,12 +1,12 @@
-# MobZ
+# MobZ: Driving Past Commuting Zones: Re-examining Local Labor Market Definitions
 
-Murray, A. T., Grubesic, T. H., and Wei, R. (2014). Spatially significant cluster detection. Spatial
-Statistics, 10, 103-116.
+Authors: Andrew Foote, Mark Kutzbach, Lars Vilhuber
 
-Murray, A.T., T.H. Grubesic, E.A. Mack, R. Wei, S.J. Rey, L. Anselin and M. Griffin (2013).
-“Convicted sex offender residential movements.” In Crime Modeling and Mapping Using Geospatial
-Technologies, edited by M. Leitner, 51-71, Springer Netherlands.
+The repository has the following structure:
 
-Murray, A.T., Grubesic, T.H., Rey, S.J. and L. Anselin. (2012). Spatial Data Uncertainty and
-Cluster
-Detection. Proceedings of the 2012 GIScience Meeting. Columbus, Ohio.
+- [raw](raw/): Location for raw (unprocessed) datasets. We do not provide the data, but provide the download locations. The datasize may be substantial.
+- [programs](programs/): Programs to read in raw data, process the data, and create the analysis are here. Programs may be in SAS or Stata.
+- [replication](replication/): as part of the paper, we replicate Autor, Dorn, Hanson (various). The code to do that is in this directory. (NEED REF FOR SOURCE)
+- [paper](paper/): original LaTeX paper locations
+- [overleaf](overleaf/): A submodule pointing at the Overleaf.com version of the paper
+- [literature](literature/): some random additional pieces. Ignore.
