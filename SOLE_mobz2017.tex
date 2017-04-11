@@ -1,6 +1,5 @@
 \documentclass[12pt]{article}
 
-
 %
 % Packages
 %
@@ -74,7 +73,7 @@
 
 \begin{document}
 
-\title{Driving Past Commuting Zones: Re-examining Local Labor Market Definitions\thanks{Any opinions and conclusions expressed herein are those of the author(s) and do not necessarily represent the views of the U.S. Census Bureau. All results have been reviewed to ensure that no confidential information is disclosed, and no confidential data was used in this paper. This document is released to inform interested parties of ongoing research and to encourage discussion of work in progress.}}
+\title{Fog Advisory: Uncertainty in Commuting Zones, Causes and Impacts\thanks{Any opinions and conclusions expressed herein are those of the author(s) and do not necessarily represent the views of the U.S. Census Bureau. All results have been reviewed to ensure that no confidential information is disclosed, and no confidential data was used in this paper. This document is released to inform interested parties of ongoing research and to encourage discussion of work in progress.}}
 \author[1]{Andrew Foote}
 \author[1]{Mark Kutzbach}
 \author[1,2]{Lars Vilhuber}
@@ -93,54 +92,25 @@ This paper evaluates the suitability of local labor market definitions for repre
 
 \doublespacing
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Introduction}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction \label{sec:intro}}
 \input{./sections/mobz_intro.tex}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\section{Data \label{sec:data}}
-
-\input{./sections/mobz_data.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Commuting Zone Data and Methodology \label{sec:method}}
+\input{./sections/mobz_method.tex}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Design Sensitivity \label{sec:dsens}}
+\input{./sections/mobz_dsens.tex}
 
-\section{Commuting Zone Methodology \label{sec:definitions}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Empirical Sensitivity \label{sec:esens}}
+\input{./sections/mobz_esens.tex}
 
-\input{./sections/mobz_llm.tex}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Sensitivity Analysis of the Commuting Zone Methodology \label{sec:issues}}
-
-\input{./sections/mobz_weaknesses.tex}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Robustness of Empirical Estimates to Commuting Zone Uncertainty \label{sec:adhreplication}}
-
-\input{./sections/mobz_replication.tex}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Objective Function for Measuring Local Labor Market Integration \label{sec:objfn}}
-
-\input{./sections/mobz_objfn.tex}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Our Proposed Methodology \label{sec:ourmeth}}
-
-\input{./sections/mobz_methodology.tex}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Summary and Next Steps \label{sec:conclusion}}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusion \label{sec:conclusion}}
 \input{./sections/mobz_conclusion.tex}
-	
 
 %%%%%%%%%%%%%%%
 % BIBLIOGRAPHY
@@ -149,14 +119,14 @@ This paper evaluates the suitability of local labor market definitions for repre
 \singlespacing
 
 \bibliographystyle{aea}
-\bibliography{bibliography}
+\bibliography{../bibliography}
 
 \newpage
-\appendix
-\section*{Tables and Figures Appendix}
-\FloatBarrier
+%\appendix
+%\section*{Tables and Figures Appendix}
+%\FloatBarrier
 
-\input{./sections/tab_fig_appendix.tex}
+%\input{./sections/tab_fig_appendix.tex}
 
 
 

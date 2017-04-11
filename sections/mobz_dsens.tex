@@ -1,0 +1,36 @@
+While commuting zones are thought of as representing local labor markets, they have a number of shortcomings for empirical research that are not regularly discussed in the literature. In this section, we eveluate the sensitivity of commuting zone definitions to two aspects of the TS1996 methodology. First, we show that the results using the method are sensitive to the variation in the input data, such that if the input data are measured in error, the definitions may convey a false sense of certainty. Second, the resulting clusters are very sensitive to the decision of when to stop merging clusters, which implies that small changes in the chosen cutoff height can affect the number and size of the clusters. Overall, this uncertainty in the commuting zone definitions contributes to conventional standard errorss understating the true level of uncertainty in the estimates; we return to this issue with our empirical replication in the next section.
+
+\subsection{Sensitivity of Clustering Results to Underlying Error}
+
+Given the reliance of TS1996 on the commuting flows data, we want to analyze the extent to which the outputs of the TS1996 methodology are sensitive to errors in this data. First, recall equation \ref{eqn:dissimilarity} for the entries of the dissimilarity matrix. If $f_{ij}$ is measured without error, then the distance between counties $i$ and $j$ are also measured without error. However, if the flows are measured with error, $\epsilon_{ij}$, then we actually have an estimate of $D_{ij}$, which is $\hat{D}_{ij}$, which can be expressed as below (assuming without loss of generality that $rlf_i < rlf_j$):
+
+\begin{equation}
+\hat{D}_{ij} = 1 - \frac{f_{ij} + \epsilon_{ij} + f_{ji} + \epsilon_{ji}}{\hat{rlf}_i}
+\end{equation}
+
+However, even if $E[\sum_j \epsilon_{ij}]=0$, we only have one realization of this draw, which are calculated from survey responses. Additionally, we know that $\frac{\epsilon_{ij}}{f_{ij}}$ is larger for small counties. This will increase $D_{ij}$ for some small counties and decrease it for others. Because of the heirarchical nature of the clustering method, this error will affect the formation of all other clusters in the data.\footnote{Additionally, because heights are normalized in the procedure, it also affects where the effective cutoff is, even for counties unaffected by errors in flows.}
+
+To demonstrate how this measurement error affects the outcome of the clustering procedure, we use the published margins of error from the 2009-2013 ACS JTW data to calculate the ratio $MOE_{ij}/f_{ij}$ for different sized counties.\footnote{These flow size bins are the following percentile bins: 0-50; 50-90; 90-95; 95-99; and 99+.}  We then use this ratio above to calculate the standard error of the flow for each $ij$ pair, in the following way:
+
+\begin{enumerate}
+	\item For each origin-destination pair ($ij$), we draw $\epsilon_{ij}$ from a normal distribution with mean 0 and standard deviation $MOE_{ij}/(2 \times 1.64)$, since the MOE is the 90\% confidence interval.
+	\item Add the value from (1) to the reported flow ($\hat{f}_{ij} = f_{ij} + \epsilon_{ij}$)
+	\item Re-aggregate the flows to calculate each dissimilarity matrix entry $D_{ij}$. 
+	\item Re-run the hierarchical clustering procedure, using the same cutoff as the replication.
+	\item Store the new clusters, and calculate the following statistics: avrage number of counties in a cluster; number of clusters; and total number of counties in a different cluster than the one they were originally assigned.
+\end{enumerate}
+
+We iterate over this procedure 1000 times in order to obtain distributions for these statistics. These graphs are shown in Figure 2, where the red vertical dashed lies are the values that would be obtained using only the published figures. The figures show that the average cluster size varies considerably from the result the published figures would yield. Additionally, the share of the population that is mismatched is on average about 5\% of the US population, a small but non-negligible number. Overall, the underlying measurement error in the data causes uncertainty in the cluster definitions, which is exacerbated by the sharp cutoff imposed in cluster analysis, which we discuss in the next subsection.
+
+\subsection{Choosing Cluster Height}
+
+[this section will discuss ambiguity, show values of cutoff vs number of clusters]
+
+
+One other sensitivity of the methodology used by TS1996 is choosing the cutoff value above which no clusters can form. Tolbert and Killian (1987) descrbie the algorithm for choosing a cutoff value as follows: ``As a rule of thumb, a normalized average distance of 0.98 was considered sufficient distance between sets of counties to treat them as separate [Labor Market Areas]." (Tolbert and Killian, 1987, page 15) The article does not provide an analysis of the sensitivity to changing the cutoff marginally up or down. In this subsection, we investigate how sensitive the resulting clusters are to the choice of the cutoff value.
+
+[Figure here]
+
+Figure \ref{fig:cutoff_count} shows the number of clusters that form at various height cutoffs using the national 1990 JTW data, with the vertical line indicating the cutoff value we chose to replicate TS1990 (0.9418). The key takeaway from this figure is that it is theoretically ambigious where a researcher should choose to stop merging clusters. Additionally, increasing or decreasing the cutoff has implications for the number of resulting clusters. Increasing it to 0.9428 decreases the number of clusters by 19, while using a cutoff of 0.9408 cause the number of clusters to increase by 17.
+
+As we described above, the measurement error in commuting flows causes some uncertainty in terms of the true dissimilarity matrix, and hence the true cluster heights. Because of the presence of a strict cutoff, some clusters that would have formed if $D_{ij}$ were measured without error do not form, and vis-versa. More broadly, TS1996 provide no empirical guidance for choosing the optimal cutoff and cluster size other than referring to expert knowledge. While this is outside the scope of the current paper, in future work we explore how researchers may be able to use a data-driven method to determine the optimal number of clusters.
