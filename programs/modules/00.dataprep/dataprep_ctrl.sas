@@ -1,1 +1,88 @@
-* Mobility Zones (MobZ);* Execute control program to run selected modules; options  mlogic symbolgen spool;* Modules, set to 1 to run, otherwise 0; /************************THESE MODULES PREP THE COMMUTING FLOWS  ************************/%let run_preplodes=0;%let run_prepjtw1990=0;%let run_prepjtw2000=0;%let run_prepjtw2009=0;                                        /*************************Runs geoagg module for correspondingdataset;Creates two separate files: ctypairs_&dset.    and reslf_&dset.                                                  *************************/                                        %let run_geoagglodes = 0 ;%let run_geoaggjtw1990 =0 ; %let run_geoaggjtw2000 = 0 ;%let run_geoaggjtw2009 = 0 ;       %let run_otherdata = 1 ;         /***********************LODES MACROS***********************/ * job type;%let jt=00;* year ; %let year=2009;* Cluster threshold;%let cutoff=0.9418 ; /*national cutoff for their way*/*%let cutoff=0.98 ; * Paths;%let dirprog=.;%let dirdata=.;libname OUTPUTS "&dirdata./outputs";libname LODES "&dirdata./lodes" access=readonly;libname GEO "&dirdata./geo" ;options sasautos="&dirprog./macros" mautosource nocenter ps=1000;%global tstamp;%let t=%sysfunc(today());%let tt=%sysfunc(time());%let dstamp=%trim(%sysfunc(year(&t.),z4.))%trim(%sysfunc(month(&t.),z2.))%trim(%sysfunc(day(&t.),z2.));%let tstamp=&dstamp._%trim(%sysfunc(hour(&tt.),z2.))%trim(%sysfunc(minute(&tt.),z2.))%trim(%sysfunc(second(&tt.),z2.));/* Overall Macro */%macro runall;* Modules;%macro runmod(val,modname);%put module &modname.;%if (&val.=1) %then %do;proc printto    log="&dirprog./loglst/module_&modname..log" new    print="&dirprog./loglst/module_&modname..lst" new;run;%include "&dirprog./modules/00.dataprep/module_&modname..sas";   proc printto    log="&dirprog./ctrl_mobz.log" new    print="&dirprog./ctrl_mobz.lst" new;run;%end;%mend runmod;* Create one for each module;%runmod(&run_preplodes.,preplodes);%runmod(&run_prepjtw1990., prepjtw1990) ;%runmod(&run_prepjtw2000., prepjtw2000) ;%runmod(&run_prepjtw2009., prepjtw2009) ; %runmod(&run_geoagglodes.,geoagglodes) ;%runmod(&run_geoaggjtw1990.,geoaggjtw1990) ;%runmod(&run_geoaggjtw2000.,geoaggjtw2000); %runmod(&run_geoaggjtw2009.,geoaggjtw2009) ;%runmod(&run_otherdata.,otherdata) ;%mend runall;* run all;%runall;
+* Mobility Zones (MobZ);
+* Execute control program to run selected modules;	
+options  mlogic symbolgen spool;
+* Modules, set to 1 to run, otherwise 0;	
+
+/************************
+THESE MODULES PREP THE COMMUTING FLOWS  
+************************/
+%let run_preplodes=0;
+%let run_prepjtw1990=0;
+%let run_prepjtw2000=0;
+%let run_prepjtw2009=0;
+                                        
+/*************************
+Runs geoagg module for corresponding
+dataset;
+Creates two separate files: ctypairs_&dset.
+    and reslf_&dset.                                                  
+*************************/                                        
+
+%let run_geoagglodes = 0 ;
+%let run_geoaggjtw1990 =0 ; 
+%let run_geoaggjtw2000 = 0 ;
+%let run_geoaggjtw2009 = 0 ;       
+
+%let run_otherdata = 1 ;         
+
+/**********************
+*LODES MACROS
+***********************/ 
+* job type;
+%let jt=00;
+* year ; 
+%let year=2009;
+
+* Cluster threshold;
+%let cutoff=0.9418 ; /*national cutoff for their way*/
+*%let cutoff=0.98 ; 
+
+* Paths;
+%let dirprog=.;
+%let dirdata=.;
+libname OUTPUTS "&dirdata./outputs";
+libname LODES "&dirdata./lodes" access=readonly;
+libname GEO "&dirdata./geo" ;
+options sasautos="&dirprog./macros" mautosource nocenter ps=1000;
+
+%global tstamp;
+%let t=%sysfunc(today());
+%let tt=%sysfunc(time());
+%let dstamp=%trim(%sysfunc(year(&t.),z4.))%trim(%sysfunc(month(&t.),z2.))%trim(%sysfunc(day(&t.),z2.));
+%let tstamp=&dstamp._%trim(%sysfunc(hour(&tt.),z2.))%trim(%sysfunc(minute(&tt.),z2.))%trim(%sysfunc(second(&tt.),z2.));
+
+/* Overall Macro */
+%macro runall;
+
+* Modules;
+%macro runmod(val,modname);
+%put module &modname.;
+%if (&val.=1) %then %do;
+proc printto
+    log="&dirprog./loglst/module_&modname..log" new
+    print="&dirprog./loglst/module_&modname..lst" new;
+run;
+%include "&dirprog./modules/00.dataprep/module_&modname..sas";			
+proc printto
+    log="&dirprog./ctrl_mobz.log" new
+    print="&dirprog./ctrl_mobz.lst" new;
+run;
+%end;
+%mend runmod;
+
+* Create one for each module;
+%runmod(&run_preplodes.,preplodes);
+%runmod(&run_prepjtw1990., prepjtw1990) ;
+%runmod(&run_prepjtw2000., prepjtw2000) ;
+%runmod(&run_prepjtw2009., prepjtw2009) ; 
+
+%runmod(&run_geoagglodes.,geoagglodes) ;
+%runmod(&run_geoaggjtw1990.,geoaggjtw1990) ;
+%runmod(&run_geoaggjtw2000.,geoaggjtw2000); 
+%runmod(&run_geoaggjtw2009.,geoaggjtw2009) ;
+
+%runmod(&run_otherdata.,otherdata) ;
+
+%mend runall;
+* run all;
+%runall;
