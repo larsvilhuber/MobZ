@@ -1,4 +1,5 @@
-/* This macro creates a bunch of definitions of commuting zones, based on
+/* 
+This macro creates a bunch of definitions of commuting zones, based on
 where the cutoff is (for use in estimation)
 These are then merged together 
 */
@@ -64,8 +65,16 @@ run;
 %mend cutoff;
 
                 
-%cutoff(jtw1990,0.90,0.97,step=5 ) ;               
+%cutoff(jtw1990,0.90,0.97,step=5 ) ;      
+
+ods graphics on /imagefmt=png imagename= "numclus_cutoff" ;
+ods listing gpath = "&root./paper/figures" ;
+
+prog sgplot data=OUTPUTS.cluster_cutoff_jtw1990 noautolegend; 
+     series x=cutoff y=clusnum ; 
+     refline 0.9418/axis=X lineattrs=(color=red thickness=5) ;
+run;
 
 proc export data=OUTPUTS.cluster_cutoff_jtw1990 
-            outfile = './outputs/clusters_cutoff_jtw1990.dta' replace; 
+            outfile = "&root./data/clusters_cutoff_jtw1990.dta" replace; 
 run;

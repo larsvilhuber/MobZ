@@ -1,3 +1,5 @@
+%include(/ssgprojects/project0002/Mobz/programs/config.sas) ;
+
 * Mobility Zones (MobZ);
 * Execute control program to run selected modules;	
 options  mlogic symbolgen spool fullstimer;
@@ -83,13 +85,11 @@ RUNS DIFFERENCES BY INDUSTRY
 %let cutoff_lodes = 0.98 ;	
 
 * Paths;
-%let dirprog=.;
-%let dirdata=.;
-libname OUTPUTS "&dirdata./outputs";
-libname LODES "&dirdata./lodes" access=readonly;
-libname GEO "&dirdata./geo" ;
-options sasautos="&dirprog./macros" mautosource nocenter ps=1000
-        sascmd='sas' autosignon;
+%let dirprog=&root.;
+%let dirdata=&root.;
+libname OUTPUTS "&dirdata./data";
+libname GEO "&dirdata./data" ;
+options sasautos="&dirprog./programs/macros" mautosource nocenter ps=1000;
 
 %global tstamp;
 %let t=%sysfunc(today());
@@ -105,14 +105,11 @@ options sasautos="&dirprog./macros" mautosource nocenter ps=1000
 %put module &modname.;
 %if (&val.=1) %then %do;
 proc printto
-    log="&dirprog./loglst/module_&modname..log" new
-    print="&dirprog./loglst/module_&modname..lst" new;
+    log="&dirprog./programs/modules/10.cluster/module_&modname..log" new
+    print="&dirprog./programs/modules/10.cluster/module_&modname..lst" new;
 run;
-%include "&dirprog./modules/10.cluster/module_&modname..sas";			
-proc printto
-    log="&dirprog./ctrl_mobz.log" new
-    print="&dirprog./ctrl_mobz.lst" new;
-run;
+%include "&dirprog./programs/modules/10.cluster/module_&modname..sas";	
+
 %end;
 %mend runmod;
 

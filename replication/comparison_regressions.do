@@ -1,13 +1,12 @@
 /***********************************
 This regression 
 ***********************************/
-global datadir "[data]/replication"
-global logdir "./logfiles"
-    
-cap log close 
-log using "$logdir/comparison_regressions.log", replace
+global root = /ssgprojects/project0002/MobZ
+global datadir "$root/data"
 
-use "$datadir/adh_data/workfile_china.dta", clear
+
+
+use "$datadir/workfile_china.dta", clear
 
 #delimit ; 
 keep d_sh_empl_mfg d_tradeusch_pw d_tradeotch_pw_lag 
@@ -82,5 +81,3 @@ gen ratio_manu = del_L_m/d_sh_empl_mfg ;
 sum ratio_manu, d ;
 
 log close ;
-
-

@@ -16,10 +16,14 @@ It has three steps
 ***************************/
 cap log close
 log using cutoff_graphs.log, replace 
-global dodir "."
-global clusdir = "[data]/outputs"
-global graphdir "[data]/figures"
-global outgraph "[data]/figures"
+
+global root = "/ssgprojects/project0002/MobZ"
+global dodir "$root/replication/iteration"
+global clusdir = "$root/data"
+global graphdir "$root/paper/figures"
+global outgraph "$root/paper/figures"
+
+
 local czonedataset = "${clusdir}/clusters_cutoff_jtw1990.dta"
 global czone_iteration = "${clusdir}/czones_cutoff.dta"
 local ipw_regs "${clusdir}/cutoff_post.dta"

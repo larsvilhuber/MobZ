@@ -126,7 +126,7 @@ proc sgplot data = OUTPUTS.finalstats_&dset. noautolegend ;
 run ;	
 
 ods graphics on /imagefmt=png imagename = "numclusters_&dset." ;
-ods listing gpath = "./paper/figures" ;
+ods listing gpath = "&root./paper/figures" ;
 
 proc sgplot data = OUTPUTS.finalstats_&dset. noautolegend;
 	histogram numclusters ;
@@ -138,7 +138,7 @@ proc sgplot data = OUTPUTS.finalstats_&dset. noautolegend;
 run ; 
 
 ods graphics on /imagefmt=png imagename = "mismatchedcounties_&dset." ;
-ods listing gpath = "./paper/figures" ;
+ods listing gpath = "&root./paper/figures" ;
 
 proc sgplot data = OUTPUTS.finalstats_&dset. noautolegend;
 	histogram total_mismatch ;

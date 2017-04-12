@@ -2,11 +2,11 @@
 This makes graphs of
 distribution of results
 *******************/
-
-global dodir "."
-global clusdir = "[data]/outputs"
-global graphdir "[data]/figures"
-global outgraph "[data]/figures"
+global root = "/ssgprojects/project0002/MobZ"
+global dodir "$root/replication/iteration"
+global clusdir = "$root/data"
+global graphdir "$root/paper/figures"
+global outgraph "$root/paper/figures"
 
 use "$clusdir/bootstrap_results.dta"
 sort iteration

@@ -4,7 +4,7 @@ for use in the
  bootstrap macro loops
 ****************/
 data OUTPUTS.flows_jtw1990_moe ;
-    infile './jtw1990/jtw1990_flows.csv' delimiter = ',' firstobs= 2;
+    infile "&root./raw/jtw1990_flows.csv" delimiter = ',' firstobs= 2;
     informat work_cty $5.;
     informat jobsflow best32. ;
     informat home_cty $5. ;
@@ -18,11 +18,10 @@ run;
 proc print data=OUTPUTS.flows_jtw1990_moe (obs=50);
 run;                                            
 
-*%bootstrap_statistics(jtw1990_moe,1000,cutoff=&cutoff.) ;
-%bootstrap_statistics(jtw2009,1000,cutoff=&cutoff.) ;
+%bootstrap_statistics(jtw1990_moe,1000,cutoff=&cutoff.) ;
 
 proc export data=OUTPUTS.bootclusters_jtw1990_moe 
-            outfile = './outputs/bootclusters_jtw1990_moe.dta' replace; 
+            outfile = "&root./data/bootclusters_jtw1990_moe.dta" replace; 
 run;
 
 /* this is for summary statistics */    

@@ -7,7 +7,7 @@ options  mlogic symbolgen spool;
 THESE MODULES PREP THE COMMUTING FLOWS  
 ************************/
 %let run_preplodes=0;
-%let run_prepjtw1990=0;
+%let run_prepjtw1990=1;
 %let run_prepjtw2000=0;
 %let run_prepjtw2009=0;
                                         
@@ -19,7 +19,7 @@ Creates two separate files: ctypairs_&dset.
 *************************/                                        
 
 %let run_geoagglodes = 0 ;
-%let run_geoaggjtw1990 =0 ; 
+%let run_geoaggjtw1990 =1 ; 
 %let run_geoaggjtw2000 = 0 ;
 %let run_geoaggjtw2009 = 0 ;       
 
@@ -35,15 +35,13 @@ Creates two separate files: ctypairs_&dset.
 
 * Cluster threshold;
 %let cutoff=0.9418 ; /*national cutoff for their way*/
-*%let cutoff=0.98 ; 
 
 * Paths;
-%let dirprog=.;
-%let dirdata=.;
-libname OUTPUTS "&dirdata./outputs";
-libname LODES "&dirdata./lodes" access=readonly;
-libname GEO "&dirdata./geo" ;
-options sasautos="&dirprog./macros" mautosource nocenter ps=1000;
+%let dirprog=&root.;
+%let dirdata=&root.;
+libname OUTPUTS "&dirdata./data";
+libname GEO "&dirdata./data" ;
+options sasautos="&dirprog./programs/macros" mautosource nocenter ps=1000;
 
 %global tstamp;
 %let t=%sysfunc(today());
@@ -59,14 +57,12 @@ options sasautos="&dirprog./macros" mautosource nocenter ps=1000;
 %put module &modname.;
 %if (&val.=1) %then %do;
 proc printto
-    log="&dirprog./loglst/module_&modname..log" new
-    print="&dirprog./loglst/module_&modname..lst" new;
+    log="&dirprog./programs/modules/00.dataprep/module_&modname..log" new
+    print="&dirprog./programs/modules/00.dataprep/module_&modname..lst" new;
 run;
-%include "&dirprog./modules/00.dataprep/module_&modname..sas";			
-proc printto
-    log="&dirprog./ctrl_mobz.log" new
-    print="&dirprog./ctrl_mobz.lst" new;
-run;
+%include "&dirprog./programs/modules/00.dataprep/module_&modname..sas";	
+	
+
 %end;
 %mend runmod;
 
