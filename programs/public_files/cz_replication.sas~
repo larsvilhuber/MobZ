@@ -1,0 +1,13 @@
+*Mobility zones;
+options mlogic sybolgen spool fullstimer;
+
+/*************************** 
+SETUP FOR RUN
+*****************************/
+
+%let dirprog=/ssgprojects/project0002/MobZ/programs/
+%let dirdata=/ssgprojects/project0002/MobZ/[data?]
+
+libname OUTPUTS "&dirdata./outputs" ;
+libname GEO "&dirdata/geo" ;
+options sasautos="&dirprog./macros" mautosource nocenter ps=1000 sascmd='sas' autosignon ;
