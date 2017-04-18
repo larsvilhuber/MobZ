@@ -19,9 +19,12 @@ log using cutoff_graphs.log, replace
 
 global root = "/ssgprojects/project0002/MobZ"
 global dodir "$root/replication/iteration"
+
+include "$dodir/config.do"
+
 global clusdir = "$root/data"
-global graphdir "$root/paper/figures"
-global outgraph "$root/paper/figures"
+global graphdir "$paperdir/figures"
+global outgraph "$paperdir/figures"
 
 
 local czonedataset = "${clusdir}/clusters_cutoff_jtw1990.dta"
