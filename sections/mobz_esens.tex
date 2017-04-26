@@ -1,13 +1,7 @@
 In the previous section, we showed that there are a number of margins on which clustering methodologies are sensitive:  uncertainty in the input data and the choice of the number of clusters. However, these issues are only important for empirical labor economists to the extent that these
-sensitivities impact empirical estimates in a meaningful way. To that end, in this section, we demonstrate the impact these issues have on empirical analysis, using a well-known paper that uses commuting zones.
+sensitivities impact empirical estimates in a meaningful way. To that end, in this section, we demonstrate the impact these issues have on the empirical findings of a well-known paper that uses commuting zones.
 
-\citet{ADH2013} estimate the impact that increased trade competition from China had on manufacturing
-employment in the United States. To estimate this effect empirically, they use variation in the initial
-distribution of manufacturing employment at the commuting zone level, and national increases in imports
-from China by manufacturing subsector. Because Autor et al. use commuting zones as their definition of
-local labor markets, their empirical analysis may be impacted by the issues outlined above.\footnote{We
-want to acknowledge that the authors have been incredibly helpful in the process of replicating their
-paper, both in providing data and helping to troubleshoot, and were receptive to this exercise.}
+\citet{ADH2013} estimate the impact that increased trade competition from China had on manufacturing employment in the United States. The magnitude of the main finding has been widely discussed and debated in economics and in the popular press.\footnote{For example, see The Economist, March 11, 2017 ``Economists argue about the impact of Chinese imports on America'' \url{http://www.economist.com/news/finance-and-economics/ 21718513-china-shock-has-not-been-debunked-it-worth-understanding}.} To estimate this effect empirically, they use variation in the initial distribution of manufacturing employment at the commuting zone level, and national increases in imports from China by manufacturing subsector. Because Autor et al. use commuting zones as their definition of local labor markets, their empirical analysis may be impacted by the issues outlined above.\footnote{We want to acknowledge that the authors have been incredibly helpful in the process of replicating their paper, both in providing data and helping to troubleshoot, and were receptive to this exercise.}
 
 Their main estimating equation in the paper is as follows:
 
@@ -41,7 +35,7 @@ We use the 1000 realizations of commuting zones that were generated using the me
 
 Another way to summarize the results of this exercise is to look at the distribution of t-statistics, which incorporates information about $se_{\beta_1}$ into the analysis as well, and comparing that distribution to the critical values. To use the distribution of t-statistics in an empirical setting, researchers construct a 95\% confidence interval of the t-statistic by using the values at the 97.5th and 2.5th percentiles of the 1000 realizations. If this confidence interval is outside the critical value $t_{0.025}$, then the null hypothesis can be rejected at $\alpha = 0.05$. 
 
-To give an empirical application, Figure \ref{fig:1990_tdist} shows the distribution of t-statistics obtained from estimating \ref{eqn:adh}. The blue vertical line is the original t-statistic, and the light gray vertical lines are the 2.5th and 97.5th percentiles. Clearly, in this application the result is still significant, because the entire confidence interval of t-statistics is less than the critical value.
+To give an empirical application, Figure \ref{fig:1990_tdist} shows the distribution of t-statistics obtained from estimating \ref{eqn:adh}. The blue vertical line is the original t-statistic, and the light gray vertical lines are the 2.5th and 97.5th percentiles. Clearly, in this application the result is still significant, because the entire confidence interval of t-statistics is less than the critical value ($-1.96$).
 
 \begin{figure}\centering
 \caption{Distribution of T-Statistic, 1990-2000 \label{fig:1990_tdist}}
@@ -70,7 +64,7 @@ In addition to the uncertainty that is induced by underlying errors in the commu
 
 Figure \ref{fig:cutoff_dist} displays the results of this exercise, where panel (a) shows the raw coefficient and panel (b) shows the coefficient scaled by the interquartile range of $\Delta IPW_{uit}$, since the IQR changes based on the composition of the clusters. In panel (a),  the red horizontal line is the estimate from ADH.
 
-Again, our results show that there is some variation in the estimate based on the cutoff value. Around the cutoff value that most closely replicates TS1996, the estimate is the most negative. However, cutoff values marginally higher or lower give different results, because the number of clusters changes quickly at that point. Given the sensitivity of estimates to the chosen cutoff, best practices for a researcher would be to report estimates for a broad range of possible cutoffs.	
+Again, our results show that there is some variation in the estimate based on the cutoff value. Around the cutoff value that most closely replicates TS1996 ($0.9418$), the estimate is the most negative. However, cutoff values marginally higher or lower give different results, because the number of clusters changes quickly at that point. Given the sensitivity of estimates to the chosen cutoff, best practices for a researcher would be to report estimates for a broad range of possible cutoffs.	
 
 \subsection{Advice to Researchers}
 
