@@ -47,35 +47,12 @@ twoway (hist tstat_1990 if iteration!=0)
 	(scatteri 0 `lower_bound' 2 `lower_bound', recast(line) lcolor(red) lwidth(thick) lpattern(dash))
 	(scatteri 0 `upper_bound' 2 `upper_bound', recast(line) lcolor(red) lwidth(thick) lpattern(dash)),
        saving("$graphdir/1990_tdistribution.gph", replace)
-       xtitle("Coefficient")
-       ytitle("Density")
-      /* xline(`true_est',lstyle(foreground) lpattern(dash) lcolor(red))*/
-       title("Distribution of Estimated Effect, 1990")
+       xtitle("T-statstic")
+       ytitle("Density")     
+       title("Distribution of T-Statistics, 1990")
        legend(off)
        ;
 
 graph export "$outgraph/1990_tstat_distribution.png", replace ;
 
 
-end
-twoway (hist beta_2000 if iteration!=0)
-(kdensity beta_2000 if iteration!=0),
-       saving("$graphdir/2000_distribution.gph", replace)
-       xtitle("Coefficient")
-       ytitle("Density")
-       title("Distribution of Estimated Effect, 1990")
-       legend(off)
-       xline(`true_est');
-
-graph export "$outgraph/2000_distribution.png", replace ;
-       
-twoway (hist beta_all if iteration!=0)
-	(kdensity beta_all if iteration!=0),
-       saving("$graphdir/all_distribution.gph", replace)
-       xtitle("Coefficient")
-       ytitle("Density")
-       title("Distribution of Estimated Effect, 1990")
-       legend(off)
-       xline(`true_est');       
-
-graph export "$outgraph/all_distribution.png", replace ;

@@ -1,0 +1,13 @@
+cd /ssgprojects/projects0002/MobZ 
+#delimit ;
+use clusnum_cutoff.dta, clear ;
+replace cutoff= cutoff/10000 ;
+sort cutoff ;
+
+twoway (line clusnum cutoff),
+           xline(0.9418)
+           xtitle("Cutoff")
+           ytitle("Number of Clusters")
+           legend(off);
+
+graph export "/programs/projects/mobz2/paper/figures/numclus_cutoff.png", replace ;

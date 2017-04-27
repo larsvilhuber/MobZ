@@ -1,3 +1,8 @@
+===============================
+To replicate results in paper
+===============================
+
+
 Order of programs to run
 =========================
 
@@ -27,9 +32,10 @@ MODULE BOOTSTRAP
 	NOTE: MUST RUN module_prepjtw1990.sas first (inputs created there)
 
 20.analysis/module_bootstrap.sas
-	creates the 1000 realization of commuting zones 
+	creates the 1000 realizations of commuting zones 
 	and figures for paper
 	Also creates inputs for appendix table
+
 ==========================================
 CUTOFF by CLUSTER COUNT GRAPH
 ==========================================
@@ -45,6 +51,7 @@ Table 1 is created by:
 Figures are created by:
        - ./replication/iteration/overall_loop.do
        - ./replication/iteration/overall_graphs.do
+
        - ./replication/iteration/cutoff_loop.do
        - ./replication/iteration/cutoff_graphs.do
 
