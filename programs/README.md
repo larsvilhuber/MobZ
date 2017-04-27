@@ -21,7 +21,7 @@ run following programs (parameters below):
 
 OUTPUT: root/data/clusfin_jtw1990.sas7bdat
 
-==========================================
+
 
 MODULE BOOTSTRAP
 ==========================================
@@ -35,13 +35,12 @@ MODULE BOOTSTRAP
 	and figures for paper
 	Also creates inputs for appendix table
 
-==========================================
+
 CUTOFF by CLUSTER COUNT GRAPH
 ==========================================
 20.analysis/module_cutoff.sas
 	Creates a graph called numclus_cutoff.png
 
-===========================================
 Replication programs for ADH
 ===========================================
 Table 1 is created by:
