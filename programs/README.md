@@ -47,6 +47,7 @@ Table 1 is created by:
       - ./replication/comparison_regressions.do
 
 Figures are created by:
+      
        - ./replication/iteration/overall_loop.do
        - ./replication/iteration/overall_graphs.do
 
