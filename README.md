@@ -10,4 +10,4 @@ The repository has the following structure:
 - [replication](replication/): as part of the paper, we replicate Autor, Dorn, Hanson (2013). The code to do that is in this directory. 
 - [paper](paper/): original LaTeX paper locations
 - [overleaf](overleaf/): A submodule pointing at the Overleaf.com version of the paper ([read-only link](https://www.overleaf.com/read/nfkkgnxqvcyy), [git clone](https://git.overleaf.com/9025807zybmtjzwpjbm))
-- [literature](literature/): some random additional pieces. Ignore.
+
