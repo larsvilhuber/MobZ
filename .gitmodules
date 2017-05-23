@@ -1,3 +1,4 @@
 [submodule "overleaf"]
 	path = overleaf
 	url = https://git.overleaf.com/9025807zybmtjzwpjbm
+        update = merge
