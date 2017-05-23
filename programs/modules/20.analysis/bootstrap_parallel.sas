@@ -55,33 +55,33 @@ run;
     %let counter = &jj. ;
     %if (&jj. le &iterations. ) %then %do ; 
 /********setup for parallelization ********/
-    SIGNON chunk&chunk. ;
-        %syslput mywork = %sysfunc(pathname(WORK))/ remote=chunk&chunk. ;
-        %syslput ii = &ii.                        / remote=chunk&chunk. ;
-        %syslput jj = &jj.                        / remote=chunk&chunk. ;
-        %syslput dset = &dset.                    / remote=chunk&chunk. ;
-        %syslput dirprog=&dirprog.                / remote=chunk&chunk. ;
-        %syslput cutoff = &cutoff.                / remote=chunk&chunk. ; 
-        %syslput chunk = &chunk.                  / remote=chunk&chunk. ;  
-    RSUBMIT chunk&chunk. WAIT=NO ;
+    SIGNON chunk&counter. ;
+        %syslput mywork = %sysfunc(pathname(WORK))/ remote=chunk&counter. ;
+        %syslput ii = &ii.                        / remote=chunk&counter. ;
+        %syslput jj = &jj.                        / remote=chunk&counter. ;
+        %syslput dset = &dset.                    / remote=chunk&counter. ;
+        %syslput dirprog=&dirprog.                / remote=chunk&counter. ;
+        %syslput cutoff = &cutoff.                / remote=chunk&counter. ; 
+        %syslput chunk = &chunk.                  / remote=chunk&counter. ;  
+    RSUBMIT chunk&counter. WAIT=NO ;
     options sasautos = "&dirprog./macros" mautosource fullstimer ; 
     libname MYWORK "&mywork." ;                                                
     
-    %perturb_parallel(&dset._&chunk.,flows_&dset._p&chunk.,&jj.,inlib=MYWORK,outlib=MYWORK) ;
+    %perturb_parallel(&dset._&chunk.,flows_&dset._&chunk.,&jj.,inlib=MYWORK,outlib=MYWORK) ;
     
-    %geoagg(&dset._p&chunk.,inlib=MYWORK,outlib=MYWORK) ; 
+    %geoagg(&dset._&chunk.,inlib=MYWORK,outlib=MYWORK) ; 
                                                 
-    %cluster(&dset._p&chunk.,inlib=MYWORK,outlib=MYWORK) ;
+    %cluster(&dset._&chunk.,inlib=MYWORK,outlib=MYWORK) ;
     
-    %review(&dset._p&chunk.,&cutoff.,inlib=MYWORK,outlib=MYWORK,noprint=NO) ;
+    %review(&dset._&chunk.,&cutoff.,inlib=MYWORK,outlib=MYWORK,noprint=NO) ;
                                                     
     /* calculating relevant stats */
-    %cluster_naming(clusfin_&dset._p&chunk.,clusname_&dset._p&jj._par,
-             reslf_&dset._p&chunk.,  inlib=MYWORK,outlib=MYWORK,otherlib=MYWORK);
+    %cluster_naming(clusfin_&dset._&chunk.,clusname_&dset._p&jj._par,
+             reslf_&dset._&chunk.,  inlib=MYWORK,outlib=MYWORK,otherlib=MYWORK);
     %cluster_compare(clustersnamed_&dset.,clusname_&dset._p&jj._par,
-                            reslf_&dset._p&chunk.,
-                            inlib=MYWORK,outlib=WORK,noprint=NO,mlib=MYWORK) ;
-    %cluster_statistics(clusfin_&dset._p&chunk.,inlib=WORK,outlib=MYWORK) ;
+                            reslf_&dset._&chunk.,
+                                inlib=MYWORK,outlib=WORK,noprint=NO,mlib=MYWORK) 
+    %cluster_statistics(clusfin_&dset._&chunk.,inlib=WORK,outlib=MYWORK) ;
     
     data MYWORK.statistics_&jj. ;
         set statistics ;
@@ -97,7 +97,7 @@ run;
         %do chunk = 0 %to %eval(&chunks.-1) ;
              %let j = %eval(&ii.+&chunk.) ;
              %if (&j. le &iterations.) %then %do ;
-                    chunk&chunk. 
+                    chunk&j. 
              %end; 
         %end; 
         ;
