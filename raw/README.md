@@ -6,7 +6,7 @@ Most of the JTW data can be found at https://www.census.gov/hhes/commuting/data/
 --------
 
 - Source: https://www.census.gov/hhes/commuting/files/1990/resco/USresco.txt
-- Permanent source: n.a.
+- Permanent source: http://doi.org/10.3886/E100617V1
 - Renamed to: 1990jtw_raw.txt
 - Program: module/00.dataprep/module_prepjtw1990.sas
 
@@ -23,7 +23,7 @@ We chose the files sorted by "residence county" for the entire US, at https://ww
 --------------
 
 - Source: http://www.census.gov/hhes/commuting/files/2013/Table%201%20County%20to%20County%20Commuting%20Flows-%20ACS%202009-2013.xlsx
-- Permanent source: n.a. (pending on openICPSR or DataLumos)
+- Permanent source: http://doi.org/10.3886/E100616V1
 - Renamed to: acs_2009_2013.csv
 - Program: module/00.dataprep/module_prepjtw2009.sas
 
