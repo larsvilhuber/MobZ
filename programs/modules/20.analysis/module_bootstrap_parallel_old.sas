@@ -14,12 +14,15 @@ data OUTPUTS.flows_jtw1990_moe ;
     informat moe best32. ;
 input work_cty jobsflow home_cty flowsize sd_ratio mean_ratio moe ;
 run;                
-    
-         
-%bootstrap_parallel(jtw1990_moe,1000,cutoff=&cutoff.) ;
+          
+                
+proc print data=OUTPUTS.flows_jtw1990_moe (obs=50);
+run;                                            
 
-proc export data=OUTPUTS.bootclusters_jtw1990_moe_new 
-            outfile = '[outdir]/bootclusters_jtw1990_moe_new.dta' replace; 
+%bootstrap_parallel_old(jtw1990_moe,1000,cutoff=&cutoff.) ;
+
+proc export data=OUTPUTS.bootclusters_jtw1990_moe
+            outfile = '[outdir]/bootclusters_jtw1990_moe.dta' replace; 
 run;
 /* this is for summary statistics */    
     
