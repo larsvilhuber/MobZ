@@ -46,6 +46,7 @@ a wide
 * Cutoffs ;
     %let cutoff_bottom = 0.8 ;
     %let cutoff_top = 1.0 ;
+    %let ci90 = 1.645 ;
     
 * Paths;
 %let dirprog=&root.;
