@@ -119,6 +119,7 @@ run;
             clusname_&dset._p&ii._par (rename=(clustername=clustername_&ii.)) 
         %end;
         ;
+	by fips ;
     run;
             
 proc export data=OUTPUTS.finalstats_&dset. 
