@@ -1,14 +1,14 @@
-global progdir "/ssgprojects/projects0002/MobZ"
 #delimit ;
-
-use "$progdir/data/clusnum_cutoff_jtw1990.dta, clear ;
+use "$datadir/clusnum_cutoff.dta", clear ;
 replace cutoff= cutoff/10000 ;
 sort cutoff ;
 
 twoway (line clusnum cutoff),
-           xline(0.9418)
+           xline(0.9365, lcolor(red) lwidth(thick) lpattern(dash) )
            xtitle("Cutoff")
            ytitle("Number of Clusters")
            legend(off);
 
-graph export "$progdir/paper/figures/numclus_cutoff.png", replace ;
+graph export "$graphdir/numclus_cutoff.png", replace ;
+
+
