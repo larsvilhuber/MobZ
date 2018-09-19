@@ -3,7 +3,7 @@
 global datadir "[datadir]" ;
 global graphdir "[figuredir]" ;
 
-use "$datadir/finalstats_jtw1990_moe.dta", clear;
+use "$datadir/finalstats_jtw1990_moe_new.dta", clear;
 *use "$datadir/finalstats_jtw2009.dta", clear;
 
 /* make the graphs */
@@ -37,9 +37,10 @@ twoway (histogram share_mismatch_wgt)
 graph export "$graphdir/mismatch_jtw1990.png", replace; 
 
 
+
 twoway (histogram mean_clussize)
-       /*(kdensity mean_clussize)*/
-       (scatteri 0 3.88 150 3.88, recast(line) lcolor(red) lwidth(thick) lpattern(dash)),
+       (kdensity mean_clussize)
+       (scatteri 0 3.88 15 3.88, recast(line) lcolor(red) lwidth(thick) lpattern(dash)),
        saving("$graphdir/meanclussize_jtw1990.gph", replace)
        xtitle("Mean Cluster Size")
        ytitle("Density")
@@ -50,8 +51,8 @@ twoway (histogram mean_clussize)
 graph export "$graphdir/meanclussize_jtw1990.png", replace;
 
 twoway (histogram numclusters)
-       /*(kdensity numclusters)*/
-       (scatteri 0 810 .8 810, recast(line) lcolor(red) lwidth(thick) lpattern(dash)),
+       (kdensity numclusters)
+       (scatteri 0 810 .06 810, recast(line) lcolor(red) lwidth(thick) lpattern(dash)),
        saving("$graphdir/numclusters_jtw1990.gph", replace)
        xtitle("Number of Clusters")
        ytitle("Density")

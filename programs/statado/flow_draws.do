@@ -1,3 +1,5 @@
+global datadir "[datadir]"
+global outdir "[outdir]"
 set more off
 import delimited "$datadir/flow_moe_ratios.csv", clear 
 
