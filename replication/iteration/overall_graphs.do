@@ -2,57 +2,111 @@
 This makes graphs of
 distribution of results
 *******************/
-global root = "/ssgprojects/project0002/MobZ"
-global dodir "$root/replication/iteration"
+global dodir "[dodir]"
+global clusdir = "[clusdir]"
 
-include "$dodir/config.do" ;
-
-global clusdir = "$root/data"
-global graphdir "$paperdir/figures"
-global outgraph "$paperdir/figures"
+global graphdir "[figuredir]"
 
 use "$clusdir/bootstrap_results.dta"
 sort iteration
 local true_est = beta_1990[1] 
 di "`true_est'"
+local true_se = se_1990[1] 
+di "`true_se'"
+local upper = `true_est'+(1.96*`true_se') 
+local lower = `true_est'-(1.96*`true_se')
+di "CONFIDENCE INTERVAL: [" %5.4f `lower' ", " %5.4f `upper' "]"
+
 #delimit ; 
 twoway (hist beta_1990 if iteration!=0)
 	(kdensity beta_1990 if iteration!=0)
-	(scatteri 0 `true_est' 15 `true_est', recast(line) lcolor(red) lwidth(thick) lpattern(dash)),
+	(scatteri 0 `true_est' 40 `true_est', recast(line) lcolor(red) lwidth(thick) lpattern(dash)),
        saving("$graphdir/1990_distribution.gph", replace)
-       xtitle("Coefficient")
+       xtitle("Estimated Coefficient")
        ytitle("Density")
-      /* xline(`true_est',lstyle(foreground) lpattern(dash) lcolor(red))*/
-       title("Distribution of Estimated Effect, 1990")
+       title("Estimated Effect from Autor, Dorn and Hanson (2013)"
+       )
        legend(off)
+              text(40 -.95 "Figure shows estimates of the" 
+		           "effect of growth in trade with"
+			   "China on manufacturing "
+			   "employment using 1000 "
+			   "realizations of commuting zones"		  
+	            , box place(se)  just(left) 
+			fcolor(gs15) bcolor(gs2) margin(vsmall))
+		    
+		text(36.3 -.86 "Replicated Estimate"		  
+	            , box place(ne) fcolor(white)  just(left) color(red) margin(small))
        ;
+       
+       graph export "$graphdir/1990_distribution_SOLE.png", replace ;
+       
+       twoway (hist beta_1990 if iteration!=0)
+	(kdensity beta_1990 if iteration!=0)
+	(scatteri 0 `true_est' 10 `true_est', recast(line) lcolor(red) lwidth(thick) lpattern(dash)),
+       saving("$graphdir/1990_distribution.gph", replace)
+       xtitle("Estimated Coefficient")
+       ytitle("Density")
+       title("Estimated Effect from Autor, Dorn and Hanson (2013)"
+       )
+       legend(off)              
+       ;
+       
+       graph export "$graphdir/1990_distribution.png", replace ;
 
-graph export "$outgraph/1990_distribution.png", replace ;
+sum tstat_1990 beta_1990 if iteration!=0,d;
+end
+centile tstat_1990, centile(2.5 97.5);
 
-preserve ; 
-sum if iteration == 0 ; 
-local true_est = r(mean); 
-keep if iteration !=0 ;
-
+preserve ;
+sum tstat_1990 if iteration==0 ; 
+local actual_tstat = r(mean);
+keep if iteration!=0 ;
 sort tstat_1990 ;
+di " The 2.5th and 97.5th percentiles of the t-distibution statistic are" %6.4f tstat_1990[25] "  and   " %6.4f tstat_1990[975] ;
 
-local lower_bound = tstat_1990[25] ;
+local lower_bound = tstat_1990[25];
 local upper_bound = tstat_1990[975];
-restore ; 
+
+restore ;
+
 
 
 twoway (hist tstat_1990 if iteration!=0)
 	(kdensity tstat_1990 if iteration!=0)
-	(scatteri 0 `true_est' 2 `true_est', recast(line) lcolor(blue) lwidth(thick) lpattern(dash))
-	(scatteri 0 `lower_bound' 2 `lower_bound', recast(line) lcolor(red) lwidth(thick) lpattern(dash))
-	(scatteri 0 `upper_bound' 2 `upper_bound', recast(line) lcolor(red) lwidth(thick) lpattern(dash)),
+	(scatteri 0 `lower_bound' .6 `lower_bound', recast(line) lcolor(gs12) lwidth(thick) lpattern(dash))
+	(scatteri 0 `upper_bound' .6 `upper_bound', recast(line) lcolor(gs12) lwidth(thick) lpattern(dash))
+	(scatteri 0 `actual_tstat' .6 `actual_tstat', recast(line) lcolor(blue) lwidth(thick) lpattern(dash)),
        saving("$graphdir/1990_tdistribution.gph", replace)
-       xtitle("T-statstic")
-       ytitle("Density")     
-       title("Distribution of T-Statistics, 1990")
+       xtitle("T-statistic")
+       ytitle("Density")
+      /* xline(`true_est',lstyle(foreground) lpattern(dash) lcolor(red))*/
+       title("Distribution of T-Statistic, 1990")
        legend(off)
        ;
+       
+       graph export "$graphdir/1990_tstat_distribution.png", replace ;
 
-graph export "$outgraph/1990_tstat_distribution.png", replace ;
+end ;
+end
+twoway (hist beta_2000 if iteration!=0)
+(kdensity beta_2000 if iteration!=0),
+       saving("$graphdir/2000_distribution.gph", replace)
+       xtitle("Coefficient")
+       ytitle("Density")
+       title("Distribution of Estimated Effect, 1990")
+       legend(off)
+       xline(`true_est');
 
+graph export "$graphdir/2000_distribution.png", replace ;
+       
+twoway (hist beta_all if iteration!=0)
+	(kdensity beta_all if iteration!=0),
+       saving("$graphdir/all_distribution.gph", replace)
+       xtitle("Coefficient")
+       ytitle("Density")
+       title("Distribution of Estimated Effect, 1990")
+       legend(off)
+       xline(`true_est');       
 
+graph export "$graphdir/all_distribution.png", replace ;

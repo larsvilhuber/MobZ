@@ -1,4 +1,3 @@
-
 /**********************
 This is the do-file loop
 
@@ -15,11 +14,8 @@ It has three steps
 	store regressions.
 	
 ***************************/
-global root = "/ssgprojects/project0002/MobZ"
-global dodir "$root/replication/iteration"
-global clusdir = "$root/data"
-global graphdir "$root/paper/figures"
-global outgraph "$root/paper/figures"
+global dodir "[dodir]"
+global clusdir = "[clusdir]"
 local czonedataset = "${clusdir}/bootclusters_jtw1990_moe.dta"
 global czone_iteration = "${clusdir}/czones.dta" 
 di "`czonedataset'" 
@@ -73,7 +69,8 @@ here we are estimating effects with our replicated CZs - we need to find
 the optimal level before running this for real.
 */	
 	
-forvalues i = 1/1000 {; 
+forvalues i = 1/1000 {;
+        di "ITERATION IS `i', TIME IS $S_TIME on $S_DATE" ;
 	* step2 ;
 	use "`czonedataset'", clear;
 		egen czone = group(clustername_`i') ;
