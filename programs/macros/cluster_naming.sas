@@ -1,12 +1,22 @@
-%macro cluster_naming(dset,outdset,resdat,inlib=OUTPUTS,outlib=OUTPUTS,otherlib=OUTPUTS) ;
+%macro cluster_naming(dset,outdset,resdat,inlib=OUTPUTS,outlib=OUTPUTS,otherlib=OUTPUTS,noprint=NO) ;
+
+%if "&noprint."="YES" %then %do ;
+%put "ENTERING CLUSTER_NAMING " ;
+%printjunk ;
+
+%end;
 
 proc sort data = &inlib..&dset. out = clusterssorted  ;
 	by county ; 
-run ;
-
-proc sort data = &otherlib..&resdat. out=reslf_naming (rename=(cty=county)); 
-	by cty ;
-run ; 
+run;
+/*
+proc contents data=&otherlib..&resdat. ;
+    title 'reslf dataset ' ;
+run;
+*/
+proc sort data = &otherlib..&resdat. out=reslf_naming (rename=(home_cty=county)); 
+	by home_cty ;
+run; 
 /*
 proc contents data = reslf;
 run ;
@@ -32,12 +42,16 @@ data largest_cty (keep=cluster bigcounty) ;
 		bigcounty = county ;
 		output largest_cty ;
 	end ;
-run ;
+run;
 
 data final ;
 	merge clusters_reslf largest_cty ;
 	by cluster ; 
-run ;
+run;
+
+proc sort data=final ;
+    by county ; 
+run;
 /*
 proc print data = final (obs = 50) ;
 run ;
@@ -45,11 +59,21 @@ run ;
 data &outlib..&outdset. (keep=clustername county);
 	set final ;
 	clustername = "CL"||bigcounty ;
-run ; 
+run;
+
+proc print data=&outlib..&outdset.  (obs=100) ;  
+    title 'qa check on cluster naming process' ;
+run;
+ 
 /*
 proc freq data = &outlib..&outdset. ;
 	table clustername ; 
 run ; 
 */
+
+%if "&noprint."="YES" %then %do ;
+%printlog ;
+%put "LEAVING Cluster Naming" ;
+%end; 
 
 %mend cluster_naming ; 

@@ -10,31 +10,15 @@
 %prep_objfn(1990,outlib=WORK) ; 
 
 /******************* ONLY FOR RANDOM **************/        
-%if "&random." = "YES" %then %do ;
 
-%randomcounties_norm(&year.,noprint=NO);
-
-data _NULL_ ;
-	set random_objfn ; 
-	call symput('inflows',rand_inflows);
-	call symput('outflows',rand_outflows);
-	call symput('sdurate',rand_sdurate);
-	call symput('sdearn',rand_sdearn); 
-run;
-%end ; 
-%else %do; /*If not normalizing by random results, then set to one */
-    %let inflows = 1 ; 
-    %let outflows = 1 ;
-    %let sdurate =1 ;
-    %let sdearn = 1 ;
-%end ;
-/********************** RANDOM CLUSTERS END******************/        
         
 /************* LOOPING OVER CLUSTER NUMS ****************/
 %let bestobjfn = 10000.0;  
         
 %let range = %eval(&maxclus. - &minclus.) ;         
-%let chunks = 10 ; /* the max number of parallel processes */
+%let chunks = &chunks. ; /* the max number of parallel processes */
+
+*%prociml_step1b(&chunks.) ; /*create 10 different work spaces*/
         
 /*------------ LOOPING OVER CLUSTER VALUES -------------*/
 %do clusnum = &minclus. %to &maxclus. %by &chunks. ; 
@@ -42,13 +26,12 @@ run;
 /*_______________ START CHUNK LOOP _______________*/
 
 %do chunk = 0 %to %eval(&chunks.-1) ;
+
     /*prep for parallelization*/
     %let j = %eval(&clusnum.+&chunk.) ;
 %if %eval(&j. le &maxclus.) %then %do ; /*----- j condition -----*/
-    data spec_&chunk.;
-        set &infile. ;
-    run;
-        
+/* only do this step once*/
+      
         /****** SETUP FOR PARALLELIZATION *******/
     SIGNON chunk&chunk. ;
     	   %syslput mywork=%sysfunc(pathname(WORK))/remote=chunk&chunk.;
@@ -57,19 +40,32 @@ run;
 	   %syslput j=&j.                          /remote=chunk&chunk.;
 	   %syslput chunk=&chunk.                  /remote=chunk&chunk.;
 	   %syslput numclus=&j.                     /remote=chunk&chunk.;
+           %syslput sdurate = &sdurate              /remote=chunk&chunk.;
+           %syslput sdearn = &sdearn                /remote=chunk&chunk.;      
+           %syslput inflows = &inflows.             /remote=chunk&chunk.;
+           %syslput outflows=&outflows.             /remote=chunk&chunk.;
     RSUBMIT chunk&chunk. WAIT=NO;
     options sasautos="&dirprog./macros" mautosource  ;
     /*inside parallel process now */
     libname MYWORK "&mywork." ;    
     %spectral_cluster(infile=spec_&chunk.,outfile=iteration_&chunk.,        
-                    numclus=&numclus.,indir=MYWORK,outdir=MYWORK);
+                    numclus=&j.,indir=MYWORK,outdir=MYWORK,noprint=NO,instor=IMLSTOR_%eval(&chunk.+1),eigen=eigen_&chunk.);
+
+    %objectivefunction_parallel(iteration_&chunk.,flows_&chunk.,reslf_&chunk.,corrlong_earnings_&chunk.,
+        corrlong_urates_&chunk.,objfn_&chunk.,inlib=MYWORK,outlib=MYWORK) ;
+        
+    data MYWORK.objfn_&chunk. ;
+        set MYWORK.objfn_&chunk. ;
+        clusnum = &j. ;
+    run;
+        
     ENDRSUBMIT ;
         
     /*done with parallel process*/ 
 %end; /*____________ end j condition ______________ */
 %end; /* _________________ end chunk condition _____________*/  
         %put "made it out of parallel process!" ;
-        
+         
     WAITFOR _ALL_  /* collecting the pieces before proceeding */
     %do chunk = 0 %to %eval(&chunks.-1) ;
         %let j = %eval(&clusnum.+&chunk.) ;
@@ -80,54 +76,19 @@ run;
     %end;    
     ;
     
-    /************************************
-    OUTPUT OF FILE:
-    state (2dig float)
-    county (3dig float)
-    cluster (number)
-
-    *formatting for objective function; 
-    data iteration ;
-        set iteration ; 
-        cty = state*1000 + county ;
-    run;         
-    ************************************/
-    
-%do chunk = 0 %to %eval(&chunks.-1) ; /* ------- start of chunk loop ----- */
-    %let j = %eval(&clusnum.+&chunk.) ;
-%if (&j. le &maxclus. ) %then %do ; /* ---- start of j condition ---- */
-    
-        %objectivefunction(iteration_&chunk.,1990,inlib=WORK,outlib=WORK) ;
-    /*
-    proc print data=objectivefn ;
-    run; 
-    */
-    data _NULL_ ;
-        set objectivefn;
-        call symput('objfnvalue',objfn) ;
-    run;
-    
-    /* storing objective function outcome */
-    data outcome ;
-        set objectivefn; 
-        clusnum = &j.;
+   data functionoutcome ;
+        set %if %eval(&clusnum.>&minclus.) %then %do ; 
+            functionoutcome 
+            %end;
+            %do chunk = 0 %to %eval(&chunks.-1) ;
+            %let jj = %eval(&clusnum.+&chunk.) ;
+            %if (&j. le &maxclus.) %then %do ;
+                 objfn_&chunk. 
+            %end; 
+            %end;
+            ; 
     run;
         
-    %if &clusnum. = &minclus. %then %do ; 
-        data functionoutcome ;
-            set outcome ; 
-        run;             
-    %end; 
-    %else %do ;
-        data functionoutcome ;
-            set functionoutcome outcome ; 
-        run; 
-    %end;  
-    
-%end ; /* ---- end of the j condition ----*/
-    
-    
-%end;  /* ----- end of the chunk loop ---- */        
 
 %end;/*---------- end of loop ---------------*/
 proc sort data=functionoutcome  ;
@@ -144,7 +105,7 @@ run;
     
     %put "Best clusters are: &optclus." ;
     
-    %spectral_cluster(infile=&infile.,outfile=&outfile.,numclus=&optclus.,indir=WORK,outdir=&outdir.) ;
+    %spectral_cluster(infile=&infile.,outfile=&outfile.,numclus=&optclus.,indir=WORK,outdir=&outdir.,instor=IMLSTOR,eigen=eigen_vectors) ;
 
 
 %if "&noprint."="YES" %then %do ;

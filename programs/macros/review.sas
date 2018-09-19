@@ -8,18 +8,18 @@
 %end;
 
 /* =========== CUTOFF FOR CLUSTER HEIGHT ==========*/
-
+/*
 proc contents data = &inlib..clustertree_&dset.;
 run; 
-
+*/
 proc sort data = &inlib..clustertree_&dset. out=test;
     by _NAME_ ;
 run;
-    
+  /*  
 proc print data= test;
     var _NAME_ ;
 run;
-
+*/
 proc sort data = &inlib..clustertree_&dset. out=clustertree; 
 	by _HEIGHT_ ;
 run ;
@@ -189,7 +189,7 @@ proc sort data = clusterheight ;
 	by _PARENT_ ;
 run ; 
 
-data clustersfinished (keep = _NAME_ _PARENT_ _HEIGHT_ state county cluster ) ;
+data clustersfinished (keep = _NAME_ _PARENT_ _HEIGHT_ county cluster ) ;
 	length _PARENT_ $15. ;
 	merge clustersfinished (in=a) clusterheight (in=b) ;
 	by _PARENT_ ;
@@ -227,7 +227,7 @@ run ;
 data singletons ;
 	set clussize (where=(numcounties = 1)) ;
 run; 
-
+/*
 proc print data = singletons ;
 	var _PARENT_ numcounties ; 
 run;
@@ -235,7 +235,7 @@ run;
 proc freq data = clussize;
 	tables numcounties ; 
 run; 	
-
+*/
 proc means data = clussize mean std p5 p25 p50 p75 p95; 
 	var numcounties ;
 run; 

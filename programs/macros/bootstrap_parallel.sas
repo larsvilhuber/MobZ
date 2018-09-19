@@ -105,25 +105,29 @@ run;
 %put "FINISHED THE LOOP THAT STARTED FROM &ii." ;
 %end; /*---------------- end of ii loop -----------------*/
         
-    data OUTPUTS.finalstats_&dset. ;
+    data OUTPUTS.finalstats_&dset._new ;
         set 
         %do ii = 1 %to &iterations. ;
             statistics_&ii. 
         %end;
         ;
     run;
+
+    proc print data=clustersnamed_&dset. (obs=100) ;
+        title 'clusters named - orig dataset' ;
+    run;
         
-    data OUTPUTS.bootclusters_&dset. (rename=(county=fips)) ;
+    data OUTPUTS.bootclusters_&dset._new (rename=(county=fips)) ;
         merge clustersnamed_&dset.
         %do ii = 1 %to &iterations. ;
             clusname_&dset._p&ii._par (rename=(clustername=clustername_&ii.)) 
         %end;
         ;
-	by fips ;
+        by county ;
     run;
             
-proc export data=OUTPUTS.finalstats_&dset. 
-            outfile= "/data/working/mobz/outputs/finalstats_&dset..dta" replace;
+proc export data=OUTPUTS.finalstats_&dset._new 
+            outfile= "[outdat]/finalstats_&dset._new.dta" replace;
 run;   
       
 %mend bootstrap_parallel ;

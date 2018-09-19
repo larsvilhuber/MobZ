@@ -75,6 +75,19 @@ proc sort data = &inlib..&clusdset.  out=clussorted (keep=county cluster) 	;
 	by county ;
 run; 
         
+
+data reslf_clusters ;
+   merge reslf (rename=(cty=county)) clussorted ;
+   by county ; 
+run;   
+/******* TOTAL RESLF BY CLUSTER ***********/
+proc summary data=reslf_clusters nway; 
+    var reslf ;
+    class cluster ;
+    output out = reslf_clus sum(reslf)=reslf_clus ; 
+run;
+      
+
         proc contents data=&inlib..&clusdset. ; 
             title 'input cluster contents' ;
         run;
@@ -94,12 +107,12 @@ run;
 3. commuting flows to outside of cluster
 4. commuting flows from outside of cluster
 */
-
+%macro skip;
 /************************
  1.correlation of urate
  ************************/
 
-%cluster_correlation(&inlib..&clusdset.,OUTPUTS.corrlong_urates,cluster,corr) ;
+%cluster_correlation(&inlib..&clusdset.,OUTPUTS.corrlong_urates,reslf,cluster,corr) ;
 
 proc summary data = corrclusters nway;
 	var mean_corr ; 
@@ -119,7 +132,7 @@ run;
 2. Variation in earnings
 *************************/
 
-%cluster_correlation(&inlib..&clusdset.,OUTPUTS.corrlong_earnings,cluster,corr) ;
+%cluster_correlation(&inlib..&clusdset.,OUTPUTS.corrlong_earnings,reslf,cluster,corr) ;
 
 proc summary data = corrclusters nway;
 	var mean_corr ; 
@@ -135,6 +148,7 @@ proc print data=earnings ;
     title 'earnings' ;
 run;    
 */
+%mend skip;
 /**********************
  3. commuting flows to outside cluster AND from outside cluster in
  (previous just the first, but update for speed )
@@ -206,29 +220,29 @@ proc summary data = cluster_outflows nway ;
 	var frac_outflows ;	
 	output out = mean_outflows mean(frac_outflows) = share_outflows;
 run; 
-
+/*
 data mean_outflows ;
 	set mean_outflows ;
 	share_outflows = share_outflows/&outflows.;
 run; 
-
+*/
 proc summary data = cluster_inflows nway ;
 	var frac_inflows ;
 	output out = mean_inflows mean(frac_inflows) = share_inflows ;
 run; 
-
+/*
 data mean_inflows ;
 	set mean_inflows ;
 	share_inflows = share_inflows/&inflows.;
 run; 
-
+*/
 /**********************************
 Now merging them all together
 **********************************/
 
 data &outlib..objectivefn (keep=objfn share_inflows share_outflows meancorr_urate meancorr_earnings) ;
-	merge mean_inflows mean_outflows urate earnings ;
-	objfn = (meancorr_urate+meancorr_earnings-share_inflows-share_outflows)/4 ;    
+	merge mean_inflows mean_outflows /* urate earnings */ ;
+	*objfn = (meancorr_urate+meancorr_earnings-share_inflows-share_outflows)/4 ;    	
 run;
 /*
 proc print data=&outlib..objectivefn ;
