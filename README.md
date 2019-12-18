@@ -1,5 +1,11 @@
 # MobZ: Driving Past Commuting Zones: Re-examining Local Labor Market Definitions
 
+
+
+[![DOI](https://zenodo.org/badge/72544899.svg)](https://zenodo.org/badge/latestdoi/72544899)
+
+
+
 Authors: Andrew Foote, Mark Kutzbach, [Lars Vilhuber](https://github.com/larsvilhuber)
 
 The repository has the following structure:
