@@ -8,10 +8,11 @@ Files directly from Autor, Dorn and Hanson:
       - industry_data.dta (provided via email)
 
 =================================
+
 Files constructed from Census extracts:
 (construction files available upon request)
     .
-      -cty_censusdata.dta
+      - cty_censusdata.dta
 
 cty_census.dta was created using a number of different inputs: QCEW, census extracts, and population counts from SEER.
 
