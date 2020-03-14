@@ -1,4 +1,9 @@
-insheet using jtw2009_2013.csv 
+/* This program runs the bootstrap stuff */
+/* Author: Andrew Foote */
+
+include "config.do"
+
+insheet using "${raw}/jtw2009_2013.csv"
 
 
 gen ratio = moe/flow
@@ -42,7 +47,10 @@ collapse (first) sd_ratio mean_ratio, by(flowsize)
 tempfile ratios 
 save `ratios', replace
 
-use  "./data/flows1990.dta", clear 
+
+
+
+use  "${interwrk}/flows1990.dta", clear 
 rename jobsflow flows
 sum flows, d
 
@@ -61,6 +69,7 @@ gen flowsize=  .
 sort flowsize 
 merge flowsize using `ratios'
 drop _merge
+
 /*************************************
 ONE TIME DRAW FROM RATIO DISTRIBUTION
 **************************************/
@@ -78,4 +87,4 @@ bys flowsize: sum std_ratio sd_ratio
 drop average_ratio std_ratio ratio_hat ratiodraw
 rename flows jobsflow
 
-outsheet using "./data/jtw1990_flows.csv", replace comma noquote
+outsheet using "${interwrk}/jtw1990_flows.csv", replace comma noquote

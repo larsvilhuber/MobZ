@@ -1,6 +1,13 @@
 To replicate results in paper
 ===============================
 
+Setting up programs
+===================
+
+- modify `config.sas`: 
+  - change the line with root to correspond to your project directory
+- modify `config.do`:
+  - change the line with root to correspond to your project directory
 
 Order of programs to run
 =========================
@@ -8,16 +15,16 @@ Order of programs to run
 To create the replicated commuting zones,
 run following programs (parameters below):
 
-00.dataprep/module_prepjtw1990.sas
+- 00.dataprep/module_prepjtw1990.sas
 	No parameters
 
-00.dataprep/module_geoaggjtw1990.sas
+- 00.dataprep/module_geoaggjtw1990.sas
 	dset: jtw1990 ;
 	
 
-10.cluster/module_clustjtw1990.sas
+- 10.cluster/module_clustjtw1990.sas
 
-10.cluster/module_reviewjtw1990.sas
+- 10.cluster/module_reviewjtw1990.sas
 
 OUTPUT: root/data/clusfin_jtw1990.sas7bdat
 
