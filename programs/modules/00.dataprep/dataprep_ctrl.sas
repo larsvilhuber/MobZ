@@ -23,7 +23,7 @@ Creates two separate files: ctypairs_&dset.
 %let run_geoaggjtw2000 = 0 ;
 %let run_geoaggjtw2009 = 0 ;       
 
-%let run_otherdata = 1 ;         
+   
 
 /**********************
 *LODES MACROS
@@ -34,7 +34,7 @@ Creates two separate files: ctypairs_&dset.
 %let year=2009;
 
 * Cluster threshold;
-%let cutoff=0.9418 ; /*national cutoff for their way*/
+%let cutoff=0.9385 ; /*national cutoff for their way*/
 
 * Paths;
 %let dirprog=&root.;
@@ -67,17 +67,14 @@ run;
 %mend runmod;
 
 * Create one for each module;
-%runmod(&run_preplodes.,preplodes);
 %runmod(&run_prepjtw1990., prepjtw1990) ;
 %runmod(&run_prepjtw2000., prepjtw2000) ;
 %runmod(&run_prepjtw2009., prepjtw2009) ; 
 
-%runmod(&run_geoagglodes.,geoagglodes) ;
 %runmod(&run_geoaggjtw1990.,geoaggjtw1990) ;
 %runmod(&run_geoaggjtw2000.,geoaggjtw2000); 
 %runmod(&run_geoaggjtw2009.,geoaggjtw2009) ;
 
-%runmod(&run_otherdata.,otherdata) ;
 
 %mend runall;
 * run all;
