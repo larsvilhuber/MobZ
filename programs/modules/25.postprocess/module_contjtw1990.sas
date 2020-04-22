@@ -1,1 +1,0 @@
-%contiguity(jtw1990) ;
