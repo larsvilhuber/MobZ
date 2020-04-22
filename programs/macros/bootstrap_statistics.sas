@@ -23,10 +23,11 @@ First run master file
 %put " Mean cluster size is : &meanclussize. and number of clusters is &numclusters." ;
 
 
-%cluster_naming(&dset.,inlib=WORK,outlib=WORK,otherlib=WORK);
+%cluster_naming(clusfin_&dset.,clustersnamed_&dset.,reslf_&dset.,
+                            inlib=WORK,outlib=WORK,otherlib=WORK);
             
 proc sort data= clustersnamed_&dset. ;
-    by home_cty;
+    by county;
 run;            
 /******************** BOOTSTRAP LOOP *******************/
 %do ii = 1 %to &iterations. ;
@@ -35,33 +36,32 @@ run;
 	
 	%geoagg(&dset._p&ii.,inlib=WORK,outlib=WORK);
 	
-	%cluster(&dset._p&ii.,inlib=WORK,outlib=WORK);
+	%cluster(&dset._p&ii.,inlib=WORK,outlib=WORK,noprint=YES);
 	
-	%review(&dset._p&ii.,&cutoff.,inlib=WORK,outlib=WORK) ;	
+	%review(&dset._p&ii.,&cutoff.,inlib=WORK,outlib=WORK,noprint=YES) ;	
 	
 	/***********************************
 	   CALCULATE RELEVANT STATISTICS	
 	***********************************/
-	%cluster_naming(clusfin_&dset._p&ii.,clustersnamed_&dset._p&ii.,reslf_&dset.,
+	%cluster_naming(clusfin_&dset._p&ii.,clustersnamed_&dset._p&ii.,reslf_&dset._p&ii.,
                                 inlib=WORK,outlib=WORK,otherlib=WORK);
 	%cluster_compare(clustersnamed_&dset.,clustersnamed_&dset._p&ii.,
-                                inlib=WORK,outlib=WORK,noprint=YES,mlib=WORK) ;
-	%cluster_statistics(&dset._p&ii.,inlib=WORK,outlib=WORK) ;
+                            reslf_&dset._p&ii.,
+                                inlib=WORK,outlib=WORK,noprint=NO,mlib=WORK) ;
+	%cluster_statistics(clusfin_&dset._p&ii.,inlib=WORK,outlib=WORK) ;
 
 	data statistics ;
 		set statistics ;
 		iteration = &ii. ;
 	run;
 	
-	%if %eval(&ii.=1) %then %do ;
-		data OUTPUTS.finalstats_&dset. ;
-			set statistics ;
+		data OUTPUTS.finalstats_&dset._new2 ;
+			set statistics 
+                        %if %eval(&ii. ne 1) %then %do;
+                            OUTPUTS.finalstats_&dset._new2 
+                        %end; 
+                        ;
 		run; 		
-	%end; 
-	%else %do ;
-		proc append base = OUTPUTS.finalstats_&dset. data = statistics ; 
-		run;
-	%end ; 
 	/***********************************
 	   DELETE INTERMEDIATE FILES
 	   IN ORDER TO NOT OVERWHELM
@@ -70,20 +70,20 @@ run;
 	proc datasets library=work ;
 		delete flows_&dset._p&ii. ctypairs_&dset._p&ii. reslf_&dset._p&ii.
 			clustertree_&dset._p&ii. clusfin_&dset._p&ii.;
-	run ; 	
+	run; 	
 
         proc sort data=clustersnamed_&dset._p&ii. ;
-            by home_cty ;
+            by county ;
         run;
 %end ;
 
-data OUTPUTS.bootclusters_&dset. (rename=(home_cty=fips));
+data OUTPUTS.bootclusters_&dset. (rename=(county=fips));
     merge clustersnamed_&dset. 
     %do ii = 1 %to &iterations. ;
          clustersnamed_&dset._p&ii.  (rename=(clustername = clustername_&ii.))  
     %end;            
     ;
-    by home_cty;
+    by county;
     clus_switched = . ;
     %do ii = 2 %to &iterations. ;
         if  (clustername_1 ne clustername_&ii.) then clus_switched = 1 ; 
@@ -99,24 +99,24 @@ proc freq data= OUTPUTS.bootclusters_&dset. ;
     table clus_switched ;
 run;    
 
-proc print data= OUTPUTS.finalstats_&dset. ;
+proc print data= OUTPUTS.finalstats_&dset._new2 ;
     title 'Final stats of bootstrap procedure' ;
 run ;
 
-proc export data=OUTPUTS.finalstats_&dset. 
-            outfile= './outputs/finalstats_&dset..dta' replace;
+proc export data=OUTPUTS.finalstats_&dset._new2 
+            outfile= "/data/working/mobz/outputs/finalstats_&dset._new2.dta" replace;
 run;            
 
-proc means data = OUTPUTS.finalstats_&dset. mean std min p25 p50 p75 max;
-	var mean_clussize median_clussize numclusters share_mismatch
-		share_mismatch_wgt total_mismatch ;
+proc means data = OUTPUTS.finalstats_&dset._new2 mean std min p25 p50 p75 max;
+	var mean_clussize median_clussize numclusters /*share_mismatch
+		share_mismatch_wgt total_mismatch*/ ;
 	title1 'Summary statistics from Bootstrap procedure' ;
 run ;	
 
 ods graphics on /imagefmt=png imagename = "mean_clussize_&dset." ;
-ods listing gpath = "./paper/figures" ;
+ods listing gpath = "/programs/projects/mobz2/paper/figures" ;
 
-proc sgplot data = OUTPUTS.finalstats_&dset. noautolegend ;
+proc sgplot data = OUTPUTS.finalstats_&dset._new2 noautolegend ;
 	histogram mean_clussize ; 
 	density mean_clussize/
 		name=  "Average Cluster Size"
@@ -126,9 +126,9 @@ proc sgplot data = OUTPUTS.finalstats_&dset. noautolegend ;
 run ;	
 
 ods graphics on /imagefmt=png imagename = "numclusters_&dset." ;
-ods listing gpath = "&root./paper/figures" ;
+ods listing gpath = "/programs/projects/mobz2/paper/figures" ;
 
-proc sgplot data = OUTPUTS.finalstats_&dset. noautolegend;
+proc sgplot data = OUTPUTS.finalstats_&dset._new2 noautolegend;
 	histogram numclusters ;
 	density numclusters/
 		name = "Distribution of Cluster Count" 
@@ -138,14 +138,18 @@ proc sgplot data = OUTPUTS.finalstats_&dset. noautolegend;
 run ; 
 
 ods graphics on /imagefmt=png imagename = "mismatchedcounties_&dset." ;
-ods listing gpath = "&root./paper/figures" ;
+ods listing gpath = "/programs/projects/mobz2/paper/figures" ;
 
-proc sgplot data = OUTPUTS.finalstats_&dset. noautolegend;
+proc sgplot data = OUTPUTS.finalstats_&dset._new2 noautolegend;
 	histogram total_mismatch ;
 	density total_mismatch/
 		name = "Distribution of Mismatched Counties" 
 		type = kernel;
-run;		
+run;	
+
+proc export data=OUTPUTS.finalstats_&dset._new2 
+        outfile='/data/working/mobz/outputs/finalstats_&dset._moe_new2.dta' replace;
+run;
 
 *ods close ; 
 
@@ -165,25 +169,25 @@ proc summary data = masterclus nway;
 	var x ; 
 	class _PARENT_ ;
 	output out = clussize 	N(x) = numcounties ; 
-run ;
+run;
 
 proc freq data = masterclus nlevels;
 	table clustername ; 
-run ;
+run;
 
 proc summary data = clussize ; 
 	var numcounties;	
 	output out = mean mean(numcounties) = mean_clussize;
-run ; 
+run; 
 
 proc summary data = masterclus ; 
 	var numcounties;
 	output out = median p50(numcounties) = median_clussize;
-run ;
+run;
 
 data test ;	
 	merge mean_clussize median_clussize ;
-run ; 
+run; 
 %mend skip ;
 proc print data = test ; 
 	title 'Summary statistics for master cluster' ;
