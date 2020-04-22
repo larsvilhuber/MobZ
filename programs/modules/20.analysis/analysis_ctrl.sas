@@ -13,11 +13,7 @@ a wide
 **************************************/    
 %let run_cutoff = 0 ; 
 %let run_graph = 0;
-%let run_graph_regions = 0;               
 
-%let run_cutoff_objfn = 0 ; 
-/* PERTURB IS ONE RUN OF THE MACRO %PERTURB */            
-%let run_perturbjtw2009 = 0 ;
 
 /**********************************
   BOOTSTRAP_STATISTICS PERTURBS THE FLOWS 
@@ -26,22 +22,14 @@ a wide
 %let run_bootstrap_statistics =0   ; 
 
              
-/* CALCULATING OBJECTIVE FUNCTION*/
-%let run_objfn = 0;
-%let run_objfnfc = 0;             
-            
-%let run_clustersum=0;
 %let run_comstat=0 ;
     
-%let run_spectralboot = 1;
-
-%let run_divergence =10;    
 /*********************************
     SETTING MACROS FOR RUNS
 ********************************/        
 
 * Cluster threshold;
-%let cutoff=0.9418 ; /*national cutoff for their way*/
+%let cutoff=0.9385 ; /*national cutoff for their way*/
     
 * Cutoffs ;
     %let cutoff_bottom = 0.8 ;
@@ -80,23 +68,12 @@ run;
 * Create one for each module;
 
 %runmod(&run_graph.,graph);
-%runmod(&run_graph_regions.,graph_regions);
-
-%runmod(&run_perturbjtw2009., perturbjtw2009) ;
 
 %runmod(&run_bootstrap_statistics., bootstrap) ;
 
-%runmod(&run_objfn.,objfn) ;
-%runmod(&run_objfnfc.,objfnfc) ;
-    
 %runmod(&run_cutoff.,cutoff) ;
-%runmod(&run_clustersum.,clustersum) ;
 %runmod(&run_comstat.,comstat) ;    
 
-%runmod(&run_spectralboot.,spectralboot) ;
-%runmod(&run_divergence.,divergence) ;
-
-%runmod(&run_cutoff_objfn.,cutoff_objfn) ;
 %mend runall;
 * run all;
 %runall;
