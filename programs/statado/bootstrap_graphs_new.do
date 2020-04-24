@@ -8,24 +8,6 @@ use "$datadir/finalstats_jtw1990_moe_new.dta", clear;
 
 /* make the graphs */
 
-/*
-twoway (histogram share_mismatch_wgt)
-       (kdensity share_mismatch_wgt),
-       saving("$graphdir/mismatch_jtw1990_SOLE.gph", replace)
-       xtitle("Population Share in Different Commuting Zone")
-       ytitle("Density")
-       title("Share of Population in Different Commuting Zone" "Based on 1000 CZ Realizations")
-       legend(off)
-       text(40 .055 "Figure shows share of population" 
-       "in different commuting zone" "due to county re-assignment" "based on resampled commuting " 
-	            "flows ", place(se) box just(left) margin(small) fcolor(gs15))
-       ;
-       
-       
-
-graph export "$graphdir/mismatch_jtw1990_SOLE.png", replace; 
-*/
-
 twoway (histogram share_mismatch_wgt)
        (kdensity share_mismatch_wgt),
        saving("$graphdir/mismatch_jtw1990.gph", replace)
