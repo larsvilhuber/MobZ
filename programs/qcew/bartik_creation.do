@@ -1,9 +1,7 @@
 /* set globals */
 #delimit ;
     
-    global data "" ;
-    global outdir "$data" ;
-    global czonedata "" ;
+
 /* prep czone data */
 use "$czonedata/czones.dta" , clear;
 sort fips ;
@@ -15,7 +13,7 @@ tempfile czone_levels ;
 save `czone_levels', replace; 
 
 /* read in data */
-use "$data/qcew_county.dta", clear ;
+use "$qcewdata/qcew_county.dta", clear ;
 
 destring naics2, replace ; 
 

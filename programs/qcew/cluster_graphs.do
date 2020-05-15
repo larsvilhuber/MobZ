@@ -3,16 +3,10 @@ This do-file creates graphs
 
 ************************************/
 
-global dodir ""
-global clusdir = ""
-global datadir "" 
-global graphdir ""
-global outgraph ""
 
 #delimit ; 
-foreach dset in moe moe_new { ; 
-
-use "$datadir/bartik_results_`dset'.dta", clear;
+f
+use "$interwrk/bartik_results_moe_new.dta", clear;
 
 
 sort iteration ; 
@@ -47,34 +41,34 @@ graphing beta coefficients
 
 twoway (hist beta if iteration!=0 )
 	(kdensity beta if iteration!=0)
-	(scatteri 0 `true_est' 9 `true_est', 
+	(scatteri 0 `true_est' 2.2 `true_est', 
 			recast(line) lcolor(red) lwidth(thick) lpattern(dash)),
-	saving("$graphdir/beta_bartik_distribution.gph", replace) 
+	saving("$outgraph/beta_bartik_distribution.gph", replace) 
 	xtitle("Estimated Coefficient")
 	ytitle("Density")
 	title("Estimated effect of labor demand on UI Receipt")
 	legend(off)
 	;
 	
-	graph export "$graphdir/beta_bartik_distribution_`dset'.png", replace;  
+	graph export "$outgraph/beta_bartik_distribution_moe_new.png", replace; 
+	graph export "$outgraph/qcew_betadist.png", replace ; 
 /*************************************
 graphing t-statistics 
 *************************************/
 twoway (hist tstat if iteration!=0)
 	(kdensity tstat if iteration!=0)
-	(scatteri 0 `lower_bound' 5 `lower_bound', recast(line) lcolor(gs12) lwidth(thick) lpattern(dash))
-	(scatteri 0 `upper_bound' 5 `upper_bound', recast(line) lcolor(gs12) lwidth(thick) lpattern(dash))
-	(scatteri 0 `actual_tstat' 5 `actual_tstat', recast(line) lcolor(blue) lwidth(thick) lpattern(dash)),
+	(scatteri 0 `lower_bound' 1.5 `lower_bound', recast(line) lcolor(gs12) lwidth(thick) lpattern(dash))
+	(scatteri 0 `upper_bound' 1.5 `upper_bound', recast(line) lcolor(gs12) lwidth(thick) lpattern(dash))
+	(scatteri 0 `actual_tstat' 1.5 `actual_tstat', recast(line) lcolor(blue) lwidth(thick) lpattern(dash)),
        saving("$graphdir/tdistribution_bartik.gph", replace)
-       xtitle("T-statistic")
+       xtitle("t-statistic")
        ytitle("Density")
       /* xline(`true_est',lstyle(foreground) lpattern(dash) lcolor(red))*/
-       title("Distribution of T-Statistic")
+       title("Distribution of t-statistic")
        legend(off)
        ;
        
-       graph export "$outgraph/tdistribution_bartik_`dset'.png", replace ;
+       graph export "$outgraph/tdistribution_bartik_moe_new.png", replace ;
+	graph export "$outgraph/qcew_tstatdist.png", replace;  
 
-
-} ; 
 

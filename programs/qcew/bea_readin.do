@@ -1,6 +1,6 @@
 #delimit ; 
 
-import delimited "[qcewdata]/bea_table30.csv", clear ; 
+import delimited "$raw/bea_table30.csv", clear ; 
 
 keep if linecode == 70 ; 
 
@@ -19,4 +19,4 @@ rename geofips fips ;
 destring uireceipt, force replace ; 
 tostring fips, replace; 
 replace fips = "0"+fips if length(fips) == 4 ; 
-save "[qcewdata]/bea_table30.dta", replace;  
+save "$interwrk/bea_table30.dta", replace;  

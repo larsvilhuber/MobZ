@@ -57,7 +57,7 @@ save `bartik', replace;
 
 /************** NOW, COLLAPSE EARNINGS TO CZONE **********/
 
-use "$datadir/bea_table30.dta", clear;  
+use "$interwrk/bea_table30.dta", clear;  
 
 sort fips ;
 merge fips using $czone_iteration ;

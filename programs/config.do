@@ -43,9 +43,22 @@ sysdir
 
 /* define relative libraries */
 
-global interwrk "${root}/data"
+global paperdir "${root}/.."
+global interwrk "${root}/data/interwrk"
 global raw "${root}/raw"
 global temp "${root}/temp"
-cap mkdir $temp
+global outputs "${root}/data/outputs"
+global outgraphs "${paperdir}/figures"
 
+cap mkdir "$temp"
+cap mkdir "${root}/data"
+cap mkdir "$interwrk"
+cap mkdir "$raw"
+cap mkdir "$outputs"
 
+/* define data sources */
+
+/* QCEW */
+    global qcewdata "" ; /* data/working/mobz/qcew */
+
+    global czonedata "$outputs" ; /* /data/working/mobz/outputs */
