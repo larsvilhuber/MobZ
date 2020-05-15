@@ -1,4 +1,5 @@
 
+include "../config.do"
 #delimit ; 
 
 

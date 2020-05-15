@@ -3,9 +3,9 @@ This do-file creates graphs
 
 ************************************/
 
-
+include "../config.do"
 #delimit ; 
-f
+
 use "$interwrk/bartik_results_moe_new.dta", clear;
 
 

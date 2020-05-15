@@ -1,13 +1,15 @@
 /*  config.do */
 
-local pwd : pwd
-/* use this if using Unix-like system from the command line - no further adjustment necessary */
 
-global root "`pwd'/.."
 
-/* use this instead of running on Windows */
+if ( "`c(hostname)'" == "ecco.vrdc.cornell.edu" ) {
+global root "/ssgprojects/project0002/MobZ"
+}
 
-// global root "/path/to/project"
+
+if ( "`c(hostname)'" == "some.server.at.census" ) {
+global root "/made/up/path/Mobz"
+}
 
 /* check if the author creates a log file. If not, adjust the following code fragment */
 
@@ -63,5 +65,4 @@ sysdir
 
 /* QCEW */
     global qcewdata "${raw}/qcew" ; /* data/working/mobz/qcew */
-
     global czonedata "$outputs" ; /* /data/working/mobz/outputs */

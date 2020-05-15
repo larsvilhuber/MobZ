@@ -13,6 +13,9 @@ It has three steps:
 5. Run regressions of avg earnings on bartik
 
 ****************************/
+
+include "../config.do"
+
 #delimit ; 
 set more off ; 
   local czonedataset = "${interwrk}/bootclusters_jtw1990_moe_new.dta" ;
@@ -67,7 +70,7 @@ use "`czonedataset'", clear ;
       save `shell2', replace ;
       
 
-      include "$programs/qcew/bartik_merge.do" ;
+      include "$programs/qcew/zz_bartik_merge.do" ;
       
       xtset czone year; 
 
@@ -96,7 +99,7 @@ forvalues i = 1/1000 { ;
       save `shell2', replace ;
       
 
-      include "$programs/qcew/bartik_merge.do" ;
+      include "$programs/qcew/zz_bartik_merge.do" ;
       
       xtset czone year; 
 

@@ -1,5 +1,7 @@
 #delimit ;
 
+include "../config.do"
+
 use "$interwrk/finalstats_jtw1990_moe_new.dta", clear;
 
 /* make the graphs */

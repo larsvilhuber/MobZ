@@ -9,23 +9,20 @@ TS1996 commuting zones and our replicated
 commuting zones
 	
 ***************************/
-cap log close
 
-global dodir ""
-global clusdir = ""
-global graphdir ""
-local czonedataset = "${clusdir}/clusters_cutoff_jtw1990.dta"
-global czone_iteration = "${clusdir}/czones_cutoff.dta"
-local ipw_regs "${clusdir}/cutoff_post.dta"
-global datadir = ""
- local qcewdata = "$datadir/qcew_county.dta"
+include "../config.do"
+
+local czonedataset = "${interwrk}/clusters_cutoff_jtw1990.dta"
+global czone_iteration = "${interwrk}/czones_cutoff.dta"
+local ipw_regs "${interwrk}/cutoff_post.dta"
+ local qcewdata = "$qcewdata/qcew_county.dta"
 #delimit ; 
 
 /*********************************
 First get the two czone datasets ready
 **********************************/
 set more off;
-    use "$clusdir/bootclusters_jtw1990_moe_new.dta", clear;
+    use "$interwrk/bootclusters_jtw1990_moe_new.dta", clear;
    
     keep fips clustername ;
     egen czone = group(clustername) ;
@@ -86,7 +83,7 @@ use `czone_ts', clear ;
       save `shell2', replace ;
       
 
-      include "$dodir/bartik_merge.do" ;
+      include "$programs/qcew/zz_bartik_merge.do" ;
       xtset czone year; 
 sum bartik_it, d;
 local sd_ts = r(sd);
@@ -112,7 +109,7 @@ use `czone_rep' , clear ;
       save `shell2', replace ;
       
 
-      include "$dodir/bartik_merge.do" ;
+      include "$programs/qcew/zz_bartik_merge.do" ;
       xtset czone year; 
 sum bartik_it, d;
 local sd_fkv = r(sd);
@@ -129,3 +126,4 @@ di "SD Bartik:     " %6.4f `sd_ts' "    FKV   " %6.4f `sd_fkv' ;
 di "***********************************************************";
 
 
+/* needs outreg or something here to write out the table */

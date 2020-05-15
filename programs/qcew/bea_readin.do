@@ -1,3 +1,6 @@
+
+include "../config.do"
+
 #delimit ; 
 
 import delimited "$raw/bea_table30.csv", clear ; 

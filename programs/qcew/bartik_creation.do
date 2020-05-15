@@ -1,6 +1,7 @@
 /* set globals */
 #delimit ;
     
+include "../config.do"
 
 /* prep czone data */
 use "$czonedata/czones.dta" , clear;

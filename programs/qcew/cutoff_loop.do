@@ -14,8 +14,7 @@ It has three steps
 	store regressions.
 	
 ***************************/
-cap log close
-log using cutoff_loop.log, replace 
+include "../config.do"
 
 local czonedataset = "${interwrk}/clusters_cutoff_jtw1990.dta"
 global czone_iteration = "${interwrk}/czones_cutoff.dta"
@@ -77,7 +76,7 @@ foreach i in `values' { ;
                 tempfile shell2 ;
                 save `shell2', replace ;
 
-         include "$programs/qcew/bartik_merge.do" ;
+         include "$programs/qcew/zz_bartik_merge.do" ;
 
          xtset czone year ;
 
