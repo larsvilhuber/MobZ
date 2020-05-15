@@ -3,7 +3,7 @@
 local pwd : pwd
 /* use this if using Unix-like system from the command line - no further adjustment necessary */
 
-global root "`pwd'"
+global root "`pwd'/.."
 
 /* use this instead of running on Windows */
 
@@ -34,20 +34,16 @@ di "Machine type:  `c(machine_type)'"
 di "=========================="
 
 
-/* install any packages locally */
-capture mkdir "${root}/ado"
-sysdir set PERSONAL "${root}/ado/personal"
-sysdir set PLUS     "${root}/ado/plus"
-sysdir set SITE     "${root}/ado/site"
-sysdir
+
 
 /* define relative libraries */
 
-global paperdir "${root}/.."
+global paperdir "${root}/paper"
 global interwrk "${root}/data/interwrk"
 global raw "${root}/raw"
 global temp "${root}/temp"
 global outputs "${root}/data/outputs"
+global programs "${root}/programs"
 global outgraphs "${paperdir}/figures"
 
 cap mkdir "$temp"
@@ -56,9 +52,16 @@ cap mkdir "$interwrk"
 cap mkdir "$raw"
 cap mkdir "$outputs"
 
+/* install any packages locally */
+capture mkdir "${programs}/ado"
+sysdir set PERSONAL "${programs}/ado/personal"
+sysdir set PLUS     "${programs}/ado/plus"
+sysdir set SITE     "${programs}/ado/site"
+sysdir
+
 /* define data sources */
 
 /* QCEW */
-    global qcewdata "" ; /* data/working/mobz/qcew */
+    global qcewdata "${raw}/qcew" ; /* data/working/mobz/qcew */
 
     global czonedata "$outputs" ; /* /data/working/mobz/outputs */

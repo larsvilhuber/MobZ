@@ -17,15 +17,10 @@ It has three steps
 cap log close
 log using cutoff_loop.log, replace 
 
-global dodir ""
-global clusdir = ""
-global graphdir ""
-global outgraph ""
-local czonedataset = "${clusdir}/clusters_cutoff_jtw1990.dta"
-global czone_iteration = "${clusdir}/czones_cutoff.dta"
-local ipw_regs "${clusdir}/cutoff_post.dta"
-global datadir = "" 
- local qcewdata = "$datadir/qcew_county.dta"
+local czonedataset = "${interwrk}/clusters_cutoff_jtw1990.dta"
+global czone_iteration = "${interwrk}/czones_cutoff.dta"
+local ipw_regs "${interwrk}/cutoff_post.dta"
+ local qcewdata = "$qcewdata/qcew_county.dta"
 
 /* create shell here */
  #delimit ; 
@@ -82,7 +77,7 @@ foreach i in `values' { ;
                 tempfile shell2 ;
                 save `shell2', replace ;
 
-         include "$dodir/bartik_merge.do" ;
+         include "$programs/qcew/bartik_merge.do" ;
 
          xtset czone year ;
 
@@ -105,4 +100,4 @@ use `bartik_regs', clear ;
 
 sum beta se cutoff ;
 
-save "$datadir/bartik_results_cutoff.dta", replace; 
+save "$interwrk/bartik_results_cutoff.dta", replace; 

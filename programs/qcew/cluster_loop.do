@@ -15,11 +15,9 @@ It has three steps:
 ****************************/
 #delimit ; 
 set more off ; 
- global dodir "" ;
- global clusdir = "" ;
- local czonedataset = "${clusdir}/bootclusters_jtw1990_moe_new.dta" ;
- global czone_iteration = "${clusdir}/czones_qcew.dta" ;
- local qcewdata = "$datadir/qcew_county.dta" ;
+  local czonedataset = "${interwrk}/bootclusters_jtw1990_moe_new.dta" ;
+ global czone_iteration = "${interwrk}/czones_qcew.dta" ;
+ local qcewdata = "$qcewdata/qcew_county.dta" ;
  
  /* create shell here */
  
@@ -50,7 +48,7 @@ tempfile bartik_regs;
 
 foreach dset in moe moe_new  { ; 
 
-local czonedataset = "${clusdir}/bootclusters_jtw1990_`dset'.dta" ;                               
+local czonedataset = "${interwrk}/bootclusters_jtw1990_`dset'.dta" ;                               
                                        
 /**************SET UP POSTFILE FIRST **************/
 postfile `czoneresults' iteration beta se tstat using `bartik_regs', replace;
@@ -69,7 +67,7 @@ use "`czonedataset'", clear ;
       save `shell2', replace ;
       
 
-      include "$dodir/bartik_merge.do" ;
+      include "$programs/qcew/bartik_merge.do" ;
       
       xtset czone year; 
 
@@ -98,7 +96,7 @@ forvalues i = 1/1000 { ;
       save `shell2', replace ;
       
 
-      include "$dodir/bartik_merge.do" ;
+      include "$programs/qcew/bartik_merge.do" ;
       
       xtset czone year; 
 
@@ -118,6 +116,6 @@ postclose `czoneresults' ;
 use `bartik_regs', clear ; 
 sum beta se tstat ;
 
-save "$datadir/bartik_results_`dset'.dta", replace; 
+save "$interwrk/bartik_results_`dset'.dta", replace; 
 
 } ;                                                                        
