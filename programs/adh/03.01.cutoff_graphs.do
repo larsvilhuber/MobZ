@@ -17,10 +17,6 @@ It has three steps
 cap log close
 log using cutoff_graphs.log, replace 
 
-global dodir "/programs/projects/mobz2"
-global clusdir = "/data/working/mobz/outputs"
-global graphdir "/programs/projects/mobz2/paper/figures"
-global outgraph "/programs/projects/mobz2/paper/figures"
 local czonedataset = "${clusdir}/clusters_cutoff_jtw1990.dta"
 global czone_iteration = "${clusdir}/czones_cutoff.dta"
 local ipw_regs "${clusdir}/cutoff_post.dta"
