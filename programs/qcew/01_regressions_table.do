@@ -124,6 +124,3 @@ di "SES:  TS   " %6.4f `se_ts' "     FKV  " %6.4f `se_fkv' ;
 di "TSTAT:  TS   " %6.4f `tstat_ts' "     FKV  " %6.4f `tstat_fkv' ;
 di "SD Bartik:     " %6.4f `sd_ts' "    FKV   " %6.4f `sd_fkv' ;
 di "***********************************************************";
-
-
-/* needs outreg or something here to write out the table */
