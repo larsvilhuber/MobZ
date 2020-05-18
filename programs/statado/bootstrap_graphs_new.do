@@ -4,7 +4,6 @@ global datadir "[datadir]" ;
 global graphdir "[figuredir]" ;
 
 use "$datadir/finalstats_jtw1990_moe_new.dta", clear;
-*use "$datadir/finalstats_jtw2009.dta", clear;
 
 /* make the graphs */
 
