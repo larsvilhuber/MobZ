@@ -1,10 +1,5 @@
 /****merge together all the data at 1990 cz level****/
 
-
-global datadir "/data/working/mobz/replication"
-global logdir "/programs/projects/mobz2/replication/logfiles"
-    
-
 /************* READ IN COMMUTING ZONE XWALK *******************/
 import delimited "$datadir/czones.csv", clear 
 
