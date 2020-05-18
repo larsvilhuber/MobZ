@@ -1,8 +1,6 @@
 /***********************************
 This regression 
 ***********************************/
-global datadir "/data/working/mobz/replication"
-global logdir "/programs/projects/mobz2/replication/logfiles"
     
 cap log close 
 log using "$logdir/comparison_regressions.log", replace
