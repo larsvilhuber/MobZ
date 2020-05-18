@@ -2,11 +2,7 @@
 This program gets all the relevant datasets
 into a county-year form, with all the variables
 that we want to calculate.
-********************************/
-
-global datadir "/data/working/mobz/replication"
-global logdir "/programs/projects/mobz2/replication/logfiles"
-    
+********************************/   
 
 set more off
 ***********************
