@@ -1,9 +1,6 @@
 /****************************************
 This dofile creates the RHS for the outcome
 *****************************************/
-
-global datadir "/data/working/mobz/replication"
-global logdir "/programs/projects/mobz2/replication/logfiles"
     
     
 use "$datadir/cw_cty_czone.dta", clear
