@@ -37,23 +37,26 @@ CLUSTERING PROCESS
 OUTPUT: root/data/clusfin_jtw1990.sas7bdat
 
 
-MODULE BOOTSTRAP
-==========================================
 
-./programs/02_flows.do
-	Projects MOEs from 2009-2013 onto 1990 data
-	NOTE: MUST RUN module_prepjtw1990.sas and module_prepjtw2009.sas first (inputs created there)
-
-20.analysis/module_bootstrap.sas
-	creates the 1000 realizations of commuting zones 
-	and figures for paper
-	Also creates inputs for appendix table
 
 CUTOFF by CLUSTER COUNT GRAPH
 ==========================================
 20.analysis/module_cutoff.sas
 	20.analysis/module_graph.sas Creates the graphs which are Figure 2 and 3 in the paper
 
+MODULE BOOTSTRAP
+==========================================
+
+- ./programs/02_flows.do
+	Projects MOEs from 2009-2013 onto 1990 data
+	NOTE: MUST RUN module_prepjtw1990.sas and module_prepjtw2009.sas first (inputs created there)
+
+- ./modules/20.analysis/module_bootstrap.sas
+	creates the 1000 realizations of commuting zones 
+
+- /programs/statado/bootstrap_graphs_new.do
+	creates Figure 4 in the paper.
+	
 Replication programs for Section 4.1 (in /qcew/ subdirectory)
 =====================================
 Creation programs:
@@ -68,10 +71,10 @@ Regression table:
 Graphs:
 	
 	- 02.01.cluster_loop.do
-	- 03.01.cluster_graphs.do
+	- 03.01.cluster_graphs.do (creates figure 5)
 	
 	- 02.02.cutoff_loop.do
-	- 03.02.cutoff_graphs.do
+	- 03.02.cutoff_graphs.do (creates figure 6)
 
 Programs called during processing: zz_bartik_merge.do
 
@@ -91,8 +94,8 @@ Table 3 is created by:
 Figures are created by:
       
 	 - /02.02.overall_loop.do
-	 - /03.02.overall_graphs.do
+	 - /03.02.overall_graphs.do (creates figure 7)
 
 	- /02.01.cutoff_loop.do
-	- /03.01.cutoff_graphs.do
+	- /03.01.cutoff_graphs.do (creates figure 8)
 
