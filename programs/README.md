@@ -32,6 +32,7 @@ CLUSTERING PROCESS
 - 10.cluster/module_clustjtw1990.sas
 
 - 10.cluster/module_reviewjtw1990.sas
+	This module generates the maps for Figure 1 in paper
 
 OUTPUT: root/data/clusfin_jtw1990.sas7bdat
 
@@ -51,7 +52,7 @@ MODULE BOOTSTRAP
 CUTOFF by CLUSTER COUNT GRAPH
 ==========================================
 20.analysis/module_cutoff.sas
-	Creates a graph called numclus_cutoff.png
+	20.analysis/module_graph.sas Creates the graphs which are Figure 2 and 3 in the paper
 
 Replication programs for Section 4.1 (in /qcew/ subdirectory)
 =====================================
