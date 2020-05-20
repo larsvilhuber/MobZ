@@ -53,7 +53,7 @@ CUTOFF by CLUSTER COUNT GRAPH
 20.analysis/module_cutoff.sas
 	Creates a graph called numclus_cutoff.png
 
-Replication programs for Section 4.1
+Replication programs for Section 4.1 (in /qcew/ subdirectory)
 =====================================
 Creation programs:
 
