@@ -56,10 +56,12 @@ CUTOFF by CLUSTER COUNT GRAPH
 Replication programs for Section 4.1
 =====================================
 Creation programs:
+
 	-00.bea_readin.do
 	-00.qcew_extraction.sas
 
 Regression table:
+
 	- 01_regressions_table.do
 
 Graphs:
@@ -75,12 +77,14 @@ Programs called during processing: zz_bartik_merge.do
 Replication programs for ADH (Section 4.2) (in /adh/ subdirectory)
 ===========================================
 Creation programs (in order):
+
 	- 00.01.IPW_creation.do
 	- 00.02.mergecounty.do
 	- 00.03.cz_merge.do
 	- 00.04.aggregatedata.do
 
 Table 3 is created by:
+
 	 - /01.table3.do
 
 Figures are created by:
