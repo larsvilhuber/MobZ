@@ -63,6 +63,7 @@ Regression table:
 	- 01_regressions_table.do
 
 Graphs:
+	
 	- 02.01.cluster_loop.do
 	- 03.01.cluster_graphs.do
 	
@@ -71,7 +72,7 @@ Graphs:
 
 Programs called during processing: zz_bartik_merge.do
 
-Replication programs for ADH (Section 4.2)
+Replication programs for ADH (Section 4.2) (in /adh/ subdirectory)
 ===========================================
 Creation programs (in order):
 	- 00.01.IPW_creation.do
@@ -80,13 +81,13 @@ Creation programs (in order):
 	- 00.04.aggregatedata.do
 
 Table 3 is created by:
-      - ./adh/01.table3.do
+	 - /01.table3.do
 
 Figures are created by:
       
-       - ./adh/02.02.overall_loop.do
-       - ./adh/03.02.overall_graphs.do
+	 - /02.02.overall_loop.do
+	 - /03.02.overall_graphs.do
 
-       - ./adh/02.01.cutoff_loop.do
-       - ./adh/03.01.cutoff_graphs.do
+	- /02.01.cutoff_loop.do
+	- /03.01.cutoff_graphs.do
 
