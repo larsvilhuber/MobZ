@@ -9,6 +9,8 @@ U.S. Bureau of Economic Analysis, “Table 30: "Economic Profile by County, 1969
 
 Directions for downloading:  https://apps.bea.gov/regional/downloadzip.cfm
 
+or directly: https://apps.bea.gov/regional/zip/CAINC30.zip
+
 under "Personal Income (State and Local)", select CAINC30: Economic Profile by County, then download.
 
 Unzip, then read in CAINC30__ALL_AREAS_1969_2018.csv
