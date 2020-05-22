@@ -1,12 +1,12 @@
 #!/bin/bash
 WGET_OPTS="--no-check-certificate"
 
-[[ -f 1990jtw_raw.txt ]] ||  wget $WGET_OPTS -O 1990jtw_raw.txt https://www.census.gov/hhes/commuting/files/1990/resco/USresco.txt
+[[ -f 1990jtw_raw.txt ]] ||  wget $WGET_OPTS -O 1990jtw_raw.txt https://www2.census.gov/programs-surveys/commuting/datasets/1990/worker-flow/usresco.txt
 
-[[ -f jtw2000_raw.txt ]] || wget $WGET_OPTS -O jtw2000_raw.txt https://www.census.gov/population/www/cen2000/commuting/files/2KRESCO_US.txt
+[[ -f jtw2000_raw.txt ]] || wget $WGET_OPTS -O jtw2000_raw.txt https://www2.census.gov/programs-surveys/decennial/tables/2000/county-to-county-worker-flow-files/2kresco_us.txt 
 
 #[[ -f acs_2009_2013.csv ]] || wget $WGET_OPTS -O acs_2009_2013.csv http://www.census.gov/hhes/commuting/files/2013/Table%201%20County%20to%20County%20Commuting%20Flows-%20ACS%202009-2013.xlsx
-[[ -f acs_2009_2013.xlsx ]] || wget $WGET_OPTS -O acs_2009_2013.xlsx http://www.census.gov/hhes/commuting/files/2013/Table%201%20County%20to%20County%20Commuting%20Flows-%20ACS%202009-2013.xlsx
+[[ -f acs_2009_2013.xlsx ]] || wget $WGET_OPTS -O acs_2009_2013.xlsx https://www2.census.gov/programs-surveys/commuting/tables/time-series/commuting-flows/table1.xlsx
 
 function do_nothing {
 # these are actually not parsable by machine... easily anyway

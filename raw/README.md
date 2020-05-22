@@ -1,11 +1,11 @@
 Source data
 ===========
-Most of the JTW data can be found at https://www.census.gov/hhes/commuting/data/commuting.html
+Most of the JTW data can be found at https://www.census.gov/topics/employment/commuting/guidance/flows.html
 
 1990 JTW
 --------
 
-- Source: https://www.census.gov/hhes/commuting/files/1990/resco/USresco.txt
+- Source: https://www2.census.gov/programs-surveys/commuting/datasets/1990/worker-flow/usresco.txt
 - Permanent source: http://doi.org/10.3886/E100617V1
 - Renamed to: 1990jtw_raw.txt
 - Program: module/00.dataprep/module_prepjtw1990.sas
