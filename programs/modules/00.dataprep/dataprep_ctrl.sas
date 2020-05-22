@@ -42,7 +42,9 @@ Creates two separate files: ctypairs_&dset.
 %let dirdata=&root.;
 libname OUTPUTS "&dirdata./data";
 libname GEO "&dirdata./data" ;
-options sasautos="&dirprog./programs/macros" mautosource nocenter ps=1000;
+%let raw=&dirdata./raw ;
+libname INPUTS "&raw" ;
+options sasautos=(SASAUTOS, "&dirprog./programs/macros") mautosource nocenter ps=1000;
 
 %global tstamp;
 %let t=%sysfunc(today());

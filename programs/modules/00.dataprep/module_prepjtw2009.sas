@@ -1,8 +1,6 @@
-libname OUTPUTS "./outputs" ;
-		
 
 data OUTPUTS.flows_jtw2009 (keep = home_cty work_cty jobsflow moe);
-	infile './jtw2009/acs_2009_2013.csv' dsd delimiter = ',' termstr=crlf  ;
+	infile "&raw./jtw2009_2013.csv" dsd delimiter = ',' firstobs=2 ;
 	length work_cty $5. home_cty $5.;
 	input h_st $ h_cty $ w_st $ w_cty $ jobsflow moe	 ;
 	if substr(w_st,1,1) = '0' or

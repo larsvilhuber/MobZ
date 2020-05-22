@@ -1,7 +1,7 @@
 *libname OUTPUTS "./outputs" ;
 
 data OUTPUTS.flows_jtw1990 (keep = home_cty work_cty jobsflow);
-	infile "&root./rawdata/1990jtw_raw.txt"  ;
+	infile "&raw./1990jtw_raw.txt"  ;
 	/* Raw 1990 JTW file is here: https://www.census.gov/hhes/commuting/files/1990/resco/USresco.txt */
 	length work_cty $5. ;
 	input h_st $1-2 h_cty $4-6 w_st $23-25 w_cty $27-29 jobsflow 46-54 ;
@@ -13,16 +13,6 @@ run ;
 
 
 proc contents data = OUTPUTS.flows_jtw1990 ; 
-run ; 
-
-proc contents data = OUTPUTS.regions ;
-run ; 
-
-proc sort data = OUTPUTS.regions ;
-	by state ; 
-run ; 
-
-proc print data = OUTPUTS.regions ; 
 run ; 
 
 data OUTPUTS.cz1990 (keep = cty cz1990) ;
