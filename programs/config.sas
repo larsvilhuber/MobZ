@@ -1,4 +1,4 @@
-%let root = /ssgprojects/project0002/MobZ ; 
+%let root = /ssgprojects/project0002/MobZ.new ; 
 %let raw=&dirdata./raw ;
 %let dirprog=&root/programs;
 
