@@ -15,16 +15,6 @@ run ;
 proc contents data = OUTPUTS.flows_jtw1990 ; 
 run ; 
 
-proc contents data = OUTPUTS.regions ;
-run ; 
-
-proc sort data = OUTPUTS.regions ;
-	by state ; 
-run ; 
-
-proc print data = OUTPUTS.regions ; 
-run ; 
-
 data OUTPUTS.cz1990 (keep = cty cz1990) ;
 	length cty $5. ;
 	infile "&root./raw/czones.csv" dsd  delimiter = ',' termstr=lf  ;
