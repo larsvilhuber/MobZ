@@ -3,13 +3,14 @@
 options  mlogic symbolgen spool;
 * Modules, set to 1 to run, otherwise 0;	
 
+%include "../../config.sas";
 /************************
 THESE MODULES PREP THE COMMUTING FLOWS  
 ************************/
 %let run_preplodes=0;
 %let run_prepjtw1990=1;
 %let run_prepjtw2000=0;
-%let run_prepjtw2009=0;
+%let run_prepjtw2009=1;
                                         
 /*************************
 Runs geoagg module for corresponding
@@ -21,7 +22,7 @@ Creates two separate files: ctypairs_&dset.
 %let run_geoagglodes = 0 ;
 %let run_geoaggjtw1990 =1 ; 
 %let run_geoaggjtw2000 = 0 ;
-%let run_geoaggjtw2009 = 0 ;       
+%let run_geoaggjtw2009 = 1 ;       
 
    
 
