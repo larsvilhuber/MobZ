@@ -35,7 +35,7 @@ Creates two separate files: ctypairs_&dset.
 * Modules;
 %macro runmod(val,modname);/*========================================*/
 %put module &modname.;
-%let logdir=&dirprog./logs/&module.;
+%let logdir=&dirprog./logs/&modname.;
 
 %if (&val.=1) %then %do;
 x mkdir -p &logdir.;
