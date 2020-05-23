@@ -1,42 +1,62 @@
 To replicate results in paper
 ===============================
 
-Setting up programs
-===================
+## Requirements
+
+These programs were last run as follows:
+
+- OS: Linux CentOS release 6.3 (Final)
+- 8-core, 147 GB RAM, about 1.5GB disk space required
+- SAS 9.4 (TS1M0) 
+  - SAS/STAT 12.3 (maintenance)
+- Stata 14.2
+
+
+
+## Setting up programs
+
 
 - modify `config.sas`: 
   - change the line with root to correspond to your project directory
 - modify `config.do`:
   - change the line with root to correspond to your project directory
 
-Order of programs to run
-=========================
+## Order of programs to run
+
 
 To create the replicated commuting zones,
 run following programs (parameters below):
 
-- 01_dataprep.sas
-	No parameters
+### Reading in various datasets
 
-CLUSTERING PROCESS
+See the [relevant README.md](../raw/README.md) for details in preparing the raw data files. They are not downloaded by the SAS programs here.
 
-- 10.cluster/module_clustjtw1990.sas
+```{bash}
+sas 01_dataprep.sas
+```
+(runtime: 2.81s)
 
-- 10.cluster/module_reviewjtw1990.sas
-	This module generates the maps for Figure 1 in paper
+### CLUSTERING PROCESS
+
+```{bash}
+sas 02_cluster.sas
+```
+(runtime: 3:25.73 minutes)
 
 OUTPUT: root/data/clusfin_jtw1990.sas7bdat
 
 
+### CUTOFF by CLUSTER COUNT GRAPH
 
+```{bash}
+sas 03_figures2_3.sas
 
-CUTOFF by CLUSTER COUNT GRAPH
-==========================================
+STOPPED
+```
 20.analysis/module_cutoff.sas
-	20.analysis/module_graph.sas Creates the graphs which are Figure 2 and 3 in the paper
+20.analysis/module_graph.sas Creates the graphs which are Figure 2 and 3 in the paper
 
-MODULE BOOTSTRAP
-==========================================
+## BOOTSTRAP
 
 - ./programs/02_flows.do
 	Projects MOEs from 2009-2013 onto 1990 data
