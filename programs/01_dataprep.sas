@@ -35,10 +35,13 @@ Creates two separate files: ctypairs_&dset.
 * Modules;
 %macro runmod(val,modname);/*========================================*/
 %put module &modname.;
+%let logdir=&dirprog./logs/&module.;
+
 %if (&val.=1) %then %do;
+x mkdir -p &logdir.;
 proc printto
-    log="&dirprog./modules/00.dataprep/module_&modname..log" new
-    print="&dirprog./modules/00.dataprep/module_&modname..lst" new;
+    log="&logdir./module_&modname..log" new
+    print="&logdir./module_&modname..lst" new;
 run;
 
 /* run the module */

@@ -15,17 +15,8 @@ Order of programs to run
 To create the replicated commuting zones,
 run following programs (parameters below):
 
-- 00.dataprep/module_prepjtw1990.sas
+- 01_dataprep.sas
 	No parameters
-	
-- 00.dataprep/module_prepjtw2009.sas
-	No parameters needed
-
-- 00.dataprep/module_geoaggjtw1990.sas
-	dset: jtw1990 ;
-	
-- 00.dataprep/module_geoaggjtw2009.sas
-	dset: jtw2009 ;
 
 CLUSTERING PROCESS
 
