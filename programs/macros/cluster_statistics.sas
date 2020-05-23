@@ -1,7 +1,7 @@
-%macro cluster_statistics(infile,inlib=OUTPUTS,outlib = OUTPUTS,matching=YES) ;
+%macro cluster_statistics(infile,inlib=OUTPUTS,worklib = WORK,matching=YES) ;
 
 data numclus ;
-	set &outlib..&infile. ;
+	set &inlib..&infile. ;
 	x = 1 ;
 run; 
 
@@ -32,11 +32,11 @@ run;
 data statistics ;
 	merge clus_stat
 		
-                &inlib..mismatch_share 
-		&inlib..mismatch_total 
-		&inlib..mismatch_share_wgt
-		&inlib..sample_merged
-		&inlib..master_merged
+                &worklib..mismatch_share 
+		&worklib..mismatch_total 
+		&worklib..mismatch_share_wgt
+		&worklib..sample_merged
+		&worklib..master_merged
                  
 		;
 run; 

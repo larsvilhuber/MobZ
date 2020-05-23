@@ -3,7 +3,7 @@
 options  mlogic symbolgen spool fullstimer;
 * Modules, set to 1 to run, otherwise 0;	
 
-%include(config.sas) ;
+%include "config.sas" ;
 
 /******************************
   Runs the average-distance clustering
@@ -69,7 +69,8 @@ run;
 
 %macro reviewjtw1990;
 
-    %review(jtw1990, 0.9385,inlib=OUTPUTS,outlib=WORK) ;
+    /* this creates and writes out clusfin_jtw1990 */
+    %review(jtw1990, 0.9385,inlib=OUTPUTS,outlib=OUTPUTS) ;
     
     *proc print data= OUTPUTS.clusfin_jtw1990 ;
     *run;
@@ -88,20 +89,24 @@ run;
     
     %cluster_compare(clusnamed_jtw1990,cz1990_named,reslf,inlib=WORK,outlib=WORK,noprint=NO,mlib=WORK)
     
-    %clustermap(clusfin_jtw1990,mapyear=1990,inlib=OUTPUTS,name=none,mapfile=1990_replicationmap,mappath=/programs/projects/mobz2/paper/figures,imgformat=png) ;
+    %clustermap(clusfin_jtw1990,mapyear=1990,
+                                inlib=OUTPUTS,
+                                name=none,
+                                mapfile=1990_replicationmap,
+                                mappath=&dirfig.,imgformat=png) ;
     
-    %cluster_statistics(clusfin_jtw1990,inlib=OUTPUTS,outlib=OUTPUTS,matching=YES) ;
+    %cluster_statistics(clusfin_jtw1990,inlib=OUTPUTS,worklib=WORK,matching=YES) ;
     
     proc print data=statistics ;
         title 'statistics replication' ; 
     run;  
     
-    %commutingflows(clusfin_jtw1990,1990,inlib=WORK,outlib=WORK);
+    %commutingflows(clusfin_jtw1990,1990,inlib=OUTPUTS,outlib=WORK);
     
     proc print data=objectivefn ;
     run;
     
-    %cluster_statistics(cz1990,inlib=WORK,outlib=WORK,matching=YES) ;
+    %cluster_statistics(cz1990,inlib=WORK,worklib=WORK,matching=YES) ;
     
     proc print data=statistics ; 
        title 'statistics - ts1990' ; 
