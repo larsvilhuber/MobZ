@@ -1,4 +1,4 @@
-%macro cluster(dset,inlib=OUTPUTS,outlib=OUTPUTS,noprint=NO);
+%macro cluster(dset=jtw1990,inlib=OUTPUTS,outlib=OUTPUTS,noprint=NO);
 
 %if "&noprint."="YES" %then %do ;
 %put "ENTERING REVIEW " ;

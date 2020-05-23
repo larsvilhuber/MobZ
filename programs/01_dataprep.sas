@@ -3,7 +3,7 @@
 options  mlogic symbolgen spool;
 * Modules, set to 1 to run, otherwise 0;	
 
-%include "../../config.sas";
+%include "config.sas";
 
 /************************
 THESE MODULES PREP THE COMMUTING FLOWS  
@@ -20,14 +20,6 @@ Creates two separate files: ctypairs_&dset.
 
 %let run_geoaggjtw1990 =1 ; 
 %let run_geoaggjtw2009 = 1 ;       
-
-
-
-%global tstamp;
-%let t=%sysfunc(today());
-%let tt=%sysfunc(time());
-%let dstamp=%trim(%sysfunc(year(&t.),z4.))%trim(%sysfunc(month(&t.),z2.))%trim(%sysfunc(day(&t.),z2.));
-%let tstamp=&dstamp._%trim(%sysfunc(hour(&tt.),z2.))%trim(%sysfunc(minute(&tt.),z2.))%trim(%sysfunc(second(&tt.),z2.));
 
 
 /*-----------------------------------------------------------
@@ -134,7 +126,7 @@ run;
 
 
 
-* Create one for each module;
+* Run each module;
 %runmod(&run_prepjtw1990., module_prepjtw1990) ;
 %runmod(&run_prepjtw1990., module_czones);
 %runmod(&run_prepjtw2009., module_prepjtw2009) ; 
