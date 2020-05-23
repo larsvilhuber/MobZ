@@ -46,8 +46,8 @@ run;
 %mend skip ;
     /*-------------- ending skip ------------*/
     
-    proc sort data= &inlib..&resdat. out=reslf_c (rename=(cty=county));
-        by cty ;
+    proc sort data= &inlib..&resdat. out=reslf_c (rename=(home_cty=county));
+        by home_cty ;
     run;     
         
         
