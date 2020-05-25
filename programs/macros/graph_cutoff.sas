@@ -1,4 +1,4 @@
-%macro graph_cutoff(dset,lowerbound,upperbound);
+%macro graph_cutoff(dset,lowerbound,upperbound,graphpath);
 
 
 
@@ -86,9 +86,6 @@ run;
 %put "ENDED at &endtime";
 %put "******************************************";
 
-*%let graphpath = ./graphs ;
-%let graphpath = ./paper/figures ;
-
 
 goptions reset= all device=png gsfname = "&graphpath./similarity_&dset..png" xpixels=1600 ypixels=800;
 filename gout "&graphpath./similarity_&dset..png" ;
@@ -101,7 +98,7 @@ run;
 
 
 ods graphics on /imagefmt=png imagename = "clustersize_&dset." ;
-ods listing gpath = "./graphs" ;
+ods listing gpath = "&graphpath." ;
 
 proc sgplot data = graph nocycleattrs;
 	series 	x =cutoff y = median_clussize 	/lineattrs =(color=blue);
@@ -109,7 +106,7 @@ proc sgplot data = graph nocycleattrs;
 run; 
 
 ods graphics on /imagefmt=png imagename = "numclusters_cutoff_&dset." ;
-ods listing gpath = "./graphs" ;
+ods listing gpath = "&graphpath." ;
 
 
 proc sgplot data = graph nocycleattrs;
