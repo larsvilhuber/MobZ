@@ -48,7 +48,7 @@ run;
 	%cluster_compare(clustersnamed_&dset.,clustersnamed_&dset._p&ii.,
                             reslf_&dset._p&ii.,
                                 inlib=WORK,outlib=WORK,noprint=NO,mlib=WORK) ;
-	%cluster_statistics(clusfin_&dset._p&ii.,inlib=WORK,outlib=WORK) ;
+	%cluster_statistics(clusfin_&dset._p&ii.,inlib=WORK,worklib=WORK) ;
 
 	data statistics ;
 		set statistics ;

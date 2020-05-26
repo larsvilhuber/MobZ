@@ -1,4 +1,4 @@
-%macro cutoff(dset,inlib=OUTPUTS,lowerbound,upperbound,step=1,diverg=NO) ;
+%macro cutoff(dset,lowerbound,upperbound,inlib=OUTPUTS,step=1,diverg=NO) ;
 
 %let lower = %sysevalf(&lowerbound.*10000);
 %let upper = %sysevalf(&upperbound.*10000); 
@@ -8,12 +8,12 @@
 %put "******************************************";
 
 %geoagg(&dset.,inlib=&inlib.,outlib=WORK);
-%cluster(&dset.,inlib=WORK,outlib=WORK);
+%cluster(dset=&dset.,inlib=WORK,outlib=WORK);
 %review(&dset.,0.9385,inlib=WORK,outlib=WORK);   
 %cluster_naming(clusfin_&dset.,clusnamed_master,reslf_&dset.,inlib=WORK,outlib=WORK,otherlib=WORK) ;
         
         %cluster_compare(clusnamed_master,clusnamed_master,reslf_&dset.,inlib=WORK,outlib=WORK,noprint=NO,mlib=WORK) ;
-        %cluster_statistics(clusfin_&dset.,inlib=WORK,outlib=WORK) ;    
+        %cluster_statistics(clusfin_&dset.,inlib=WORK,worklib=WORK) ;    
 
 proc print data=statistics ;
     title 'statistics' ; 
@@ -44,7 +44,7 @@ run;
         run;
         %cluster_naming(clusnm,clusname_&cutoff.,reslf_&dset.,inlib=WORK,outlib=WORK,otherlib=WORK) ;
         %cluster_compare(clusname_&cutoff.,clusnamed_master,reslf_&dset.,inlib=WORK,outlib=WORK,noprint=NO,mlib=WORK) ;
-        %cluster_statistics(clusfin_&dset.,inlib=WORK,outlib=WORK) ;
+        %cluster_statistics(clusfin_&dset.,inlib=WORK,worklib=WORK) ;
 
         data clus_obj ;
             set clusname_&cutoff. (rename=(clustername=cluster)) ;
