@@ -2,8 +2,8 @@
 %macro printjunk;
 
 proc printto
-    log="&dirprog./loglst/junk_&modname..log" new
-    print="&dirprog./loglst/junk_&modname..lst" new;
+    log="&dirprog./logs/junk_&modname..log" new
+    print="&dirprog./logs/junk_&modname..lst" new;
 run;
 
 %mend printjunk;
@@ -13,8 +13,8 @@ run;
 %macro printlog;
 
 proc printto
-    log="&dirprog./loglst/module_&modname..log" 
-    print="&dirprog./loglst/module_&modname..lst" ;
+    log="&dirprog./logs/module_&modname..log" 
+    print="&dirprog./logs/module_&modname..lst" ;
 run;
 
 %mend printlog;

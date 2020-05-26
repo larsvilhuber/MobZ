@@ -2,7 +2,8 @@
 %let raw=&root./raw ;
 %let dirprog=&root/programs;
 %let dirfig=&root/figures;
-%let diroutputs=&root.data;
+%let diroutputs=&root./data;
+%let logdir=&dirprog./logs;
 
 
 libname OUTPUTS "&diroutputs.";
