@@ -49,10 +49,11 @@ OUTPUT: root/data/clusfin_jtw1990.sas7bdat
 ### CUTOFF by CLUSTER COUNT GRAPH
 
 ```{bash}
-sas 03_figures2_3.sas
-
-STOPPED
+sas 03_prep_figures.sas
+sas 04_figures2_3.sas
 ```
+The first program took 8:50 minutes.
+
 20.analysis/module_cutoff.sas
 20.analysis/module_graph.sas Creates the graphs which are Figure 2 and 3 in the paper
 
