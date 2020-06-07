@@ -52,16 +52,18 @@ OUTPUT: root/data/clusfin_jtw1990.sas7bdat
 sas 03_prep_figures.sas
 sas 04_figures2_3.sas
 ```
-The first program took 8:50 minutes.
+The first program took 8:50 minutes. The second took 11:35 hours.
 
-20.analysis/module_cutoff.sas
-20.analysis/module_graph.sas Creates the graphs which are Figure 2 and 3 in the paper
 
 ## BOOTSTRAP
 
-- ./programs/02_flows.do
-	Projects MOEs from 2009-2013 onto 1990 data
-	NOTE: MUST RUN module_prepjtw1990.sas and module_prepjtw2009.sas first (inputs created there)
+```{bash}
+stata -b do 05_flows.do
+```
+
+Projects MOEs from 2009-2013 onto 1990 data
+
+> NOTE: MUST RUN 01_dataprep.sas first (inputs created there)
 
 - ./modules/20.analysis/module_bootstrap.sas
 	creates the 1000 realizations of commuting zones 
