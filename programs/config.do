@@ -3,7 +3,7 @@
 
 
 if ( "`c(hostname)'" == "ecco.vrdc.cornell.edu" ) {
-global root "/ssgprojects/project0002/MobZ"
+global root "/ssgprojects/project0002/MobZ.new"
 }
 
 
@@ -18,7 +18,7 @@ local cdate = subinstr("`c_date'", " ", "_", .)
 local c_time = c(current_time)
 local ctime = subinstr("`c_time'", ":", "_", .)
 
-log using "${root}/logfile_`cdate'-`ctime'.log", replace text
+// log using "${root}/logfile_`cdate'-`ctime'.log", replace text
 
 /* It will provide some info about how and when the program was run */
 /* See https://www.stata.com/manuals13/pcreturn.pdf#pcreturn */
@@ -44,10 +44,12 @@ global paperdir "${root}/paper"
 global interwrk "${root}/data/interwrk"
 global raw "${root}/raw"
 global temp "${root}/temp"
-global outputs "${root}/data/outputs"
+global outputs "${root}/data"
 global programs "${root}/programs"
-global outgraphs "${paperdir}/figures"
+global outgraphs "${root}/figures"
+global logdir "${programs}/logs"
 
+log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
 cap mkdir "$temp"
 cap mkdir "${root}/data"
 cap mkdir "$interwrk"
@@ -64,5 +66,7 @@ sysdir
 /* define data sources */
 
 /* QCEW */
-    global qcewdata "${raw}/qcew" ; /* data/working/mobz/qcew */
-    global czonedata "$outputs" ; /* /data/working/mobz/outputs */
+/* data/working/mobz/qcew */
+    global qcewdata "${raw}/qcew"  
+/* /data/working/mobz/outputs */
+    global czonedata "$outputs"  

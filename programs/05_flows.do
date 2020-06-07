@@ -3,8 +3,14 @@
 
 include "config.do"
 
-insheet using "${raw}/jtw2009_2013.csv"
+/* the last three lines contain unwanted footnotes */
+/* We use shell script here to remove them */
+/* On windows, do this manually! */
 
+tempfile a
+! head -n -3 "${raw}/jtw2009_2013.csv" > `a'
+//insheet using "${raw}/jtw2009_2013.csv", names
+insheet using "`a'", names
 
 gen ratio = moe/flow
 
@@ -29,6 +35,8 @@ twoway (kdensity ratio if flow <= `pct50' & ratio<10)
 				label(3 "Third Cat") label(4 "Fourth Cat"))
 		xtitle("Ratio")
 		ytitle("Density");
+graph save "$outgraphs/figure05a_temp", replace;
+graph export "$outgraphs/figure05a_temp.pdf", replace;
 
 #delimit cr
 
@@ -50,7 +58,7 @@ save `ratios', replace
 
 
 
-use  "${interwrk}/flows1990.dta", clear 
+use  "${outputs}/flows1990.dta", clear 
 rename jobsflow flows
 sum flows, d
 
@@ -87,4 +95,4 @@ bys flowsize: sum std_ratio sd_ratio
 drop average_ratio std_ratio ratio_hat ratiodraw
 rename flows jobsflow
 
-outsheet using "${interwrk}/jtw1990_flows.csv", replace comma noquote
+outsheet using "${outputs}/jtw1990_flows.csv", replace comma noquote
