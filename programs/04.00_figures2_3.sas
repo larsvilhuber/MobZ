@@ -62,12 +62,7 @@ run;
     run;
 %mend;
 
-%macro m_graph;
-    %graph_cutoff(jtw1990,&cutoff_bottom.,&cutoff_top.,graphpath=&dirfig.);
-%mend;
-
 * run each module ;
 
 %runmod(&run_cutoff, m_cutoff );  
-%runmod(&run_graph., m_graph ) ;
 
