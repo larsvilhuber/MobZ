@@ -1,8 +1,8 @@
+// Does the other graphs for this section
 
-global datadir [datadir] ;
-global graphdir [graphdir] ;
+include "config.do"
 #delimit ;
-use $datadir/clusnum_cutoff.dta, clear ;
+use $outputs/clusnum_cutoff.dta, clear ;
 
 replace cutoff= cutoff/10000 ;
 sort cutoff ;
@@ -16,7 +16,8 @@ twoway (line clusnum cutoff, yaxis(1))
 	   
            legend(label(1 "Number of Clusters") label(2 "Share Mismatch (right axis)"));
 
-graph export "$graphdir/numclus_cutoff.png", replace ;
+graph export "$outgraphs/numclus_cutoff.pdf", replace ;
+graph save "$outgraphs/numclus_cutoff.gph", replace ;
 
 
 twoway (line share_inflows cutoff, yaxis(1)),
@@ -26,5 +27,6 @@ twoway (line share_inflows cutoff, yaxis(1)),
 	   title("Cross-Commuting as Share of Population")
            legend(label(1 " Share Cross-Commuting"));
 
-graph export "$graphdir/flows_cutoff.png", replace ;
+graph export "$outgraphs/flows_cutoff.pdf", replace ;
+graph save "$outgraphs/flows_cutoff.gph", replace ;
 
