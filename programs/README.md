@@ -50,9 +50,11 @@ OUTPUT: root/data/clusfin_jtw1990.sas7bdat
 
 ```{bash}
 sas 03_prep_figures.sas
-sas 04_figures2_3.sas
+sas 04_00_prep_figures2_3.sas
+stata -b do 04_01_figures2_3.do
 ```
 The first program took 8:50 minutes. The second took 11:35 hours.
+The third one runs in seconds.
 
 
 ## BOOTSTRAP
