@@ -6,6 +6,9 @@ if ( "`c(hostname)'" == "ecco.vrdc.cornell.edu" ) {
 global root "/ssgprojects/project0002/MobZ.new"
 }
 
+if ( "`c(username)'" == "vilhuber" ) {
+global root "/home/vilhuber/Workspace/git/larsvilhuber/MobZ"
+}
 
 if ( "`c(hostname)'" == "some.server.at.census" ) {
 global root "/made/up/path/Mobz"
@@ -49,6 +52,7 @@ global programs "${root}/programs"
 global outgraphs "${root}/figures"
 global logdir "${programs}/logs"
 
+cap mkdir "$logdir"
 log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
 cap mkdir "$temp"
 cap mkdir "${root}/data"
