@@ -7,6 +7,7 @@
 
 
 libname OUTPUTS "&diroutputs.";
+libname INTERWRK "&diroutputs./interwrk";
 libname GEO "&diroutputs." ;
 libname INPUTS "&raw" ;
 options sasautos=(SASAUTOS, "&dirprog./macros") mautosource nocenter ps=1000;

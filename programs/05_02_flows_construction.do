@@ -1,4 +1,7 @@
-import delimited [datadir]/jtw2009_2013.csv, clear
+/* construct flows */
+
+*import delimited [datadir]/jtw2009_2013.csv, clear
+use "$interwrk/jtw2009_2013.csv", clear
 
 destring workersincommutingflow, gen(flow) ignore(",")
 destring marginoferror, gen(moe) ignore(",")

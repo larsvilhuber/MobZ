@@ -12,6 +12,8 @@ tempfile a
 //insheet using "${raw}/jtw2009_2013.csv", names
 insheet using "`a'", names
 
+save "$interwrk/jtw2009_2013", replace
+
 gen ratio = moe/flow
 
 sum flow, d
@@ -35,7 +37,7 @@ twoway (kdensity ratio if flow <= `pct50' & ratio<10)
 				label(3 "Third Cat") label(4 "Fourth Cat"))
 		xtitle("Ratio")
 		ytitle("Density");
-graph save "$outgraphs/figure05a_temp", replace;
+graph save "$outgraphs/figure05a_temp.gph", replace;
 graph export "$outgraphs/figure05a_temp.pdf", replace;
 
 #delimit cr
