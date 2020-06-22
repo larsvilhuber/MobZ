@@ -97,21 +97,18 @@ while (r(min)<0) {
 	 sum ratiodraw 
 }
 
-preserve
 /* create file for downstream processing */
 
-gen moe = jobsflow*ratiodraw
+gen moe = flows*ratiodraw
 format moe ratiodraw mean_ratio sd_ratio %15.5f
-drop _merge
-outfile using "$datadir/jtw1990_moe.csv", comma replace noquote
+outfile using "$interwrk/jtw1990_moe.csv", comma replace noquote
 sort work_cty home_cty 
 
 list in 150/200
 
-save "$outdir/jtw1990_moe.dta", replace
+save "$interwrk/jtw1990_moe.dta", replace
 
 /* create different file for downstream */
-restore
 gen ratio_hat = moe/flows 
 bys flowsize: egen average_ratio = mean(ratio_hat) 
 bys flowsize: egen std_ratio = sd(ratio_hat) 
