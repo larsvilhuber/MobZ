@@ -83,14 +83,35 @@ gen flowsize=  .
 sort flowsize 
 merge flowsize using `ratios'
 drop _merge
-
+tab flowsize, m 
 /*************************************
 ONE TIME DRAW FROM RATIO DISTRIBUTION
 **************************************/
 gen ratiodraw = rnormal(mean_ratio,sd_ratio)
-	replace ratiodraw = rnormal(mean_ratio,sd_ratio) if ratiodraw<0 
-gen moe = flows*ratiodraw
 
+ sum ratiodraw
+/* sometimes is negative: redraw until positive */
+
+while (r(min)<0) {
+	replace ratiodraw = rnormal(mean_ratio,sd_ratio) if ratiodraw < 0 
+	 sum ratiodraw 
+}
+
+preserve
+/* create file for downstream processing */
+
+gen moe = jobsflow*ratiodraw
+format moe ratiodraw mean_ratio sd_ratio %15.5f
+drop _merge
+outfile using "$datadir/jtw1990_moe.csv", comma replace noquote
+sort work_cty home_cty 
+
+list in 150/200
+
+save "$outdir/jtw1990_moe.dta", replace
+
+/* create different file for downstream */
+restore
 gen ratio_hat = moe/flows 
 bys flowsize: egen average_ratio = mean(ratio_hat) 
 bys flowsize: egen std_ratio = sd(ratio_hat) 
@@ -102,3 +123,4 @@ drop average_ratio std_ratio ratio_hat ratiodraw
 rename flows jobsflow
 
 outsheet using "${outputs}/jtw1990_flows.csv", replace comma noquote
+
