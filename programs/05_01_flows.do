@@ -54,6 +54,10 @@ bys flowsize: egen mean_ratio = mean(ratio)
 
 collapse (first) sd_ratio mean_ratio, by(flowsize)
 
+export delimited using "$interwrk/flow_moe_ratios.csv", replace
+
+/* do other stuff here */
+
 tempfile ratios 
 save `ratios', replace
 
