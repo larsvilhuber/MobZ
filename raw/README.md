@@ -28,15 +28,6 @@ We chose the files sorted by "residence county" for the entire US, at https://ww
 - Program: module/00.dataprep/module_prepjtw2009.sas
 
 
-LODES
------
-LODES data is published as block-to-block. We map each block to the associated county (SOURCE?) and then aggregate to the county level. 
-
-
-- Source: https://lehd.ces.census.gov/data/lodes/LODES7/[state]/od/
-- Alternate source: (not public) ecco:/data/lodes/v7.2
-- Notes: We use 2006-2012 data in the paper
-- Program: module/00.dataprep/module_preplodes.sas 
 
 Unemployment rates
 ------------------
@@ -45,6 +36,32 @@ Unemployment rates
 - Alternate data: https://download.bls.gov/pub/time.series/la/la.data.0.CurrentU$arg for arg in 00-04 05-09 10-14 15-19 90-94 95-99
 - Renamed to: urates_counties.csv
 - Program: module/00.dataprep/module_otherdata.sas
+
+BEA  
+---
+
+
+> U.S. Bureau of Economic Analysis, “Table 30: "Economic Profile by County, 1969-2016.” (accessed Sept 1, 2017).
+
+Directions for downloading:  https://apps.bea.gov/regional/downloadzip.cfm
+ - under "Personal Income (State and Local)", select CAINC30: Economic Profile by County, then download.
+ - or directly: https://apps.bea.gov/regional/zip/CAINC30.zip
+
+Unzip, then read in CAINC30__ALL_AREAS_1969_2018.csv
+
+```{bash}
+wget https://apps.bea.gov/regional/zip/CAINC30.zip 
+unzip CAINC30.zip CAINC30__ALL_AREAS_1969_2018.csv
+```
+
+QCEW
+----
+
+
+- programs that compile are from https://github.com/labordynamicsinstitute/readin_qcew_sas/releases/tag/v20200622 (https://doi.org/10.5281/zenodo.3903458)
+
+The `bls_us_county.sas7bdat` file from that program sequence should be provided here.
+
 
 
 Additional sources

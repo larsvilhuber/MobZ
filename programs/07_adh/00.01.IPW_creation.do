@@ -1,14 +1,15 @@
 /****************************************
 This dofile creates the RHS for the outcome
 *****************************************/
+
+include "../config.do"
     
-    
-use "$datadir/cw_cty_czone.dta", clear
+use "$interwrk/cw_cty_czone.dta", clear
 sort cty_fips
 tempfile czone
 save `czone', replace
 
-use "$datadir/adh_data/sic87dd_trade_data.dta", clear
+use "$adhdata/sic87dd_trade_data.dta", clear
 
 bys year sic87dd: egen M_ucjt = sum(imports*(exporter=="CHN")*(importer=="USA"))
 
@@ -50,7 +51,8 @@ tempfile tradedata
 save `tradedata', replace
 
 /**************** COUNTY BY INDUSTRY BY YEAR *************/
-use "$datadir/industry_data.dta", clear
+
+use "$interwrk/industry_data.dta", clear
 
 drop if fips == "30113" | (substr(fips,1,2)=="02" | substr(fips,1,2) == "15")
 preserve 
@@ -105,4 +107,4 @@ collapse (first) IPW*, by(czone year)
 label variable IPW_uit "Import Competition from China for county i"
 label variable IPW_oit "Import Flows to Other Rich Nations (instrument)"
 
-save "$datadir/IPW_czone.dta", replace
+save "$interwrk/IPW_czone.dta", replace

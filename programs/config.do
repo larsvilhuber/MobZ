@@ -74,3 +74,6 @@ sysdir
     global qcewdata "${raw}/qcew"  
 /* /data/working/mobz/outputs */
     global czonedata "$outputs"  
+
+/* ADH */
+    global adhdata "${raw}/adh_data/Public Release Data/dta"

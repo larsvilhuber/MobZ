@@ -9,14 +9,14 @@ set more off
 *STEP 1: industry employment
 ***********************
 
-use "$datadir/cbp_allyears.dta", clear
+use "$raw/cbp_allyears.dta", clear
 
 replace fips = "12025" if fips == "12086" 
 sort fips year
 tempfile cbp
 save `cbp' , replace
 
-use "$datadir/industry_data.dta", clear
+use "$interwrk/industry_data.dta", clear
 
 collapse (sum) emp, by(cty_fips year) 
 tostring cty_fips, gen(fips) force
@@ -33,7 +33,7 @@ save `adhemp', replace
 * STEP 2: census data
 **********************
 
-use "$datadir/popcounts.dta", clear
+use "$interwrk/popcounts.dta", clear
 
 rename county fips 
 replace fips = "12025" if fips == "12086"
@@ -43,7 +43,7 @@ sort fips year
 tempfile population
 save `population', replace
 
-use "$datadir/censusdata.dta", clear
+use "$interwrk/censusdata.dta", clear
 replace year = 2007 if year > 2000 
 
 rename  pop_16_65 population_census_1665
@@ -62,7 +62,7 @@ tabstat pop_16_65 population_census_1665, by(year)
 
 
 sort fips year
-merge 1:1 fips year using "$datadir/qcewdata.dta"
+merge 1:1 fips year using "$interwrk/qcewdata.dta"
 tab _merge
 drop if _merge == 2
 drop _merge
@@ -84,5 +84,5 @@ drop _merge
 
 sort fips year
 tempfile cty_censusdata
-save  "$datadir/cty_censusdata.dta", replace
+save  "$interwrk/cty_censusdata.dta", replace
 

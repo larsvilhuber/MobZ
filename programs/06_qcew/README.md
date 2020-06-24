@@ -26,5 +26,4 @@ unzip CAINC30.zip CAINC30__ALL_AREAS_1969_2018.csv
 
 - programs that compile are from https://github.com/labordynamicsinstitute/readin_qcew_sas/releases/tag/v20200622 (https://doi.org/10.5281/zenodo.3903458)
 
-Needs the "bls_us_county" file from LEHD/ LDI infrastructure.
 
