@@ -24,6 +24,13 @@ run;
 proc print data=OUTPUTS.flows_jtw1990_moe (obs=50);
 run;                                            
 
+%let modname=bootstrap_statistics;
+
+/*===================================================================*/
+/* After the first few macro command, the LOG output gets redirected */
+/* search for a file with "module_bootstrap_statistics" in the name !*/
+/*===================================================================*/
+
 %bootstrap_statistics(jtw1990_moe,&bootstrap_num.,cutoff=&cutoff.) ;
             
             
