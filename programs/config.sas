@@ -29,3 +29,8 @@ options sasautos=(SASAUTOS, "&dirprog./macros") mautosource nocenter ps=1000;
     %let cutoff_top = 1.0 ;
     %let ci90 = 1.645 ;
     
+* Bootstrap draws ;
+*  - paper: 1000;
+*  - testing: 3;
+
+%let bootstrap_num = 3;

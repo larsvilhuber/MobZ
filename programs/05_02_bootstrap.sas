@@ -5,7 +5,7 @@ for use in the
 ****************/
 
 data OUTPUTS.flows_jtw1990_moe ;
-    infile '/data/working/mobz/jtw1990/jtw1990_moe.csv' delimiter = ',' firstobs= 2;
+    infile "&dirinterwrk./jtw1990_moe.csv" delimiter = ',' firstobs= 2;
     informat work_cty $5.;
     informat jobsflow best32. ;
     informat home_cty $5. ;
@@ -17,12 +17,6 @@ data OUTPUTS.flows_jtw1990_moe ;
 input work_cty jobsflow home_cty flowsize sd_ratio mean_ratio draw moe ;
 run;                
     
-    /*
-proc import datafile= '/data/working/mobz/jtw1990/jtw1990_moe.csv'
-            out=OUTPUTS.flows_jtw1990_moe 
-            dbms=csv replace; 
-run;    
-*/
 
             
                         
@@ -30,17 +24,11 @@ run;
 proc print data=OUTPUTS.flows_jtw1990_moe (obs=50);
 run;                                            
 
-%bootstrap_statistics(jtw1990_moe,1000,cutoff=&cutoff.) ;
-*%bootstrap_statistics(jtw2009,1000,cutoff=&cutoff.) ;
-/*
-proc export data=OUTPUTS.bootclusters_jtw1990_moe 
-            outfile = '/data/working/mobz/outputs/bootclusters_jtw1990_moe.dta' replace; 
-run;
-*/
+%bootstrap_statistics(jtw1990_moe,&bootstrap_num.,cutoff=&cutoff.) ;
             
             
 proc export data=OUTPUTS.bootclusters_jtw1990_moe
-            outfile = '/data/working/mobz/outputs/bootclusters_jtw1990_moe_new.dta'
+            outfile = "&diroutputs./bootclusters_jtw1990_moe_new.dta"
 replace ;
 run;
 
