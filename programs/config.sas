@@ -3,11 +3,12 @@
 %let dirprog=&root/programs;
 %let dirfig=&root/figures;
 %let diroutputs=&root./data;
+%let dirinterwrk=&root./data/interwrk;
 %let logdir=&dirprog./logs;
 
 
 libname OUTPUTS "&diroutputs.";
-libname INTERWRK "&diroutputs./interwrk";
+libname INTERWRK "&dirinterwrk.";
 libname GEO "&diroutputs." ;
 libname INPUTS "&raw" ;
 options sasautos=(SASAUTOS, "&dirprog./macros") mautosource nocenter ps=1000;
