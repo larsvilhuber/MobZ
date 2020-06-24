@@ -11,6 +11,8 @@ Unzip into `raw` into a subdirectory called `adh_data`:
 
 The data is first created in the 00 programs.
 
+cw_cty_czone.dta is from here: https://www.ddorn.net/data/cw_cty_czone.zip
+
 ## Table 3
 
 Table 3 is created in 01.table3.do
