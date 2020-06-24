@@ -4,6 +4,8 @@ for use in the
  bootstrap macro loops
 ****************/
 
+%include "config.sas"/source2;
+
 data OUTPUTS.flows_jtw1990_moe ;
     infile "&dirinterwrk./jtw1990_moe.csv" delimiter = ',' firstobs= 2;
     informat work_cty $5.;
@@ -70,5 +72,5 @@ run;
 
 proc means data=moe_means (where=(jobsflow>=10000)) mean p25 p50 p75; 
     var moe_ratio ;
-    title 'MOE Ratio, flows 10000+'
+    title 'MOE Ratio, flows 10000+';
 run;
