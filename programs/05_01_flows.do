@@ -107,17 +107,3 @@ sort work_cty home_cty
 list in 150/200
 
 save "$interwrk/jtw1990_moe.dta", replace
-
-/* create different file for downstream */
-gen ratio_hat = moe/flows 
-bys flowsize: egen average_ratio = mean(ratio_hat) 
-bys flowsize: egen std_ratio = sd(ratio_hat) 
-
-bys flowsize: sum average_ratio mean_ratio 
-bys flowsize: sum std_ratio sd_ratio 
-
-drop average_ratio std_ratio ratio_hat ratiodraw
-rename flows jobsflow
-
-outsheet using "${outputs}/jtw1990_flows.csv", replace comma noquote
-

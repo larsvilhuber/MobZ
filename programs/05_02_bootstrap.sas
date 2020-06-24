@@ -24,15 +24,6 @@ proc import datafile= '/data/working/mobz/jtw1990/jtw1990_moe.csv'
 run;    
 */
 
-proc export data=OUTPUTS.flows_jtw1990_moe 
-            outfile ='/data/working/mobz/outputs/flows_1990_stats.dta'
-            replace ;
-run;
-            
-proc export data=OUTPUTS.flows_jtw2009
-            outfile ='/data/working/mobz/outputs/flows_2009_stats.dta'
-            replace ;
-run;
             
                         
                 
