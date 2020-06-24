@@ -3,3 +3,6 @@
 .directory
 *swp
 *.sas7bdat
+*.dta
+*.log
+
