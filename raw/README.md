@@ -62,6 +62,10 @@ QCEW
 
 The `bls_us_county.sas7bdat` file from that program sequence should be provided here.
 
+ADH-related files
+-----------------
+
+cw_cty_czone.dta is from here: https://www.ddorn.net/data/cw_cty_czone.zip
 
 
 Additional sources
