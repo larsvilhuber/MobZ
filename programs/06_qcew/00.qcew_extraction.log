@@ -1,4 +1,4 @@
-1                                                          The SAS System                                14:31 Monday, June 22, 2020
+1                                                          The SAS System                              22:51 Thursday, June 25, 2020
 
 NOTE: Copyright (c) 2002-2012 by SAS Institute Inc., Cary, NC, USA. 
 NOTE: SAS (r) Proprietary Software 9.4 (TS1M0) 
@@ -38,7 +38,7 @@ The command line option "-nonews" will prevent this display.
 
 
 NOTE: SAS initialization used:
-      real time           0.02 seconds
+      real time           0.04 seconds
       cpu time            0.02 seconds
       
 
@@ -49,7 +49,7 @@ NOTE: Libref OPMQA was successfully assigned as follows:
       Physical Name: /home/lv39/Desktop/opm-qa
 NOTE: Libref HERE was successfully assigned as follows: 
       Engine:        V9 
-      Physical Name: /ssgprojects/project0002/MobZ.new/programs/05_qcew
+      Physical Name: /ssgprojects/project0002/MobZ.new/programs/06_qcew
 =========== running on ecco.vrdc.cornell.edu ============
 
 NOTE: AUTOEXEC processing completed.
@@ -58,7 +58,7 @@ NOTE: AUTOEXEC processing completed.
 2          
 3          %include "../config.sas";
 NOTE: Libref OUTPUTS was successfully assigned as follows: 
-2 The SAS System                                                                                         14:31 Monday, June 22, 2020
+2 The SAS System                                                                                       22:51 Thursday, June 25, 2020
 
       Engine:        V9 
       Physical Name: /ssgprojects/project0002/MobZ.new/data
@@ -72,99 +72,99 @@ NOTE: Libref GEO was successfully assigned as follows:
 NOTE: Libref INPUTS was successfully assigned as follows: 
       Engine:        V9 
       Physical Name: /ssgprojects/project0002/MobZ.new/raw
-34         
-35         
-36         %macro extract ;
-37         
-38         
-39         data qcew_county (keep = fips naics2 /*annual_avg_emplvl*/ emp_month1 year quarter) ;
-40             set INPUTS.bls_us_county (where=(
-41                                     ownership_code ='5'
-42                                     and aggregation_level='74' and naicssec ne '99')) ;
-43             fips = state||county ;
-44             naics2 = naicssec;
-45         run;
-46         
-47         /* sort by info */
-48         proc sort data=qcew_county nodupkey;
-49         by fips naics2 year quarter;
-50         run;
-51         
-52         data qcew_county (keep = fips naics2 annual_avg_emplvl year);
-53           set qcew_county;
-54           by fips naics2 year quarter;
-55           retain annual_empl n_recs;
-56           if first.year then do;
-57         	annual_empl = .;
-58                 n_recs = 0;
-59           end;
-60           annual_empl + emp_month1;
-61           n_recs+1;
-62           if last.year then do;
-63              annual_avg_emplvl = annual_empl/n_recs;
-64              output;
+40         
+41         
+42         %macro extract ;
+43         
+44         
+45         data qcew_county (keep = fips naics2 /*annual_avg_emplvl*/ emp_month1 year quarter) ;
+46             set INPUTS.bls_us_county (where=(
+47                                     ownership_code ='5'
+48                                     and aggregation_level='74' and naicssec ne '99')) ;
+49             fips = state||county ;
+50             naics2 = naicssec;
+51         run;
+52         
+53         /* sort by info */
+54         proc sort data=qcew_county nodupkey;
+55         by fips naics2 year quarter;
+56         run;
+57         
+58         data qcew_county (keep = fips naics2 annual_avg_emplvl year);
+59           set qcew_county;
+60           by fips naics2 year quarter;
+61           retain annual_empl n_recs;
+62           if first.year then do;
+63         	annual_empl = .;
+64                 n_recs = 0;
 65           end;
-66         run;
-67         
-68         proc export data=qcew_county
-69                           outfile = "&diroutputs./qcew_county.dta" replace
-70                           dbms=dta ;
-71         run;
-72         
-73         data qcew_earnings (keep = fips year quarter /*avg_annual_pay annual_avg_emplvl*/ empl_month1 total_wage) ;
-74             set INPUTS.bls_us_county /* (where=( quarter=1 and aggregation_level='70'))*/ ;
-75             fips = state||county ;
-76         run;
-77         /* sort by info */
-78         proc sort data=qcew_earnings;
-79         by fips year quarter;
-80         run;
-81         
-82         data qcew_earnings (keep = fips annual_avg_emplvl avg_annual_pay year);
-83           set qcew_earnings;
-84           by fips year quarter;
-85           retain annual_empl annual_wage  n_recs;
-86           if first.year then do;
-87         	annual_empl = .;
-88                 annual_wage = .;
-89                 n_recs = 0;
-90           end;
-91           annual_empl + emp_month1;
-92           annual_wage + total_wage;
-93           n_recs+1;
-94           if last.year then do;
-95              annual_avg_emplvl = annual_empl/n_recs;
-96              avg_annual_pay = annual_wage/n_recs;
-97              output;
-98           end;
-99         run;
-100        
-101        
-102        proc export data=qcew_earnings
-103                       outfile = "&diroutputs./qcew_earnings.dta" replace
-104                       dbms=dta;
-105        
+66           annual_empl + emp_month1;
+67           n_recs+1;
+68           if last.year then do;
+69              annual_avg_emplvl = annual_empl/n_recs;
+70              output;
+71           end;
+72         run;
+73         
+74         proc export data=qcew_county
+75                           outfile = "&diroutputs./qcew_county.dta" replace
+76                           dbms=dta ;
+77         run;
+78         
+79         data qcew_earnings (keep = fips year quarter /*avg_annual_pay annual_avg_emplvl*/ empl_month1 total_wage) ;
+80             set INPUTS.bls_us_county /* (where=( quarter=1 and aggregation_level='70'))*/ ;
+81             fips = state||county ;
+82         run;
+83         /* sort by info */
+84         proc sort data=qcew_earnings;
+85         by fips year quarter;
+86         run;
+87         
+88         data qcew_earnings (keep = fips annual_avg_emplvl avg_annual_pay year);
+89           set qcew_earnings;
+90           by fips year quarter;
+91           retain annual_empl annual_wage  n_recs;
+92           if first.year then do;
+93         	annual_empl = .;
+94                 annual_wage = .;
+95                 n_recs = 0;
+96           end;
+97           annual_empl + emp_month1;
+98           annual_wage + total_wage;
+99           n_recs+1;
+100          if last.year then do;
+101             annual_avg_emplvl = annual_empl/n_recs;
+102             avg_annual_pay = annual_wage/n_recs;
+103             output;
+104          end;
+105        run;
 106        
-107        %mend extract ;
-108        
-109         %extract;
+107        
+108        proc export data=qcew_earnings
+109                       outfile = "&diroutputs./qcew_earnings.dta" replace
+110                       dbms=dta;
+111        
+112        
+113        %mend extract ;
+114        
+115         %extract;
 
 NOTE: There were 5959008 observations read from the data set INPUTS.BLS_US_COUNTY.
       WHERE (ownership_code='5') and (aggregation_level='74') and (naicssec not = '99');
 NOTE: The data set WORK.QCEW_COUNTY has 5959008 observations and 5 variables.
 NOTE: DATA statement used (Total process time):
-      real time           2.14 seconds
-      user cpu time       1.64 seconds
-      system cpu time     0.48 seconds
+      real time           2.30 seconds
+      user cpu time       1.66 seconds
+      system cpu time     0.51 seconds
       memory              942.00k
       OS Memory           6296.00k
-      Timestamp           06/22/2020 02:31:34 PM
+      Timestamp           06/25/2020 10:51:42 PM
       Step Count                        1  Switch Count  0
       Page Faults                       0
       Page Reclaims                     794
       Page Swaps                        0
-      Voluntary Context Switches        15
-      Involuntary Context Switches      743
+      Voluntary Context Switches        11
+      Involuntary Context Switches      753
       Block Input Operations            1390624
       Block Output Operations           374280
       
@@ -174,18 +174,18 @@ NOTE: There were 5959008 observations read from the data set WORK.QCEW_COUNTY.
 NOTE: 0 observations with duplicate key values were deleted.
 NOTE: The data set WORK.QCEW_COUNTY has 5959008 observations and 5 variables.
 NOTE: PROCEDURE SORT used (Total process time):
-      real time           3.87 seconds
-      user cpu time       3.47 seconds
-      system cpu time     0.40 seconds
+      real time           4.01 seconds
+      user cpu time       3.59 seconds
+      system cpu time     0.42 seconds
       memory              422401.65k
       OS Memory           428224.00k
-      Timestamp           06/22/2020 02:31:38 PM
+      Timestamp           06/25/2020 10:51:46 PM
       Step Count                        2  Switch Count  0
       Page Faults                       0
       Page Reclaims                     105372
       Page Swaps                        0
       Voluntary Context Switches        0
-      Involuntary Context Switches      7
+      Involuntary Context Switches      8
       Block Input Operations            0
       Block Output Operations           374280
       
@@ -194,12 +194,12 @@ NOTE: PROCEDURE SORT used (Total process time):
 NOTE: There were 5959008 observations read from the data set WORK.QCEW_COUNTY.
 NOTE: The data set WORK.QCEW_COUNTY has 1489752 observations and 4 variables.
 NOTE: DATA statement used (Total process time):
-      real time           1.42 seconds
-      user cpu time       1.33 seconds
-      system cpu time     0.11 seconds
+      real time           1.45 seconds
+      user cpu time       1.34 seconds
+      system cpu time     0.12 seconds
       memory              588.00k
       OS Memory           6808.00k
-      Timestamp           06/22/2020 02:31:39 PM
+      Timestamp           06/25/2020 10:51:48 PM
       Step Count                        3  Switch Count  0
       Page Faults                       0
       Page Reclaims                     39
@@ -214,18 +214,18 @@ NOTE: DATA statement used (Total process time):
 NOTE: The export data set has 1489752 observations and 4 variables.
 NOTE: "/ssgprojects/project0002/MobZ.new/data/qcew_county.dta" file was successfully created.
 NOTE: PROCEDURE EXPORT used (Total process time):
-      real time           0.30 seconds
+      real time           0.28 seconds
       user cpu time       0.16 seconds
       system cpu time     0.05 seconds
       memory              546.40k
       OS Memory           6808.00k
-      Timestamp           06/22/2020 02:31:39 PM
+      Timestamp           06/25/2020 10:51:48 PM
       Step Count                        4  Switch Count  0
       Page Faults                       0
       Page Reclaims                     95
       Page Swaps                        0
-      Voluntary Context Switches        1250
-      Involuntary Context Switches      41
+      Voluntary Context Switches        972
+      Involuntary Context Switches      40
       Block Input Operations            0
       Block Output Operations           81480
       
@@ -235,18 +235,18 @@ WARNING: The variable empl_month1 in the DROP, KEEP, or RENAME list has never be
 NOTE: There were 9863852 observations read from the data set INPUTS.BLS_US_COUNTY.
 NOTE: The data set WORK.QCEW_EARNINGS has 9863852 observations and 4 variables.
 NOTE: DATA statement used (Total process time):
-      real time           1.53 seconds
-      user cpu time       0.99 seconds
-      system cpu time     0.52 seconds
+      real time           1.52 seconds
+      user cpu time       1.02 seconds
+      system cpu time     0.48 seconds
       memory              517.71k
       OS Memory           6808.00k
-      Timestamp           06/22/2020 02:31:41 PM
+      Timestamp           06/25/2020 10:51:49 PM
       Step Count                        5  Switch Count  0
       Page Faults                       0
       Page Reclaims                     8
       Page Swaps                        0
-      Voluntary Context Switches        11
-      Involuntary Context Switches      707
+      Voluntary Context Switches        18
+      Involuntary Context Switches      697
       Block Input Operations            1390624
       Block Output Operations           465288
       
@@ -255,12 +255,12 @@ NOTE: DATA statement used (Total process time):
 NOTE: There were 9863852 observations read from the data set WORK.QCEW_EARNINGS.
 NOTE: The data set WORK.QCEW_EARNINGS has 9863852 observations and 4 variables.
 NOTE: PROCEDURE SORT used (Total process time):
-      real time           3.56 seconds
-      user cpu time       3.05 seconds
-      system cpu time     0.53 seconds
+      real time           3.54 seconds
+      user cpu time       3.01 seconds
+      system cpu time     0.55 seconds
       memory              544002.75k
       OS Memory           550332.00k
-      Timestamp           06/22/2020 02:31:45 PM
+      Timestamp           06/25/2020 10:51:53 PM
       Step Count                        6  Switch Count  0
       Page Faults                       0
       Page Reclaims                     135443
@@ -275,22 +275,22 @@ NOTE: PROCEDURE SORT used (Total process time):
 NOTE: Variable emp_month1 is uninitialized.
 NOTE: Missing values were generated as a result of performing an operation on missing values.
       Each place is given by: (Number of times) at (Line):(Column).
-      97582 at 109:182   
+      97582 at 115:182   
 NOTE: There were 9863852 observations read from the data set WORK.QCEW_EARNINGS.
 NOTE: The data set WORK.QCEW_EARNINGS has 97582 observations and 4 variables.
 NOTE: DATA statement used (Total process time):
-      real time           1.32 seconds
-      user cpu time       1.23 seconds
-      system cpu time     0.09 seconds
+      real time           1.31 seconds
+      user cpu time       1.24 seconds
+      system cpu time     0.08 seconds
       memory              587.71k
       OS Memory           7320.00k
-      Timestamp           06/22/2020 02:31:46 PM
+      Timestamp           06/25/2020 10:51:54 PM
       Step Count                        7  Switch Count  0
       Page Faults                       0
       Page Reclaims                     5
       Page Swaps                        0
       Voluntary Context Switches        0
-      Involuntary Context Switches      6
+      Involuntary Context Switches      4
       Block Input Operations            0
       Block Output Operations           6152
       
@@ -298,17 +298,17 @@ NOTE: DATA statement used (Total process time):
 NOTE: The export data set has 97582 observations and 4 variables.
 NOTE: "/ssgprojects/project0002/MobZ.new/data/qcew_earnings.dta" file was successfully created.
 NOTE: PROCEDURE EXPORT used (Total process time):
-      real time           0.02 seconds
-      user cpu time       0.00 seconds
-      system cpu time     0.01 seconds
+      real time           0.03 seconds
+      user cpu time       0.01 seconds
+      system cpu time     0.00 seconds
       memory              342.84k
       OS Memory           7320.00k
-      Timestamp           06/22/2020 02:31:46 PM
+      Timestamp           06/25/2020 10:51:54 PM
       Step Count                        8  Switch Count  0
       Page Faults                       0
       Page Reclaims                     5
       Page Swaps                        0
-      Voluntary Context Switches        133
+      Voluntary Context Switches        122
       Involuntary Context Switches      3
       Block Input Operations            0
       Block Output Operations           5720
@@ -316,18 +316,18 @@ NOTE: PROCEDURE EXPORT used (Total process time):
 
 NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
 NOTE: The SAS System used:
-      real time           14.24 seconds
-      user cpu time       11.89 seconds
-      system cpu time     2.20 seconds
+      real time           14.56 seconds
+      user cpu time       12.05 seconds
+      system cpu time     2.22 seconds
       memory              548538.03k
       OS Memory           550332.00k
-      Timestamp           06/22/2020 02:31:46 PM
+      Timestamp           06/25/2020 10:51:54 PM
       Step Count                        8  Switch Count  22
       Page Faults                       0
-      Page Reclaims                     246516
+      Page Reclaims                     246514
       Page Swaps                        0
-      Voluntary Context Switches        1500
-      Involuntary Context Switches      1521
+      Voluntary Context Switches        1217
+      Involuntary Context Switches      1520
       Block Input Operations            2781264
       Block Output Operations           1842904
       

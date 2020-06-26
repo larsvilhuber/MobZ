@@ -12,9 +12,7 @@ commuting zones
 
 include "../config.do"
 
-local czonedataset = "${interwrk}/clusters_cutoff_jtw1990.dta"
-global czone_iteration = "${interwrk}/czones_cutoff.dta"
-local ipw_regs "${interwrk}/cutoff_post.dta"
+local czonedataset = "${outputs}/clusters_cutoff_jtw1990.dta"
  local qcewdata = "$qcewdata/qcew_county.dta"
 #delimit ; 
 
@@ -22,7 +20,7 @@ local ipw_regs "${interwrk}/cutoff_post.dta"
 First get the two czone datasets ready
 **********************************/
 set more off;
-    use "$interwrk/bootclusters_jtw1990_moe_new.dta", clear;
+    use "$outputs/bootclusters_jtw1990_moe_new.dta", clear;
    
     keep fips clustername ;
     egen czone = group(clustername) ;
