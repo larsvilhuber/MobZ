@@ -77,3 +77,10 @@ sysdir
 
 /* ADH */
     global adhdata "${raw}/adh_data/Public Release Data/dta"
+/* CZONE */
+    global czonedata "${raw}/adh_data/"
+
+/* CBP */
+    /* this is where the raw Stata versions of CBP data reside */
+   global cbpdata "/data/clean/cbp"
+

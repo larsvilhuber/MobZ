@@ -33,4 +33,4 @@ options sasautos=(SASAUTOS, "&dirprog./macros") mautosource nocenter ps=1000;
 *  - paper: 1000;
 *  - testing: 3;
 
-%let bootstrap_num = 3;
+%let bootstrap_num = 100;
