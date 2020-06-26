@@ -4,7 +4,7 @@ This dofile creates the RHS for the outcome
 
 include "../config.do"
     
-use "$interwrk/cw_cty_czone.dta", clear
+use "$czonedata/cw_cty_czone.dta", clear
 sort cty_fips
 tempfile czone
 save `czone', replace
