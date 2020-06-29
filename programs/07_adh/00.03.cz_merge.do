@@ -1,13 +1,18 @@
 /****merge together all the data at 1990 cz level****/
 
 /************* READ IN COMMUTING ZONE XWALK *******************/
-import delimited "$datadir/czones.csv", clear 
+//import delimited "$datadir/czones.csv", clear 
 
-tostring fips, replace force
-replace fips = "0" + fips if length(fips) == 4
+//tostring fips, replace force
+//replace fips = "0" + fips if length(fips) == 4
 *replace fips = "12086" if fips == "12025"
+    use "${interwrk}/czlma903", clear
+    rename countyfipscode fips
+    rename cz90 czone 
+    keep fips czone 
+
 sort fips 
-rename czone1990 czone
+//rename czone1990 czone
 tempfile czone 
 save `czone', replace
 
