@@ -30,10 +30,11 @@ set more off;
     save `czone_rep', replace ;
 
 
-    import delimited /data/working/mobz/geo/cz90.csv , clear ;
-    tostring countyfipscode, gen(fips) ;
-    replace fips = "0" + fips if length(fips) == 4 ;
-    *rename countyfipscode fips;
+    //import delimited /data/working/mobz/geo/cz90.csv , clear ;
+    use "${interwrk}/czlma903", clear;
+    //tostring countyfipscode, gen(fips) ;
+    //replace fips = "0" + fips if length(fips) == 4 ;
+    rename countyfipscode fips;
     egen czone = group(cz90) ;
     keep fips czone ;
     

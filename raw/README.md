@@ -1,6 +1,19 @@
 Source data
 ===========
+
+Commuting Zones
+--------------
+Of course, we need commuting zones:
+
+- Source https://www.ers.usda.gov/data-products/commuting-zones-and-labor-market-areas/
+  - Actual file: https://www.ers.usda.gov/webdocs/DataFiles/48457/czlma903.xls?v=6997.1
+
+JTW
+---
+
 Most of the JTW data can be found at https://www.census.gov/topics/employment/commuting/guidance/flows.html
+
+
 
 1990 JTW
 --------

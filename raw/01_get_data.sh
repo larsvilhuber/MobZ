@@ -42,3 +42,6 @@ else
   wget -O - $WGET_OPTS https://download.bls.gov/pub/time.series/la/la.data.0.CurrentU$arg | grep LAUCN >> $UFILE
  done
 fi
+
+# CZ
+curl https://www.ers.usda.gov/webdocs/DataFiles/48457/czlma903.xls?v=6997.1 > czlma903.xls

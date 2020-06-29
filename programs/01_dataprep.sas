@@ -77,15 +77,30 @@ run;
 
 
 %macro module_czones;
+    	/* Commuting zones are here: https://www.ers.usda.gov/webdocs/DataFiles/Commuting_Zones_and_Labor_Market_Areas__17970//czlma903.xls */
 
+    proc import out=czones DATAFILE="&root./raw/czlma903.xls" dbms=xls replace;
+       sheet="CZLMA903";
+       getnames=yes;
+       run;
+       proc contents;
+       run;
+    data OUTPUTS.cz1990;
+       set czones;
+       length cty $ 5;
+       cty = compress(County_FIPS_Code);
+       cz1990 =  cz90;
+       run; 
+
+/*
     data OUTPUTS.cz1990 (keep = cty cz1990) ;
     	length cty $5. ;
     	infile "&root./raw/czones.csv" dsd  delimiter = ',' termstr=lf  ;
-    	/* Commuting zones are here: https://www.ers.usda.gov/webdocs/DataFiles/Commuting_Zones_and_Labor_Market_Areas__17970//czlma903.xls */
     	input ctycode $ cz1990 $ ;
     	if cz1990 ne "CZ90"; 
     	cty = ctycode ; 
     run ; 		
+*/
     
     proc sort data = OUTPUTS.cz1990 ;
     	by cty ;
