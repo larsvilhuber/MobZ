@@ -3,6 +3,8 @@
 include "../config.do"
 
 use "$cbpdata/cbp1990_co.dta", clear
+keep if sic=="20--"
+desc
 
 gen fips = fipstate*1000 + fipscty
 tostring fips, replace force
@@ -31,6 +33,8 @@ tempfile cbp90
 save `cbp90', replace
 
 use "$cbpdata/cbp2000_co.dta", clear
+keep if naics=="31----"
+desc
 
 gen fips = fipstate*1000 + fipscty
 tostring fips, replace force
@@ -59,6 +63,8 @@ tempfile cbp00
 save `cbp00', replace
 
 use "$cbpdata/cbp2007_co.dta", clear
+keep if naics=="31----"
+desc
 
 gen fips = fipstate*1000+fipscty
 tostring fips, replace force
@@ -90,6 +96,7 @@ save `cbp07', replace
 
 append using `cbp00'
 append using `cbp90'
+
 
 tab year 
 sort fips year
