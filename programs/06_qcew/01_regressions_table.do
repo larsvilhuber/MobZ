@@ -13,7 +13,7 @@ commuting zones
 include "../config.do"
 
 local czonedataset = "${outputs}/clusters_cutoff_jtw1990.dta"
- local qcewdata = "$qcewdata/qcew_county.dta"
+local qcewdata = "${outputs}/qcew_county.dta"
 #delimit ; 
 
 /*********************************
