@@ -14,6 +14,8 @@ include "../config.do"
 
 local czonedataset = "${outputs}/clusters_cutoff_jtw1990.dta"
 local qcewdata = "${outputs}/qcew_county.dta"
+global czone_iteration = "${interwrk}/czones_cutoff.dta"
+
 #delimit ; 
 
 /*********************************
@@ -50,7 +52,7 @@ set more off;
  
  use `qcewdata', clear; 
  
-  destring naics2, replace ;
+  destring naics2, force replace ;
  collapse (first) fips, by(naics2 year) ;
  keep naics2 year ;
  tempfile shell;
@@ -82,7 +84,8 @@ use `czone_ts', clear ;
       save `shell2', replace ;
       
 
-      include "$programs/qcew/zz_bartik_merge.do" ;
+      include "$programs/06_qcew/zz_bartik_merge.do" ;
+
       xtset czone year; 
 sum bartik_it, d;
 local sd_ts = r(sd);
@@ -108,7 +111,7 @@ use `czone_rep' , clear ;
       save `shell2', replace ;
       
 
-      include "$programs/qcew/zz_bartik_merge.do" ;
+      include "$programs/06_qcew/zz_bartik_merge.do" ;
       xtset czone year; 
 sum bartik_it, d;
 local sd_fkv = r(sd);

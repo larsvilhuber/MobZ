@@ -1,0 +1,737 @@
+
+  ___  ____  ____  ____  ____ (R)
+ /__    /   ____/   /   ____/
+___/   /   /___/   /   /___/   14.2   Copyright 1985-2015 StataCorp LLC
+  Statistics/Data Analysis            StataCorp
+                                      4905 Lakeway Drive
+                                      College Station, Texas 77845 USA
+                                      800-STATA-PC        http://www.stata.com
+                                      979-696-4600        stata@stata.com
+                                      979-696-4601 (fax)
+
+8-user Stata network perpetual license:
+       Serial number:  501406244326
+         Licensed to:  ECCO Cornell University
+                       Ithaca, NY
+
+Notes:
+      1.  Stata is running in batch mode.
+      2.  Unicode is supported; see help unicode_advice.
+
+. do 01_regressions_table.do 
+
+. /**********************
+> This is the do-file that creates
+> the tables for Table 2 of the paper
+> 
+> Four regressions:
+> Weighted/unweighted
+> 
+> TS1996 commuting zones and our replicated
+> commuting zones
+>         
+> ***************************/
+. 
+. include "../config.do"
+
+. /*  config.do */
+. 
+. 
+. 
+. if ( "`c(hostname)'" == "ecco.vrdc.cornell.edu" ) {
+. global root "/ssgprojects/project0002/MobZ.new"
+. }
+
+. 
+. if ( "`c(username)'" == "vilhuber" ) {
+. global root "/home/vilhuber/Workspace/git/larsvilhuber/MobZ"
+. }
+
+. 
+. if ( "`c(hostname)'" == "some.server.at.census" ) {
+. global root "/made/up/path/Mobz"
+. }
+
+. 
+. /* check if the author creates a log file. If not, adjust the following code 
+> fragment */
+. 
+. local c_date = c(current_date)
+
+. local cdate = subinstr("`c_date'", " ", "_", .)
+
+. local c_time = c(current_time)
+
+. local ctime = subinstr("`c_time'", ":", "_", .)
+
+. 
+. // log using "${root}/logfile_`cdate'-`ctime'.log", replace text
+. 
+. /* It will provide some info about how and when the program was run */
+. /* See https://www.stata.com/manuals13/pcreturn.pdf#pcreturn */
+. local variant = cond(c(MP),"MP",cond(c(SE),"SE",c(flavor)) )  
+
+. // alternatively, you could use 
+. // local variant = cond(c(stata_version)>13,c(real_flavor),"NA")  
+. 
+. di "=== SYSTEM DIAGNOSTICS ==="
+=== SYSTEM DIAGNOSTICS ===
+
+. di "Stata version: `c(stata_version)'"
+Stata version: 14.2
+
+. di "Updated as of: `c(born_date)'"
+Updated as of: 19 Dec 2017
+
+. di "Variant:       `variant'"
+Variant:       IC
+
+. di "Processors:    `c(processors)'"
+Processors:    1
+
+. di "OS:            `c(os)' `c(osdtl)'"
+OS:            Unix 
+
+. di "Machine type:  `c(machine_type)'"
+Machine type:  PC (64-bit x86-64)
+
+. di "=========================="
+==========================
+
+. 
+. 
+. 
+. 
+. /* define relative libraries */
+. 
+. global paperdir "${root}/paper"
+
+. global interwrk "${root}/data/interwrk"
+
+. global raw "${root}/raw"
+
+. global temp "${root}/temp"
+
+. global outputs "${root}/data"
+
+. global programs "${root}/programs"
+
+. global outgraphs "${root}/figures"
+
+. global logdir "${programs}/logs"
+
+. 
+. cap mkdir "$logdir"
+
+. log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
+(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_30_Jun_2020
+> -18_14_27.log not found)
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_30_Jun_202
+> 0-18_14_27.log
+  log type:  text
+ opened on:  30 Jun 2020, 18:14:27
+
+. cap mkdir "$temp"
+
+. cap mkdir "${root}/data"
+
+. cap mkdir "$interwrk"
+
+. cap mkdir "$raw"
+
+. cap mkdir "$outputs"
+
+. 
+. /* install any packages locally */
+. capture mkdir "${programs}/ado"
+
+. sysdir set PERSONAL "${programs}/ado/personal"
+
+. sysdir set PLUS     "${programs}/ado/plus"
+
+. sysdir set SITE     "${programs}/ado/site"
+
+. sysdir
+   STATA:  /usr/local/stata14/
+    BASE:  /usr/local/stata14/ado/base/
+    SITE:  /ssgprojects/project0002/MobZ.new/programs/ado/site/
+    PLUS:  /ssgprojects/project0002/MobZ.new/programs/ado/plus/
+PERSONAL:  /ssgprojects/project0002/MobZ.new/programs/ado/personal/
+OLDPLACE:  ~/ado/
+
+. 
+. /* define data sources */
+. 
+. /* QCEW */
+. /* data/working/mobz/qcew */
+.     global qcewdata "${raw}/qcew"  
+
+. /* /data/working/mobz/outputs */
+.     global czonedata "$outputs"  
+
+. 
+. /* ADH */
+.     global adhdata "${raw}/adh_data/Public Release Data/dta"
+
+. /* CZONE */
+.     global czonedata "${raw}/adh_data/"
+
+. 
+. /* CBP */
+.     /* this is where the raw Stata versions of CBP data reside */
+.    global cbpdata "/data/clean/cbp"
+
+. 
+. 
+. 
+. local czonedataset = "${outputs}/clusters_cutoff_jtw1990.dta"
+
+. local qcewdata = "${outputs}/qcew_county.dta"
+
+. global czone_iteration = "${interwrk}/czones_cutoff.dta"
+
+. 
+. #delimit ; 
+delimiter now ;
+. /*********************************
+> First get the two czone datasets ready
+> **********************************/
+> set more off;
+
+.     use "$outputs/bootclusters_jtw1990_moe_new.dta", clear;
+
+.        keep fips clustername ;
+
+.     egen czone = group(clustername) ;
+
+.         tempfile czone_rep ;
+
+.     sort fips ;
+
+.     save `czone_rep', replace ;
+(note: file /tmp/St06678.000001 not found)
+file /tmp/St06678.000001 saved
+
+.     //import delimited /data/working/mobz/geo/cz90.csv , clear ;
+>     use "${interwrk}/czlma903", clear;
+
+.     //tostring countyfipscode, gen(fips) ;
+>     //replace fips = "0" + fips if length(fips) == 4 ;
+>     rename countyfipscode fips;
+
+.     egen czone = group(cz90) ;
+
+.     keep fips czone ;
+
+.         sort fips ;
+
+.     tempfile czone_ts ;
+
+.     save `czone_ts', replace;
+(note: file /tmp/St06678.000002 not found)
+file /tmp/St06678.000002 saved
+
+. /**********************************
+>  industry data
+> **********************************/
+> /* create shell here */
+>  
+>  use `qcewdata', clear;
+
+.     destring naics2, force replace ;
+naics2: contains nonnumeric characters; replaced as byte
+(265486 missing values generated)
+
+.  collapse (first) fips, by(naics2 year) ;
+
+.  keep naics2 year ;
+
+.  tempfile shell;
+
+.  save `shell', replace;
+(note: file /tmp/St06678.000003 not found)
+file /tmp/St06678.000003 saved
+
+.   /* create industry-year data here */
+>  use `qcewdata', clear;
+
+.   destring naics2, force replace ;
+naics2: contains nonnumeric characters; replaced as byte
+(265486 missing values generated)
+
+.   collapse (sum) EMP_jt = annual_avg_emplvl, by(naics2 year) ;
+
+. sort naics2 year ;
+
+.  xtset naics2 year ;
+       panel variable:  naics2 (weakly balanced)
+        time variable:  year, 1990 to 2019
+                delta:  1 unit
+
+. gen delta_emp_jt = log(EMP_jt) - log(L.EMP_jt) ;
+(17 missing values generated)
+
+. tempfile industry_by_year ;
+
+. save `industry_by_year' , replace ;
+(note: file /tmp/St06678.000004 not found)
+file /tmp/St06678.000004 saved
+
+. /********************************
+> First, regressions with TS1990 
+> *********************************/
+> 
+> use `czone_ts', clear ;
+
+.    save $czone_iteration, replace;
+file /ssgprojects/project0002/MobZ.new/data/interwrk/czones_cutoff.dta saved
+
+.  collapse (first) fips, by( czone) ;
+
+.       cross using `shell' ;
+
+.       tempfile shell2 ;
+
+.       save `shell2', replace ;
+(note: file /tmp/St06678.000005 not found)
+file /tmp/St06678.000005 saved
+
+.             include "$programs/06_qcew/zz_bartik_merge.do" ;
+
+. #delimit ; 
+delimiter now ;
+. /*******************************************
+> 
+> globals set above - this will be "include"-d
+> 
+> ********************************************/
+> 
+>  /* important tempfiles:
+> 
+> masterdata - data to which things will get merged
+> $czone_iteration - the czone definition being used right now
+>    (already sorted by FIPS)
+> qcewdata - sorted by fips
+> industry_by_year - sorted by naics2 year (employment growth);
+> shell - a naics-year-czone dataset for merging into ;
+> 
+> */
+>     
+> use `qcewdata', clear;
+
+. destring naics2, force replace;
+naics2: contains nonnumeric characters; replaced as byte
+(265486 missing values generated)
+
+.   sort fips ;
+
+.  merge fips using $czone_iteration ;
+(note: you are using old merge syntax; see [D] merge for new syntax)
+variable fips does not uniquely identify observations in the master data
+
+. drop _merge ;
+
+. tempfile mergefile;
+
+. save `mergefile', replace;
+(note: file /tmp/St06678.000006 not found)
+file /tmp/St06678.000006 saved
+
+. /************** BASE YEAR ***********************/
+> bys naics2 czone: egen L_ij1990 = sum(annual_avg_emplvl*(year==1990)) ;
+
+. bys czone: egen L_1990 = sum(annual_avg_emplvl*(year==1990)) ;
+
+. gen gamma_ij1990 = L_ij1990 / L_1990 ;
+(836 missing values generated)
+
+. collapse (first) gamma_ij1990, by(czone naics2) ;
+
+. sort czone naics2;
+
+. tempfile base_year ;
+
+. save `base_year', replace;
+(note: file /tmp/St06678.000007 not found)
+file /tmp/St06678.000007 saved
+
+. /************** merging into bartik  *****************/
+> 
+> use `shell2', clear ;
+
+. sort czone naics2 ;
+
+. merge czone naics2 using `base_year' ;
+(note: you are using old merge syntax; see [D] merge for new syntax)
+variables czone naics2 do not uniquely identify observations in the master
+    data
+
+. drop _merge ;
+
+. sort naics2 year ;
+
+. merge naics2 year using `industry_by_year', keep(delta_emp_jt) ;
+(note: you are using old merge syntax; see [D] merge for new syntax)
+variables naics2 year do not uniquely identify observations in the master
+    data
+
+. bys czone year: egen bartik_it = sum(delta_emp_jt*gamma_ij1990) ;
+
+. collapse (first) bartik_it, by(czone year) ;
+
+. keep czone year bartik_it ;
+
+. tempfile bartik ;
+
+. save `bartik', replace;
+(note: file /tmp/St06678.000008 not found)
+file /tmp/St06678.000008 saved
+
+. /************** NOW, COLLAPSE EARNINGS TO CZONE **********/
+> 
+> use "$interwrk/bea_table30.dta", clear;
+
+.   sort fips ;
+
+. merge fips using $czone_iteration ;
+(note: you are using old merge syntax; see [D] merge for new syntax)
+variable fips does not uniquely identify observations in the master data
+
+. collapse (sum) uireceipt , by(czone year) ;
+
+.  gen log_uireceipt = log(uireceipt) ;
+(22 missing values generated)
+
+. sort czone year ;
+
+. merge czone year using `bartik' ;
+(note: you are using old merge syntax; see [D] merge for new syntax)
+(note: variable year was int, now double to accommodate using data's values)
+
+. drop _merge ;
+
+.  tempfile mergedfile ;
+
+. /* then will merge this outside this file, to */
+
+.       xtset czone year;
+       panel variable:  czone (unbalanced)
+        time variable:  year, 1990 to 2019
+                delta:  1 unit
+
+.  sum bartik_it, d;
+
+                      (first) bartik_it
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%    -.0715458      -.1842645
+ 5%     -.029573      -.1300157
+10%    -.0180007      -.1029507       Obs              22,231
+25%            0      -.0956751       Sum of Wgt.      22,231
+
+50%     .0143544                      Mean           .0080191
+                        Largest       Std. Dev.      .0205997
+75%     .0205786        .105778
+90%     .0250195       .1093047       Variance       .0004243
+95%     .0271925       .1096795       Skewness      -1.825577
+99%     .0329741       .1895917       Kurtosis       8.148263
+
+. local sd_ts = r(sd);
+
+.       areg log_uireceipt L.bartik_it i.year, absorb(czone) cluster(czone) ;
+
+Linear regression, absorbing indicators         Number of obs     =     18,500
+                                                F(  25,    739)   =    1134.52
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9838
+                                                Adj R-squared     =     0.9831
+                                                Root MSE          =     0.2495
+
+                                (Std. Err. adjusted for 740 clusters in czone)
+------------------------------------------------------------------------------
+             |               Robust
+log_uirece~t |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   bartik_it |
+         L1. |  -6.896829   1.209666    -5.70   0.000    -9.271619   -4.522038
+             |
+        year |
+       1992  |   .1559041   .0312322     4.99   0.000     .0945896    .2172185
+       1993  |   .6736146   .0087462    77.02   0.000     .6564444    .6907849
+       1994  |   .6889953   .0211318    32.60   0.000     .6475098    .7304808
+       1995  |   .4360771   .0331826    13.14   0.000     .3709337    .5012205
+       1996  |   .3856496   .0324518    11.88   0.000     .3219409    .4493583
+       1997  |   .4126106   .0260229    15.86   0.000      .361523    .4636983
+       1998  |   .3695125   .0302103    12.23   0.000     .3102042    .4288208
+       1999  |   .3558138   .0283852    12.54   0.000     .3000885    .4115391
+       2000  |   .3642936   .0246028    14.81   0.000      .315994    .4125932
+       2001  |   .3421893   .0201731    16.96   0.000     .3025859    .3817927
+       2002  |   .7309091   .0292499    24.99   0.000     .6734863    .7883319
+       2003  |   .8393342   .0301835    27.81   0.000     .7800786    .8985899
+       2004  |   .9757108   .0195538    49.90   0.000     .9373232    1.014098
+       2005  |   .7799435   .0180531    43.20   0.000      .744502     .815385
+       2006  |   .6669141   .0237045    28.13   0.000      .620378    .7134503
+       2007  |   .6030073   .0220246    27.38   0.000      .559769    .6462456
+       2008  |   .6236296   .0184297    33.84   0.000     .5874487    .6598104
+       2009  |   .9097365    .018415    49.40   0.000     .8735847    .9458884
+       2010  |    1.43694   .0803537    17.88   0.000     1.279191    1.594689
+       2011  |   1.811552   .0258088    70.19   0.000     1.760884    1.862219
+       2012  |    1.78305   .0256644    69.48   0.000     1.732666    1.833433
+       2013  |    1.57471    .030735    51.23   0.000     1.514371    1.635048
+       2014  |   1.241782   .0234468    52.96   0.000     1.195752    1.287812
+       2015  |   .7646647   .0295963    25.84   0.000     .7065618    .8227676
+             |
+       _cons |   8.501321   .0097401   872.81   0.000     8.482199    8.520442
+-------------+----------------------------------------------------------------
+       czone |   absorbed                                     (740 categories)
+
+.                  local beta_ts = _b[L.bartik_it] ;
+
+.                  local se_ts = _se[L.bartik_it] ;
+
+.                  local tstat_ts = _b[L.bartik_it]/_se[L.bartik_it] ;
+
+. /***
+>  then a weighted regression here
+> ***/
+> 
+> 
+> /*******************************
+> Second regressions with FKV1990
+> *******************************/
+> use `czone_rep' , clear ;
+
+.      save $czone_iteration, replace;
+file /ssgprojects/project0002/MobZ.new/data/interwrk/czones_cutoff.dta saved
+
+.  collapse (first) fips, by( czone) ;
+
+.       cross using `shell' ;
+
+.       tempfile shell2 ;
+
+.       save `shell2', replace ;
+(note: file /tmp/St06678.00000a not found)
+file /tmp/St06678.00000a saved
+
+.             include "$programs/06_qcew/zz_bartik_merge.do" ;
+
+. #delimit ; 
+delimiter now ;
+. /*******************************************
+> 
+> globals set above - this will be "include"-d
+> 
+> ********************************************/
+> 
+>  /* important tempfiles:
+> 
+> masterdata - data to which things will get merged
+> $czone_iteration - the czone definition being used right now
+>    (already sorted by FIPS)
+> qcewdata - sorted by fips
+> industry_by_year - sorted by naics2 year (employment growth);
+> shell - a naics-year-czone dataset for merging into ;
+> 
+> */
+>     
+> use `qcewdata', clear;
+
+. destring naics2, force replace;
+naics2: contains nonnumeric characters; replaced as byte
+(265486 missing values generated)
+
+.   sort fips ;
+
+.  merge fips using $czone_iteration ;
+(note: you are using old merge syntax; see [D] merge for new syntax)
+variable fips does not uniquely identify observations in the master data
+(note: variable fips was str6, now str10 to accommodate using data's values)
+
+. drop _merge ;
+
+. tempfile mergefile;
+
+. save `mergefile', replace;
+(note: file /tmp/St06678.00000b not found)
+file /tmp/St06678.00000b saved
+
+. /************** BASE YEAR ***********************/
+> bys naics2 czone: egen L_ij1990 = sum(annual_avg_emplvl*(year==1990)) ;
+
+. bys czone: egen L_1990 = sum(annual_avg_emplvl*(year==1990)) ;
+
+. gen gamma_ij1990 = L_ij1990 / L_1990 ;
+
+. collapse (first) gamma_ij1990, by(czone naics2) ;
+
+. sort czone naics2;
+
+. tempfile base_year ;
+
+. save `base_year', replace;
+(note: file /tmp/St06678.00000c not found)
+file /tmp/St06678.00000c saved
+
+. /************** merging into bartik  *****************/
+> 
+> use `shell2', clear ;
+
+. sort czone naics2 ;
+
+. merge czone naics2 using `base_year' ;
+(note: you are using old merge syntax; see [D] merge for new syntax)
+variables czone naics2 do not uniquely identify observations in the master
+    data
+
+. drop _merge ;
+
+. sort naics2 year ;
+
+. merge naics2 year using `industry_by_year', keep(delta_emp_jt) ;
+(note: you are using old merge syntax; see [D] merge for new syntax)
+variables naics2 year do not uniquely identify observations in the master
+    data
+
+. bys czone year: egen bartik_it = sum(delta_emp_jt*gamma_ij1990) ;
+
+. collapse (first) bartik_it, by(czone year) ;
+
+. keep czone year bartik_it ;
+
+. tempfile bartik ;
+
+. save `bartik', replace;
+(note: file /tmp/St06678.00000d not found)
+file /tmp/St06678.00000d saved
+
+. /************** NOW, COLLAPSE EARNINGS TO CZONE **********/
+> 
+> use "$interwrk/bea_table30.dta", clear;
+
+.   sort fips ;
+
+. merge fips using $czone_iteration ;
+(note: you are using old merge syntax; see [D] merge for new syntax)
+variable fips does not uniquely identify observations in the master data
+(note: variable fips was str5, now str10 to accommodate using data's values)
+
+. collapse (sum) uireceipt , by(czone year) ;
+
+.  gen log_uireceipt = log(uireceipt) ;
+(28 missing values generated)
+
+. sort czone year ;
+
+. merge czone year using `bartik' ;
+(note: you are using old merge syntax; see [D] merge for new syntax)
+(note: variable year was int, now double to accommodate using data's values)
+
+. drop _merge ;
+
+.  tempfile mergedfile ;
+
+. /* then will merge this outside this file, to */
+
+.       xtset czone year;
+       panel variable:  czone (unbalanced)
+        time variable:  year, 1990 to 2019
+                delta:  1 unit
+
+.  sum bartik_it, d;
+
+                      (first) bartik_it
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%    -.0714211      -.1179878
+ 5%    -.0293079      -.1091667
+10%    -.0179729      -.1021747       Obs              22,651
+25%            0      -.0989288       Sum of Wgt.      22,651
+
+50%     .0145422                      Mean           .0081452
+                        Largest       Std. Dev.      .0205429
+75%     .0207877       .0931345
+90%     .0251504       .1111616       Variance        .000422
+95%     .0273031       .1150512       Skewness      -1.908049
+99%     .0321098       .1268538       Kurtosis       7.701791
+
+. local sd_fkv = r(sd);
+
+.       areg log_uireceipt L.bartik_it i.year, absorb(czone) cluster(czone) ;
+
+Linear regression, absorbing indicators         Number of obs     =     18,700
+                                                F(  25,    747)   =    1568.66
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9781
+                                                Adj R-squared     =     0.9772
+                                                Root MSE          =     0.2303
+
+                                (Std. Err. adjusted for 748 clusters in czone)
+------------------------------------------------------------------------------
+             |               Robust
+log_uirece~t |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   bartik_it |
+         L1. |  -9.300704   1.058313    -8.79   0.000    -11.37833   -7.223083
+             |
+        year |
+       1992  |   .1133977   .0277803     4.08   0.000     .0588609    .1679345
+       1993  |   .6795032   .0079761    85.19   0.000     .6638449    .6951615
+       1994  |   .7126191   .0190367    37.43   0.000     .6752474    .7499908
+       1995  |   .4637575   .0297206    15.60   0.000     .4054116    .5221033
+       1996  |   .4063061   .0289498    14.03   0.000     .3494734    .4631388
+       1997  |   .4156005   .0235398    17.66   0.000     .3693884    .4618126
+       1998  |   .3837198   .0272845    14.06   0.000     .3301563    .4372833
+       1999  |   .3594494   .0258531    13.90   0.000      .308696    .4102028
+       2000  |   .3591355   .0235046    15.28   0.000     .3129927    .4052784
+       2001  |   .3563556   .0193508    18.42   0.000     .3183672     .394344
+       2002  |    .816353   .0250348    32.61   0.000     .7672061    .8654998
+       2003  |   .8442792   .0255232    33.08   0.000     .7941734     .894385
+       2004  |   .9917347   .0159668    62.11   0.000     .9603896     1.02308
+       2005  |   .8362505   .0176775    47.31   0.000     .8015469     .870954
+       2006  |   .7491906   .0220022    34.05   0.000      .705997    .7923842
+       2007  |   .6881069   .0210185    32.74   0.000     .6468446    .7293692
+       2008  |   .6961988   .0174029    40.00   0.000     .6620343    .7303632
+       2009  |   .9607657   .0170261    56.43   0.000      .927341    .9941903
+       2010  |   1.357546    .070622    19.22   0.000     1.218904    1.496187
+       2011  |   1.849976   .0227547    81.30   0.000     1.805305    1.894646
+       2012  |   1.890756   .0242544    77.96   0.000     1.843141    1.938371
+       2013  |   1.679444   .0286176    58.69   0.000     1.623263    1.735624
+       2014  |   1.314857   .0226163    58.14   0.000     1.270458    1.359256
+       2015  |   .8154569   .0285151    28.60   0.000     .7594776    .8714361
+             |
+       _cons |   8.946483   .0090156   992.33   0.000     8.928784    8.964182
+-------------+----------------------------------------------------------------
+       czone |   absorbed                                     (748 categories)
+
+.                  local beta_fkv = _b[L.bartik_it] ;
+
+.                  local se_fkv = _se[L.bartik_it] ;
+
+.                  local tstat_fkv = _b[L.bartik_it]/_se[L.bartik_it] ;
+
+. di "***********************************************************";
+***********************************************************
+
+. di "*********************** RESULTS ***************************";
+*********************** RESULTS ***************************
+
+. di "BETAS:  TS   " %6.4f `beta_ts' "     FKV  " %6.4f `beta_fkv' ;
+BETAS:  TS   -6.8968     FKV  -9.3007
+
+. di "SES:  TS   " %6.4f `se_ts' "     FKV  " %6.4f `se_fkv' ;
+SES:  TS   1.2097     FKV  1.0583
+
+. di "TSTAT:  TS   " %6.4f `tstat_ts' "     FKV  " %6.4f `tstat_fkv' ;
+TSTAT:  TS   -5.7014     FKV  -8.7882
+
+. di "SD Bartik:     " %6.4f `sd_ts' "    FKV   " %6.4f `sd_fkv' ;
+SD Bartik:     0.0206    FKV   0.0205
+
+. di "***********************************************************";
+***********************************************************
+
+. 
+end of do-file
