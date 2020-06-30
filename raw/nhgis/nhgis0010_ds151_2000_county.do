@@ -257,12 +257,12 @@ label var gmh025    `"Female >> Other services (except public administration)"'
 label var gmh026    `"Female >> Public administration"'
 
 gen foreign = gi8002
-egen bachelors = rowsum(gkt013-gkt016 gkt029-gkt032)
-egen total_emp = rowsum(gmh001-gmh026)
-egen female_emp = rowsum(gmh014-gmh026)
-egen manu_emp = rowsum(gmh003 gmh016) 
+egen bachelors = rowtotal(gkt013-gkt016 gkt029-gkt032)
+egen total_emp = rowtotal(gmh001-gmh026)
+egen female_emp = rowtotal(gmh014-gmh026)
+egen manu_emp = rowtotal(gmh003 gmh016) 
 
-gen fips = statea||countya 
+gen fips = statea+countya 
 
 keep fips foreign bachelors total_emp female_emp manu_emp
 

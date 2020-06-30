@@ -773,11 +773,11 @@ label var rp5e054   `"Estimates: Female: Other services, except public administr
 label var rp5e055   `"Estimates: Female: Public administration"'
 
 
-gen fips = statea||countya 
-egen manu_emp = rowsum(rp5e007 rp5e034)
-egen female_emp = rowsum(rp5e030-rp5e055)
-egen total_emp = rowsum(rp5e030-rp5e055 rp5e003-rp5e028)
-egen bachelor = rowsum(rm8e015-rm8e018 rm8e032-rm8e035)
+gen fips = statea+countya 
+egen manu_emp = rowtotal(rp5e007 rp5e034)
+egen female_emp = rowtotal(rp5e030-rp5e055)
+egen total_emp = rowtotal(rp5e030-rp5e055 rp5e003-rp5e028)
+egen bachelor = rowtotal(rm8e015-rm8e018 rm8e032-rm8e035)
 
 keep fips manu_emp female_emp total_emp bachelor
 

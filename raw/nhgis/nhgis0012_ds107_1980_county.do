@@ -146,12 +146,12 @@ label var dia013    `"Professional and related services: Educational services (c
 label var dia014    `"Professional and related services: Other professional and related services (code"'
 label var dia015    `"Public administration (codes 900-932)"'
 
-gen fips = statea||countya 
-egen female_emp = rowsum(dhx006)
-egen manu_emp = rowsum(dia003 dia004)
+gen fips = statea+countya 
+egen female_emp = rowtotal(dhx006)
+egen manu_emp = rowtotal(dia003 dia004)
 gen foreign = dg6004 
 gen bachelors = dhm005
-egen total_emp = rowsum(dhx002 dhx006)
+egen total_emp = rowtotal(dhx002 dhx006)
 keep fips female_emp manu_emp foreign bachelors total_emp
 
 save 1980manu, replace 

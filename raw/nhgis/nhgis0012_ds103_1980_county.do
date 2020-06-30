@@ -704,9 +704,9 @@ label var c62150  `"Female >> 73 years"'
 label var c62151  `"Female >> 74 years"'
 label var c62152  `"Female >> 75+ years"'
 
-egen pop_16_65 = rowsum(c62017-c62066 c62093-c62142)
-egen femalepop_16_65 = rowsum(c62093-c62142)
-gen fips = statea||countya 
+egen pop_16_65 = rowtotal(c62017-c62066 c62093-c62142)
+egen femalepop_16_65 = rowtotal(c62093-c62142)
+gen fips = statea+countya 
 
 keep fips femalepop_16_65 pop_16_65
 

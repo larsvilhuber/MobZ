@@ -970,22 +970,22 @@ label var r5ce171   `"Estimates: Female: 75 years and over: In labor force: Empl
 label var r5ce172   `"Estimates: Female: 75 years and over: In labor force: Unemployed"'
 label var r5ce173   `"Estimates: Female: 75 years and over: Not in labor force"'
 #delimit ; 
-egen pop_16_65 = rowsum(r5ce003 r5ce010 r5ce017 r5ce024 
+egen pop_16_65 = rowtotal(r5ce003 r5ce010 r5ce017 r5ce024 
 						r5ce031 r5ce038 r5ce045 r5ce052	
 						r5ce059 r5ce066 
 						r5ce089 r5ce096 r5ce103 r5ce110
 						r5ce117 r5ce124 r5ce131 r5ce138
 						r5ce145 r5ce152); 
 						
-egen female_pop_16_65 = rowsum(r5ce089 r5ce096 r5ce103 r5ce110
+egen female_pop_16_65 = rowtotal(r5ce089 r5ce096 r5ce103 r5ce110
 						r5ce117 r5ce124 r5ce131 r5ce138
 						r5ce145 r5ce152);
 						
-gen fips = statea||countya  ; 
+gen fips = statea+countya  ; 
 
 keep fips pop_16_65 female_pop_16_65;
 
-save 2009pop, replace 
+save 2009pop, replace  ;
 						
 
 

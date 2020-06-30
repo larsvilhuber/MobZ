@@ -122,8 +122,8 @@ label var c3i026    `"Female >> Nonagricultural industries >> Local government w
 label var c3i027    `"Female >> Nonagricultural industries >> Self-employed worker"'
 label var c3i028    `"Female >> Nonagricultural industries >> Unpaid family worker"'
 
-egen female_emp = rowsum(c3i015-c3i028) 
-gen fips = statea||countya 
+egen female_emp = rowtotal(c3i015-c3i028) 
+gen fips = statea+countya 
 
 keep fips female_emp 
 

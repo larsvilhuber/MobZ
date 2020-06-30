@@ -174,13 +174,13 @@ label var e4p015    `"Professional and related services (812-899): Educational s
 label var e4p016    `"Professional and related services (812-899): Other professional and related serv"'
 label var e4p017    `"Public administration (900-939)"'
 
-gen fips = statea||countya 
+gen fips = statea+countya 
 gen female_emp = e4i006
-egen manu_emp = rowsum(e4p004-e4p005)
-egen total_emp = rowsum(e4p001-e4p017)
-egen foreign = rowsum(e3g002 e3g003 e3g005 e3g006)
-gen bachelors = rowsum(e33006 e33007)
+egen manu_emp = rowtotal(e4p004-e4p005)
+egen total_emp = rowtotal(e4p001-e4p017)
+egen foreign = rowtotal(e3g002 e3g003 e3g005 e3g006)
+gen bachelors = rowtotal(e33006 e33007)
 
-keep female_emp manu_emp fips 
+keep female_emp manu_emp total_emp foreign bachelors fips 
 
 save 1990emp, replace

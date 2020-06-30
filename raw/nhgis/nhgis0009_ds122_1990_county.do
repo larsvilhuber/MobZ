@@ -666,9 +666,9 @@ label var exl204    `"Female >> 100 to 104 years"'
 label var exl205    `"Female >> 105 to 109 years"'
 label var exl206    `"Female >> 110 years and over"'
 
-gen fips = statea||countya 
-egen pop_16_65 = rowsum(exl017-exl066 exl120-exl169)
-egen female_pop_16_65 = rowsum(exl120-exl169)
+gen fips = statea+countya 
+egen pop_16_65 = rowtotal(exl017-exl066 exl120-exl169)
+egen female_pop_16_65 = rowtotal(exl120-exl169)
 
 gen fips pop_16_65 female_pop_16_65 
 save 1990pop, replace

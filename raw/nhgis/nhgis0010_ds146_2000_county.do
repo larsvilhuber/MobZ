@@ -206,9 +206,9 @@ label var fmz044    `"Female >> 75 to 79 years"'
 label var fmz045    `"Female >> 80 to 84 years"'
 label var fmz046    `"Female >> 85 years and over"'
 
-gen fips = statea||countya 
-egen female_pop_16_65 = rowsum(fmz027-fmz040)
-egen pop_16_65 = rowsum(fmz004-fmz017 fmz027-fmz040)
+gen fips = statea+countya 
+egen female_pop_16_65 = rowtotal(fmz027-fmz040)
+egen pop_16_65 = rowtotal(fmz004-fmz017 fmz027-fmz040)
 
 keep fips female_pop_16_65 pop_16_65
 

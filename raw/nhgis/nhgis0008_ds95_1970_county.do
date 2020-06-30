@@ -647,9 +647,9 @@ label var ce6202    `"Female >> 100 years and over"'
 /***************************************
 Creating populations 
 *******************************************/
-egen pop_16_65 = rowsum(ce6017-ce6066 ce6118-ce6167)
-egen femalepop_16_65 = rowsum(ce6118-ce6167)
-gen fips = statea||countya 
+egen pop_16_65 = rowtotal(ce6017-ce6066 ce6118-ce6167)
+egen femalepop_16_65 = rowtotal(ce6118-ce6167)
+gen fips = statea+countya 
 
-keep fips female_emp 
+keep fips pop_16_65 femalepop_16_65 
 save 1970female.dta, replace 

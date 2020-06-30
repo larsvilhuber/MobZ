@@ -117,8 +117,8 @@ label var c09013    `"Professional and related services"'
 label var c09014    `"Public administration"'
 
 gen manu_emp = c09004+c09005 
-egen total_emp = rowsum(c090*) 
-gen fips = statea||countya 
+egen total_emp = rowtotal(c090*) 
+gen fips = statea+countya 
 
-keep fips female_emp 
+keep fips  manu_emp total_emp
 save 1970manu, replace ;
