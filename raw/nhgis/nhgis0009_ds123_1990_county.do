@@ -179,8 +179,9 @@ gen female_emp = e4i006
 egen manu_emp = rowtotal(e4p004-e4p005)
 egen total_emp = rowtotal(e4p001-e4p017)
 egen foreign = rowtotal(e3g002 e3g003 e3g005 e3g006)
-gen bachelors = rowtotal(e33006 e33007)
+egen bachelors = rowtotal(e33006 e33007)
 
 keep female_emp manu_emp total_emp foreign bachelors fips 
 
 save 1990emp, replace
+

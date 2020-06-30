@@ -670,7 +670,6 @@ gen fips = statea+countya
 egen pop_16_65 = rowtotal(exl017-exl066 exl120-exl169)
 egen female_pop_16_65 = rowtotal(exl120-exl169)
 
-gen fips pop_16_65 female_pop_16_65 
+keep fips pop_16_65 female_pop_16_65 
 save 1990pop, replace
 
-save 1990pop, replace

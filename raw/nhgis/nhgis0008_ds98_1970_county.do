@@ -121,4 +121,5 @@ egen total_emp = rowtotal(c090*)
 gen fips = statea+countya 
 
 keep fips  manu_emp total_emp
-save 1970manu, replace ;
+save 1970manu, replace 
+
