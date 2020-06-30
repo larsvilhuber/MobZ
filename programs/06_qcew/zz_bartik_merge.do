@@ -17,7 +17,7 @@ shell - a naics-year-czone dataset for merging into ;
 */
     
 use `qcewdata', clear;
-destring naics2, force replace;  
+//destring naics2, force replace;  
 sort fips ; 
 merge fips using $czone_iteration ;
 drop _merge ;

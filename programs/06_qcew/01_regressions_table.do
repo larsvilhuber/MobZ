@@ -13,7 +13,8 @@ commuting zones
 include "../config.do"
 
 local czonedataset = "${outputs}/clusters_cutoff_jtw1990.dta"
-local qcewdata = "${outputs}/qcew_county.dta"
+//local qcewdata = "${outputs}/qcew_county.dta"
+global qcewfile = "${outputs}/qcew_county.dta"
 global czone_iteration = "${interwrk}/czones_cutoff.dta"
 
 #delimit ; 
@@ -49,10 +50,18 @@ set more off;
  industry data
 **********************************/
 /* create shell here */
+
+use $qcewfile, clear;
+//destring naics2, force replace;
+rename naics2 naics2char;
+egen naics2 = group(naics2char);
+compress fips;
+tempfile qcewdata;
+save `qcewdata';
  
  use `qcewdata', clear; 
  
-  destring naics2, force replace ;
+//  destring naics2, force replace ;
  collapse (first) fips, by(naics2 year) ;
  keep naics2 year ;
  tempfile shell;
@@ -60,7 +69,7 @@ set more off;
  
  /* create industry-year data here */
  use `qcewdata', clear; 
- destring naics2, force replace ; 
+// destring naics2, force replace ; 
  collapse (sum) EMP_jt = annual_avg_emplvl, by(naics2 year) ;
 sort naics2 year ; 
 xtset naics2 year ;
@@ -76,6 +85,8 @@ First, regressions with TS1990
 *********************************/
 
 use `czone_ts', clear ;
+   compress fips;
+   desc fips;
    save $czone_iteration, replace;
 
  collapse (first) fips, by( czone) ;
@@ -103,6 +114,8 @@ local sd_ts = r(sd);
 Second regressions with FKV1990
 *******************************/
 use `czone_rep' , clear ; 
+    compress fips;
+    desc fips;
     save $czone_iteration, replace;
 
  collapse (first) fips, by( czone) ;

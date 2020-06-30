@@ -125,13 +125,13 @@ Machine type:  PC (64-bit x86-64)
 
 . log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
 (note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_30_Jun_2020
-> -18_14_27.log not found)
+> -18_33_43.log not found)
 -------------------------------------------------------------------------------
       name:  <unnamed>
        log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_30_Jun_202
-> 0-18_14_27.log
+> 0-18_33_43.log
   log type:  text
- opened on:  30 Jun 2020, 18:14:27
+ opened on:  30 Jun 2020, 18:33:43
 
 . cap mkdir "$temp"
 
@@ -188,7 +188,8 @@ OLDPLACE:  ~/ado/
 . 
 . local czonedataset = "${outputs}/clusters_cutoff_jtw1990.dta"
 
-. local qcewdata = "${outputs}/qcew_county.dta"
+. //local qcewdata = "${outputs}/qcew_county.dta"
+. global qcewfile = "${outputs}/qcew_county.dta"
 
 . global czone_iteration = "${interwrk}/czones_cutoff.dta"
 
@@ -211,8 +212,8 @@ delimiter now ;
 .     sort fips ;
 
 .     save `czone_rep', replace ;
-(note: file /tmp/St06678.000001 not found)
-file /tmp/St06678.000001 saved
+(note: file /tmp/St08974.000001 not found)
+file /tmp/St08974.000001 saved
 
 .     //import delimited /data/working/mobz/geo/cz90.csv , clear ;
 >     use "${interwrk}/czlma903", clear;
@@ -230,60 +231,80 @@ file /tmp/St06678.000001 saved
 .     tempfile czone_ts ;
 
 .     save `czone_ts', replace;
-(note: file /tmp/St06678.000002 not found)
-file /tmp/St06678.000002 saved
+(note: file /tmp/St08974.000002 not found)
+file /tmp/St08974.000002 saved
 
 . /**********************************
 >  industry data
 > **********************************/
 > /* create shell here */
->  
->  use `qcewdata', clear;
+> 
+> use $qcewfile, clear;
 
-.     destring naics2, force replace ;
-naics2: contains nonnumeric characters; replaced as byte
-(265486 missing values generated)
+. //destring naics2, force replace;
+> rename naics2 naics2char;
 
-.  collapse (first) fips, by(naics2 year) ;
+. egen naics2 = group(naics2char);
+
+. compress fips;
+  variable fips was str6 now str5
+  (1,489,752 bytes saved)
+
+. tempfile qcewdata;
+
+. save `qcewdata';
+file /tmp/St08974.000003 saved
+
+.   use `qcewdata', clear;
+
+.   //  destring naics2, force replace ;
+>  collapse (first) fips, by(naics2 year) ;
 
 .  keep naics2 year ;
 
 .  tempfile shell;
 
 .  save `shell', replace;
-(note: file /tmp/St06678.000003 not found)
-file /tmp/St06678.000003 saved
+(note: file /tmp/St08974.000004 not found)
+file /tmp/St08974.000004 saved
 
 .   /* create industry-year data here */
 >  use `qcewdata', clear;
 
-.   destring naics2, force replace ;
-naics2: contains nonnumeric characters; replaced as byte
-(265486 missing values generated)
-
-.   collapse (sum) EMP_jt = annual_avg_emplvl, by(naics2 year) ;
+.  // destring naics2, force replace ; 
+>  collapse (sum) EMP_jt = annual_avg_emplvl, by(naics2 year) ;
 
 . sort naics2 year ;
 
 .  xtset naics2 year ;
-       panel variable:  naics2 (weakly balanced)
+       panel variable:  naics2 (strongly balanced)
         time variable:  year, 1990 to 2019
                 delta:  1 unit
 
 . gen delta_emp_jt = log(EMP_jt) - log(L.EMP_jt) ;
-(17 missing values generated)
+(19 missing values generated)
 
 . tempfile industry_by_year ;
 
 . save `industry_by_year' , replace ;
-(note: file /tmp/St06678.000004 not found)
-file /tmp/St06678.000004 saved
+(note: file /tmp/St08974.000005 not found)
+file /tmp/St08974.000005 saved
 
 . /********************************
 > First, regressions with TS1990 
 > *********************************/
 > 
 > use `czone_ts', clear ;
+
+.    compress fips;
+  (0 bytes saved)
+
+.    desc fips;
+
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+fips            str5    %9s                   County FIPS Code
 
 .    save $czone_iteration, replace;
 file /ssgprojects/project0002/MobZ.new/data/interwrk/czones_cutoff.dta saved
@@ -295,8 +316,8 @@ file /ssgprojects/project0002/MobZ.new/data/interwrk/czones_cutoff.dta saved
 .       tempfile shell2 ;
 
 .       save `shell2', replace ;
-(note: file /tmp/St06678.000005 not found)
-file /tmp/St06678.000005 saved
+(note: file /tmp/St08974.000006 not found)
+file /tmp/St08974.000006 saved
 
 .             include "$programs/06_qcew/zz_bartik_merge.do" ;
 
@@ -321,11 +342,8 @@ delimiter now ;
 >     
 > use `qcewdata', clear;
 
-. destring naics2, force replace;
-naics2: contains nonnumeric characters; replaced as byte
-(265486 missing values generated)
-
-.   sort fips ;
+. //destring naics2, force replace;  
+> sort fips ;
 
 .  merge fips using $czone_iteration ;
 (note: you are using old merge syntax; see [D] merge for new syntax)
@@ -336,8 +354,8 @@ variable fips does not uniquely identify observations in the master data
 . tempfile mergefile;
 
 . save `mergefile', replace;
-(note: file /tmp/St06678.000006 not found)
-file /tmp/St06678.000006 saved
+(note: file /tmp/St08974.000007 not found)
+file /tmp/St08974.000007 saved
 
 . /************** BASE YEAR ***********************/
 > bys naics2 czone: egen L_ij1990 = sum(annual_avg_emplvl*(year==1990)) ;
@@ -354,8 +372,8 @@ file /tmp/St06678.000006 saved
 . tempfile base_year ;
 
 . save `base_year', replace;
-(note: file /tmp/St06678.000007 not found)
-file /tmp/St06678.000007 saved
+(note: file /tmp/St08974.000008 not found)
+file /tmp/St08974.000008 saved
 
 . /************** merging into bartik  *****************/
 > 
@@ -386,8 +404,8 @@ variables naics2 year do not uniquely identify observations in the master
 . tempfile bartik ;
 
 . save `bartik', replace;
-(note: file /tmp/St06678.000008 not found)
-file /tmp/St06678.000008 saved
+(note: file /tmp/St08974.000009 not found)
+file /tmp/St08974.000009 saved
 
 . /************** NOW, COLLAPSE EARNINGS TO CZONE **********/
 > 
@@ -426,28 +444,28 @@ variable fips does not uniquely identify observations in the master data
                       (first) bartik_it
 -------------------------------------------------------------
       Percentiles      Smallest
- 1%    -.0715458      -.1842645
- 5%     -.029573      -.1300157
-10%    -.0180007      -.1029507       Obs              22,231
-25%            0      -.0956751       Sum of Wgt.      22,231
+ 1%    -.0750654      -.1842037
+ 5%    -.0316352      -.1144908
+10%    -.0194043       -.107453       Obs              22,236
+25%            0      -.1049875       Sum of Wgt.      22,236
 
-50%     .0143544                      Mean           .0080191
-                        Largest       Std. Dev.      .0205997
-75%     .0205786        .105778
-90%     .0250195       .1093047       Variance       .0004243
-95%     .0271925       .1096795       Skewness      -1.825577
-99%     .0329741       .1895917       Kurtosis       8.148263
+50%      .013432                      Mean           .0072967
+                        Largest       Std. Dev.      .0212232
+75%     .0202351        .110543
+90%     .0249939        .113257       Variance       .0004504
+95%     .0275672       .1151739       Skewness      -1.825731
+99%      .035039       .1908425       Kurtosis       8.473059
 
 . local sd_ts = r(sd);
 
 .       areg log_uireceipt L.bartik_it i.year, absorb(czone) cluster(czone) ;
 
 Linear regression, absorbing indicators         Number of obs     =     18,500
-                                                F(  25,    739)   =    1134.52
+                                                F(  25,    739)   =    1145.28
                                                 Prob > F          =     0.0000
-                                                R-squared         =     0.9838
-                                                Adj R-squared     =     0.9831
-                                                Root MSE          =     0.2495
+                                                R-squared         =     0.9839
+                                                Adj R-squared     =     0.9832
+                                                Root MSE          =     0.2484
 
                                 (Std. Err. adjusted for 740 clusters in czone)
 ------------------------------------------------------------------------------
@@ -455,35 +473,35 @@ Linear regression, absorbing indicators         Number of obs     =     18,500
 log_uirece~t |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
    bartik_it |
-         L1. |  -6.896829   1.209666    -5.70   0.000    -9.271619   -4.522038
+         L1. |  -7.016348   .9660145    -7.26   0.000    -8.912807   -5.119888
              |
         year |
-       1992  |   .1559041   .0312322     4.99   0.000     .0945896    .2172185
-       1993  |   .6736146   .0087462    77.02   0.000     .6564444    .6907849
-       1994  |   .6889953   .0211318    32.60   0.000     .6475098    .7304808
-       1995  |   .4360771   .0331826    13.14   0.000     .3709337    .5012205
-       1996  |   .3856496   .0324518    11.88   0.000     .3219409    .4493583
-       1997  |   .4126106   .0260229    15.86   0.000      .361523    .4636983
-       1998  |   .3695125   .0302103    12.23   0.000     .3102042    .4288208
-       1999  |   .3558138   .0283852    12.54   0.000     .3000885    .4115391
-       2000  |   .3642936   .0246028    14.81   0.000      .315994    .4125932
-       2001  |   .3421893   .0201731    16.96   0.000     .3025859    .3817927
-       2002  |   .7309091   .0292499    24.99   0.000     .6734863    .7883319
-       2003  |   .8393342   .0301835    27.81   0.000     .7800786    .8985899
-       2004  |   .9757108   .0195538    49.90   0.000     .9373232    1.014098
-       2005  |   .7799435   .0180531    43.20   0.000      .744502     .815385
-       2006  |   .6669141   .0237045    28.13   0.000      .620378    .7134503
-       2007  |   .6030073   .0220246    27.38   0.000      .559769    .6462456
-       2008  |   .6236296   .0184297    33.84   0.000     .5874487    .6598104
-       2009  |   .9097365    .018415    49.40   0.000     .8735847    .9458884
-       2010  |    1.43694   .0803537    17.88   0.000     1.279191    1.594689
-       2011  |   1.811552   .0258088    70.19   0.000     1.760884    1.862219
-       2012  |    1.78305   .0256644    69.48   0.000     1.732666    1.833433
-       2013  |    1.57471    .030735    51.23   0.000     1.514371    1.635048
-       2014  |   1.241782   .0234468    52.96   0.000     1.195752    1.287812
-       2015  |   .7646647   .0295963    25.84   0.000     .7065618    .8227676
+       1992  |   .1521647   .0253366     6.01   0.000     .1024245    .2019049
+       1993  |   .6720364   .0088606    75.85   0.000     .6546414    .6894314
+       1994  |    .691007   .0179066    38.59   0.000     .6558532    .7261608
+       1995  |   .4394638   .0273018    16.10   0.000     .3858654    .4930622
+       1996  |   .3876147   .0265176    14.62   0.000      .335556    .4396734
+       1997  |   .4163864   .0219142    19.00   0.000     .3733649     .459408
+       1998  |   .3713962    .024764    15.00   0.000     .3227801    .4200124
+       1999  |   .3559373   .0231255    15.39   0.000     .3105377    .4013369
+       2000  |   .3653184   .0207966    17.57   0.000     .3244909    .4061458
+       2001  |   .3444325   .0174757    19.71   0.000     .3101245    .3787405
+       2002  |   .7289096   .0232697    31.32   0.000      .683227    .7745922
+       2003  |   .8332346    .026485    31.46   0.000     .7812399    .8852294
+       2004  |   .9697563    .018648    52.00   0.000     .9331469    1.006366
+       2005  |    .776855   .0161193    48.19   0.000     .7452098    .8085001
+       2006  |   .6636397   .0204065    32.52   0.000      .623578    .7037013
+       2007  |   .5979545   .0186824    32.01   0.000     .5612776    .6346314
+       2008  |   .6124258   .0161407    37.94   0.000     .5807387    .6441129
+       2009  |   .9019018   .0181095    49.80   0.000     .8663496    .9374539
+       2010  |   1.415649   .0667975    21.19   0.000     1.284513    1.546784
+       2011  |   1.802314   .0240401    74.97   0.000     1.755119    1.849509
+       2012  |   1.780657   .0222521    80.02   0.000     1.736972    1.824342
+       2013  |   1.571756   .0254472    61.77   0.000     1.521799    1.621714
+       2014  |   1.239713   .0203346    60.97   0.000     1.199793    1.279634
+       2015  |   .7618372   .0247271    30.81   0.000     .7132934     .810381
              |
-       _cons |   8.501321   .0097401   872.81   0.000     8.482199    8.520442
+       _cons |   8.501321   .0098239   865.37   0.000     8.482035    8.520607
 -------------+----------------------------------------------------------------
        czone |   absorbed                                     (740 categories)
 
@@ -503,7 +521,18 @@ log_uirece~t |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
 > *******************************/
 > use `czone_rep' , clear ;
 
-.      save $czone_iteration, replace;
+.      compress fips;
+  variable fips was str10 now str5
+  (15,700 bytes saved)
+
+.     desc fips;
+
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+fips            str5    %9s                   
+
+.     save $czone_iteration, replace;
 file /ssgprojects/project0002/MobZ.new/data/interwrk/czones_cutoff.dta saved
 
 .  collapse (first) fips, by( czone) ;
@@ -513,8 +542,8 @@ file /ssgprojects/project0002/MobZ.new/data/interwrk/czones_cutoff.dta saved
 .       tempfile shell2 ;
 
 .       save `shell2', replace ;
-(note: file /tmp/St06678.00000a not found)
-file /tmp/St06678.00000a saved
+(note: file /tmp/St08974.00000b not found)
+file /tmp/St08974.00000b saved
 
 .             include "$programs/06_qcew/zz_bartik_merge.do" ;
 
@@ -539,24 +568,20 @@ delimiter now ;
 >     
 > use `qcewdata', clear;
 
-. destring naics2, force replace;
-naics2: contains nonnumeric characters; replaced as byte
-(265486 missing values generated)
-
-.   sort fips ;
+. //destring naics2, force replace;  
+> sort fips ;
 
 .  merge fips using $czone_iteration ;
 (note: you are using old merge syntax; see [D] merge for new syntax)
 variable fips does not uniquely identify observations in the master data
-(note: variable fips was str6, now str10 to accommodate using data's values)
 
 . drop _merge ;
 
 . tempfile mergefile;
 
 . save `mergefile', replace;
-(note: file /tmp/St06678.00000b not found)
-file /tmp/St06678.00000b saved
+(note: file /tmp/St08974.00000c not found)
+file /tmp/St08974.00000c saved
 
 . /************** BASE YEAR ***********************/
 > bys naics2 czone: egen L_ij1990 = sum(annual_avg_emplvl*(year==1990)) ;
@@ -572,8 +597,8 @@ file /tmp/St06678.00000b saved
 . tempfile base_year ;
 
 . save `base_year', replace;
-(note: file /tmp/St06678.00000c not found)
-file /tmp/St06678.00000c saved
+(note: file /tmp/St08974.00000d not found)
+file /tmp/St08974.00000d saved
 
 . /************** merging into bartik  *****************/
 > 
@@ -604,8 +629,8 @@ variables naics2 year do not uniquely identify observations in the master
 . tempfile bartik ;
 
 . save `bartik', replace;
-(note: file /tmp/St06678.00000d not found)
-file /tmp/St06678.00000d saved
+(note: file /tmp/St08974.00000e not found)
+file /tmp/St08974.00000e saved
 
 . /************** NOW, COLLAPSE EARNINGS TO CZONE **********/
 > 
@@ -616,7 +641,6 @@ file /tmp/St06678.00000d saved
 . merge fips using $czone_iteration ;
 (note: you are using old merge syntax; see [D] merge for new syntax)
 variable fips does not uniquely identify observations in the master data
-(note: variable fips was str5, now str10 to accommodate using data's values)
 
 . collapse (sum) uireceipt , by(czone year) ;
 
@@ -645,28 +669,28 @@ variable fips does not uniquely identify observations in the master data
                       (first) bartik_it
 -------------------------------------------------------------
       Percentiles      Smallest
- 1%    -.0714211      -.1179878
- 5%    -.0293079      -.1091667
-10%    -.0179729      -.1021747       Obs              22,651
-25%            0      -.0989288       Sum of Wgt.      22,651
+ 1%    -.0772311      -.1191017
+ 5%    -.0326119      -.1086787
+10%    -.0203116      -.1082915       Obs              22,655
+25%            0      -.1047922       Sum of Wgt.      22,655
 
-50%     .0145422                      Mean           .0081452
-                        Largest       Std. Dev.      .0205429
-75%     .0207877       .0931345
-90%     .0251504       .1111616       Variance        .000422
-95%     .0273031       .1150512       Skewness      -1.908049
-99%     .0321098       .1268538       Kurtosis       7.701791
+50%     .0133453                      Mean           .0068771
+                        Largest       Std. Dev.      .0214639
+75%     .0200068       .0974502
+90%     .0247982       .1171211       Variance       .0004607
+95%     .0274442       .1183259       Skewness      -1.925777
+99%     .0334416       .1306634       Kurtosis       8.075653
 
 . local sd_fkv = r(sd);
 
 .       areg log_uireceipt L.bartik_it i.year, absorb(czone) cluster(czone) ;
 
 Linear regression, absorbing indicators         Number of obs     =     18,700
-                                                F(  25,    747)   =    1568.66
+                                                F(  25,    747)   =    1580.72
                                                 Prob > F          =     0.0000
-                                                R-squared         =     0.9781
-                                                Adj R-squared     =     0.9772
-                                                Root MSE          =     0.2303
+                                                R-squared         =     0.9782
+                                                Adj R-squared     =     0.9773
+                                                Root MSE          =     0.2298
 
                                 (Std. Err. adjusted for 748 clusters in czone)
 ------------------------------------------------------------------------------
@@ -674,35 +698,35 @@ Linear regression, absorbing indicators         Number of obs     =     18,700
 log_uirece~t |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
    bartik_it |
-         L1. |  -9.300704   1.058313    -8.79   0.000    -11.37833   -7.223083
+         L1. |  -8.395262   .7419061   -11.32   0.000    -9.851731   -6.938793
              |
         year |
-       1992  |   .1133977   .0277803     4.08   0.000     .0588609    .1679345
-       1993  |   .6795032   .0079761    85.19   0.000     .6638449    .6951615
-       1994  |   .7126191   .0190367    37.43   0.000     .6752474    .7499908
-       1995  |   .4637575   .0297206    15.60   0.000     .4054116    .5221033
-       1996  |   .4063061   .0289498    14.03   0.000     .3494734    .4631388
-       1997  |   .4156005   .0235398    17.66   0.000     .3693884    .4618126
-       1998  |   .3837198   .0272845    14.06   0.000     .3301563    .4372833
-       1999  |   .3594494   .0258531    13.90   0.000      .308696    .4102028
-       2000  |   .3591355   .0235046    15.28   0.000     .3129927    .4052784
-       2001  |   .3563556   .0193508    18.42   0.000     .3183672     .394344
-       2002  |    .816353   .0250348    32.61   0.000     .7672061    .8654998
-       2003  |   .8442792   .0255232    33.08   0.000     .7941734     .894385
-       2004  |   .9917347   .0159668    62.11   0.000     .9603896     1.02308
-       2005  |   .8362505   .0176775    47.31   0.000     .8015469     .870954
-       2006  |   .7491906   .0220022    34.05   0.000      .705997    .7923842
-       2007  |   .6881069   .0210185    32.74   0.000     .6468446    .7293692
-       2008  |   .6961988   .0174029    40.00   0.000     .6620343    .7303632
-       2009  |   .9607657   .0170261    56.43   0.000      .927341    .9941903
-       2010  |   1.357546    .070622    19.22   0.000     1.218904    1.496187
-       2011  |   1.849976   .0227547    81.30   0.000     1.805305    1.894646
-       2012  |   1.890756   .0242544    77.96   0.000     1.843141    1.938371
-       2013  |   1.679444   .0286176    58.69   0.000     1.623263    1.735624
-       2014  |   1.314857   .0226163    58.14   0.000     1.270458    1.359256
-       2015  |   .8154569   .0285151    28.60   0.000     .7594776    .8714361
+       1992  |   .1320137    .020145     6.55   0.000     .0924662    .1715612
+       1993  |   .6759529   .0080927    83.53   0.000     .6600657    .6918401
+       1994  |   .6937496   .0145249    47.76   0.000     .6652352     .722264
+       1995  |   .4355229   .0217686    20.01   0.000      .392788    .4782577
+       1996  |   .3790523   .0210867    17.98   0.000      .337656    .4204485
+       1997  |   .3940059    .017706    22.25   0.000     .3592464    .4287654
+       1998  |   .3579972   .0201018    17.81   0.000     .3185345    .3974599
+       1999  |   .3339426   .0191969    17.40   0.000     .2962563     .371629
+       2000  |    .332034   .0178442    18.61   0.000     .2970032    .3670648
+       2001  |   .3373569   .0152739    22.09   0.000     .3073721    .3673418
+       2002  |   .7768492   .0183008    42.45   0.000      .740922    .8127764
+       2003  |   .8435528   .0214876    39.26   0.000     .8013696     .885736
+       2004  |   .9847043   .0149507    65.86   0.000     .9553538    1.014055
+       2005  |   .8145054   .0151849    53.64   0.000     .7846951    .8443156
+       2006  |   .7242877   .0181238    39.96   0.000     .6887082    .7598673
+       2007  |   .6628373    .017297    38.32   0.000     .6288808    .6967939
+       2008  |   .6648899   .0150518    44.17   0.000     .6353409    .6944388
+       2009  |   .9539298   .0164364    58.04   0.000     .9216627    .9861969
+       2010  |    1.38519   .0529429    26.16   0.000     1.281256    1.489125
+       2011  |   1.848445   .0203411    90.87   0.000     1.808512    1.888377
+       2012  |   1.871314   .0206459    90.64   0.000     1.830783    1.911844
+       2013  |   1.653204   .0229655    71.99   0.000      1.60812    1.698289
+       2014  |   1.294621   .0189748    68.23   0.000     1.257371    1.331871
+       2015  |   .7876828   .0227559    34.61   0.000     .7430098    .8323558
              |
-       _cons |   8.946483   .0090156   992.33   0.000     8.928784    8.964182
+       _cons |   8.946483   .0091368   979.17   0.000     8.928546    8.964419
 -------------+----------------------------------------------------------------
        czone |   absorbed                                     (748 categories)
 
@@ -719,16 +743,16 @@ log_uirece~t |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
 *********************** RESULTS ***************************
 
 . di "BETAS:  TS   " %6.4f `beta_ts' "     FKV  " %6.4f `beta_fkv' ;
-BETAS:  TS   -6.8968     FKV  -9.3007
+BETAS:  TS   -7.0163     FKV  -8.3953
 
 . di "SES:  TS   " %6.4f `se_ts' "     FKV  " %6.4f `se_fkv' ;
-SES:  TS   1.2097     FKV  1.0583
+SES:  TS   0.9660     FKV  0.7419
 
 . di "TSTAT:  TS   " %6.4f `tstat_ts' "     FKV  " %6.4f `tstat_fkv' ;
-TSTAT:  TS   -5.7014     FKV  -8.7882
+TSTAT:  TS   -7.2632     FKV  -11.3158
 
 . di "SD Bartik:     " %6.4f `sd_ts' "    FKV   " %6.4f `sd_fkv' ;
-SD Bartik:     0.0206    FKV   0.0205
+SD Bartik:     0.0212    FKV   0.0215
 
 . di "***********************************************************";
 ***********************************************************
