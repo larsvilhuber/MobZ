@@ -19,13 +19,22 @@ include "../config.do"
 local czonedataset = "${interwrk}/clusters_cutoff_jtw1990.dta"
 global czone_iteration = "${interwrk}/czones_cutoff.dta"
 local ipw_regs "${interwrk}/cutoff_post.dta"
- local qcewdata = "$qcewdata/qcew_county.dta"
+// local qcewdata = "$qcewdata/qcew_county.dta"
+ global qcewfile = "$outputs/qcew_county.dta"
 
 /* create shell here */
  #delimit ; 
+use $qcewfile, clear;
+//destring naics2, force replace;
+rename naics2 naics2char;
+egen naics2 = group(naics2char);
+compress fips;
+tempfile qcewdata;
+save `qcewdata';
+
  use `qcewdata', clear; 
  
-  destring naics2, replace ;
+//  destring naics2, replace ;
  collapse (first) fips, by(naics2 year) ;
  keep naics2 year ;
  tempfile shell;
@@ -33,7 +42,7 @@ local ipw_regs "${interwrk}/cutoff_post.dta"
  
  /* create industry-year data here */
  use `qcewdata', clear; 
- destring naics2, force replace ; 
+// destring naics2, force replace ; 
  collapse (sum) EMP_jt = annual_avg_emplvl, by(naics2 year) ;
 sort naics2 year ; 
 xtset naics2 year ;
@@ -76,7 +85,7 @@ foreach i in `values' { ;
                 tempfile shell2 ;
                 save `shell2', replace ;
 
-         include "$programs/qcew/zz_bartik_merge.do" ;
+         include "$programs/06_qcew/zz_bartik_merge.do" ;
 
          xtset czone year ;
 

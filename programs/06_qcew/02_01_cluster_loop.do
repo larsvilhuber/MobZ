@@ -18,15 +18,23 @@ include "../config.do"
 
 #delimit ; 
 set more off ; 
-  local czonedataset = "${interwrk}/bootclusters_jtw1990_moe_new.dta" ;
+  local czonedataset = "${outputs}/bootclusters_jtw1990_moe_new.dta" ;
  global czone_iteration = "${interwrk}/czones_qcew.dta" ;
- local qcewdata = "$qcewdata/qcew_county.dta" ;
+// local qcewdata = "$qcewdata/qcew_county.dta" ;
+ global qcewfile = "$outputs/qcew_county.dta";
  
  /* create shell here */
+use $qcewfile, clear;
+//destring naics2, force replace;
+rename naics2 naics2char;
+egen naics2 = group(naics2char);
+compress fips;
+tempfile qcewdata;
+save `qcewdata';
  
  use `qcewdata', clear; 
  
-  destring naics2, replace ;
+//  destring naics2, replace ;
  collapse (first) fips, by(naics2 year) ;
  keep naics2 year ;
  tempfile shell;
@@ -34,7 +42,7 @@ set more off ;
  
  /* create industry-year data here */
  use `qcewdata', clear; 
- destring naics2, force replace ; 
+ // destring naics2, force replace ; 
  collapse (sum) EMP_jt = annual_avg_emplvl, by(naics2 year) ;
 sort naics2 year ; 
 xtset naics2 year ;
@@ -51,7 +59,7 @@ tempfile bartik_regs;
 
 foreach dset in moe moe_new  { ; 
 
-local czonedataset = "${interwrk}/bootclusters_jtw1990_`dset'.dta" ;                               
+local czonedataset = "${outputs}/bootclusters_jtw1990_`dset'.dta" ;                               
                                        
 /**************SET UP POSTFILE FIRST **************/
 postfile `czoneresults' iteration beta se tstat using `bartik_regs', replace;
@@ -70,7 +78,7 @@ use "`czonedataset'", clear ;
       save `shell2', replace ;
       
 
-      include "$programs/qcew/zz_bartik_merge.do" ;
+      include "$programs/06_qcew/zz_bartik_merge.do" ;
       
       xtset czone year; 
 
