@@ -57,9 +57,6 @@ use "`czonedataset'", clear ;
 tempname czoneresults;
 tempfile bartik_regs;
 
-foreach dset in moe moe_new  { ; 
-
-local czonedataset = "${outputs}/bootclusters_jtw1990_`dset'.dta" ;                               
                                        
 /**************SET UP POSTFILE FIRST **************/
 postfile `czoneresults' iteration beta se tstat using `bartik_regs', replace;
@@ -127,6 +124,6 @@ postclose `czoneresults' ;
 use `bartik_regs', clear ; 
 sum beta se tstat ;
 
-save "$interwrk/bartik_results_`dset'.dta", replace; 
+save "$interwrk/bartik_results_moe_new.dta", replace; 
 
-} ;                                                                        
+                                                                     
