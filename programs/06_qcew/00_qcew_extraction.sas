@@ -76,4 +76,4 @@ proc export data=qcew_earnings
     
 %mend extract ; 
     
- %extract;
+%extract;

@@ -1,0 +1,340 @@
+
+  ___  ____  ____  ____  ____ (R)
+ /__    /   ____/   /   ____/
+___/   /   /___/   /   /___/   14.2   Copyright 1985-2015 StataCorp LLC
+  Statistics/Data Analysis            StataCorp
+                                      4905 Lakeway Drive
+                                      College Station, Texas 77845 USA
+                                      800-STATA-PC        http://www.stata.com
+                                      979-696-4600        stata@stata.com
+                                      979-696-4601 (fax)
+
+8-user Stata network perpetual license:
+       Serial number:  501406244326
+         Licensed to:  ECCO Cornell University
+                       Ithaca, NY
+
+Notes:
+      1.  Stata is running in batch mode.
+      2.  Unicode is supported; see help unicode_advice.
+
+. do 00_qcew_post_extraction.do 
+
+. 
+. include "../config.do"
+
+. /*  config.do */
+. 
+. 
+. 
+. if ( "`c(hostname)'" == "ecco.vrdc.cornell.edu" ) {
+. global root "/ssgprojects/project0002/MobZ.new"
+. }
+
+. 
+. if ( "`c(username)'" == "vilhuber" ) {
+. global root "/home/vilhuber/Workspace/git/larsvilhuber/MobZ"
+. }
+
+. 
+. if ( "`c(hostname)'" == "some.server.at.census" ) {
+. global root "/made/up/path/Mobz"
+. }
+
+. 
+. /* check if the author creates a log file. If not, adjust the following code 
+> fragment */
+. 
+. local c_date = c(current_date)
+
+. local cdate = subinstr("`c_date'", " ", "_", .)
+
+. local c_time = c(current_time)
+
+. local ctime = subinstr("`c_time'", ":", "_", .)
+
+. 
+. // log using "${root}/logfile_`cdate'-`ctime'.log", replace text
+. 
+. /* It will provide some info about how and when the program was run */
+. /* See https://www.stata.com/manuals13/pcreturn.pdf#pcreturn */
+. local variant = cond(c(MP),"MP",cond(c(SE),"SE",c(flavor)) )  
+
+. // alternatively, you could use 
+. // local variant = cond(c(stata_version)>13,c(real_flavor),"NA")  
+. 
+. di "=== SYSTEM DIAGNOSTICS ==="
+=== SYSTEM DIAGNOSTICS ===
+
+. di "Stata version: `c(stata_version)'"
+Stata version: 14.2
+
+. di "Updated as of: `c(born_date)'"
+Updated as of: 19 Dec 2017
+
+. di "Variant:       `variant'"
+Variant:       IC
+
+. di "Processors:    `c(processors)'"
+Processors:    1
+
+. di "OS:            `c(os)' `c(osdtl)'"
+OS:            Unix 
+
+. di "Machine type:  `c(machine_type)'"
+Machine type:  PC (64-bit x86-64)
+
+. di "=========================="
+==========================
+
+. 
+. 
+. 
+. 
+. /* define relative libraries */
+. 
+. global paperdir "${root}/paper"
+
+. global interwrk "${root}/data/interwrk"
+
+. global raw "${root}/raw"
+
+. global temp "${root}/temp"
+
+. global outputs "${root}/data"
+
+. global programs "${root}/programs"
+
+. global outgraphs "${root}/figures"
+
+. global logdir "${programs}/logs"
+
+. 
+. cap mkdir "$logdir"
+
+. log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
+(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile__3_Jul_2020
+> -17_20_05.log not found)
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile__3_Jul_202
+> 0-17_20_05.log
+  log type:  text
+ opened on:   3 Jul 2020, 17:20:05
+
+. cap mkdir "$temp"
+
+. cap mkdir "${root}/data"
+
+. cap mkdir "$interwrk"
+
+. cap mkdir "$raw"
+
+. cap mkdir "$outputs"
+
+. 
+. /* install any packages locally */
+. capture mkdir "${programs}/ado"
+
+. sysdir set PERSONAL "${programs}/ado/personal"
+
+. sysdir set PLUS     "${programs}/ado/plus"
+
+. sysdir set SITE     "${programs}/ado/site"
+
+. sysdir
+   STATA:  /usr/local/stata14/
+    BASE:  /usr/local/stata14/ado/base/
+    SITE:  /ssgprojects/project0002/MobZ.new/programs/ado/site/
+    PLUS:  /ssgprojects/project0002/MobZ.new/programs/ado/plus/
+PERSONAL:  /ssgprojects/project0002/MobZ.new/programs/ado/personal/
+OLDPLACE:  ~/ado/
+
+. 
+. /* define data sources */
+. 
+. /* QCEW */
+. /* data/working/mobz/qcew */
+.     global qcewdata "${raw}/qcew"  
+
+. /* /data/working/mobz/outputs */
+.     global czonedata "$outputs"  
+
+. 
+. /* ADH */
+.     global adhdata "${raw}/adh_data/Public Release Data/dta"
+
+. /* CZONE */
+.     global czonedata "${raw}/adh_data/"
+
+. 
+. /* CBP */
+.     /* this is where the raw Stata versions of CBP data reside */
+.    global cbpdata "/data/clean/cbp"
+
+. 
+. 
+. 
+. /* compress and create summary stats */
+. /*=================== Employment file ==================*/
+.  
+. use "$outputs/qcew_county.dta", clear
+
+. compress
+  variable year was double now int
+  variable fips was str6 now str5
+  variable naics2 was str6 now str5
+  (11,918,016 bytes saved)
+
+. save "$outputs/qcew_county.dta", replace
+file /ssgprojects/project0002/MobZ.new/data/qcew_county.dta saved
+
+. sum 
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        year |  1,489,752     2006.24    8.201803       1990       2019
+        fips |          0
+      naics2 |          0
+annual_avg~l |  1,489,752    2085.921    9564.786          0   836339.3
+
+. codebook
+
+-------------------------------------------------------------------------------
+year                                                                       Year
+-------------------------------------------------------------------------------
+
+                  type:  numeric (int)
+
+                 range:  [1990,2019]                  units:  1
+         unique values:  30                       missing .:  0/1,489,752
+
+                  mean:   2006.24
+              std. dev:    8.2018
+
+           percentiles:        10%       25%       50%       75%       90%
+                              1994      2000      2007      2013      2017
+
+-------------------------------------------------------------------------------
+fips                                                                (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str5)
+
+         unique values:  3,282                    missing "":  0/1,489,752
+
+              examples:  "17085"
+                         "26097"
+                         "37079"
+                         "48091"
+
+-------------------------------------------------------------------------------
+naics2                                                              (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str5)
+
+         unique values:  19                       missing "":  0/1,489,752
+
+              examples:  "31-33"
+                         "48-49"
+                         "54"
+                         "62"
+
+-------------------------------------------------------------------------------
+annual_avg_emplvl                                                   (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  numeric (double)
+
+                 range:  [0,836339.25]                units:  .01
+         unique values:  89,283                   missing .:  0/1,489,752
+
+                  mean:   2085.92
+              std. dev:   9564.79
+
+           percentiles:        10%       25%       50%       75%       90%
+                                 0     27.25    180.75     909.5    3837.5
+
+. 
+. /*=================== Earnings file ==================*/
+. use "$outputs/qcew_earnings.dta", clear
+
+. compress
+  variable year was double now int
+  variable annual_avg_emplvl was double now byte
+  variable fips was str6 now str5
+  (1,366,148 bytes saved)
+
+. save "$outputs/qcew_earnings.dta", replace
+file /ssgprojects/project0002/MobZ.new/data/qcew_earnings.dta saved
+
+. sum
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        year |     97,582    2004.557    8.646403       1990       2019
+        fips |          0
+annual_avg~l |          0
+avg_annual~y |     97,582    1.05e+07    4.39e+07          0   1.97e+09
+
+. codebook
+
+-------------------------------------------------------------------------------
+year                                                                       Year
+-------------------------------------------------------------------------------
+
+                  type:  numeric (int)
+
+                 range:  [1990,2019]                  units:  1
+         unique values:  30                       missing .:  0/97,582
+
+                  mean:   2004.56
+              std. dev:    8.6464
+
+           percentiles:        10%       25%       50%       75%       90%
+                              1993      1997      2005      2012      2017
+
+-------------------------------------------------------------------------------
+fips                                                                (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str5)
+
+         unique values:  3,282                    missing "":  0/97,582
+
+              examples:  "17101"
+                         "26119"
+                         "37089"
+                         "48111"
+
+-------------------------------------------------------------------------------
+annual_avg_emplvl                                                   (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+
+                 range:  [.,.]                        units:  .
+         unique values:  0                        missing .:  97,582/97,582
+
+            tabulation:  Freq.  Value
+                        97,582  .
+
+-------------------------------------------------------------------------------
+avg_annual_pay                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  numeric (double)
+
+                 range:  [0,1.969e+09]                units:  1.000e-13
+         unique values:  97,569                   missing .:  0/97,582
+
+                  mean:   1.0e+07
+              std. dev:   4.4e+07
+
+           percentiles:        10%       25%       50%       75%       90%
+                            221454    560770   1.6e+06   5.2e+06   1.9e+07
+
+. 
+. 
+end of do-file

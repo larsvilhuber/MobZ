@@ -34,4 +34,8 @@ replace fips = "0"+fips if length(fips) == 4 ;
 save "$interwrk/bea_table30.dta", replace;  
 outsheet using "$interwrk/bea_table30.csv", replace noquote comma;
 
+/* create summary stats */
+sum;
+codebook;
+ 
 
