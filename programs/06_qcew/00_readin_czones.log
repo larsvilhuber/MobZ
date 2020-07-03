@@ -1,0 +1,364 @@
+
+  ___  ____  ____  ____  ____ (R)
+ /__    /   ____/   /   ____/
+___/   /   /___/   /   /___/   14.2   Copyright 1985-2015 StataCorp LLC
+  Statistics/Data Analysis            StataCorp
+                                      4905 Lakeway Drive
+                                      College Station, Texas 77845 USA
+                                      800-STATA-PC        http://www.stata.com
+                                      979-696-4600        stata@stata.com
+                                      979-696-4601 (fax)
+
+8-user Stata network perpetual license:
+       Serial number:  501406244326
+         Licensed to:  ECCO Cornell University
+                       Ithaca, NY
+
+Notes:
+      1.  Stata is running in batch mode.
+      2.  Unicode is supported; see help unicode_advice.
+
+. do 00_readin_czones.do 
+
+. /* this reads in the original CZ data */
+. 
+. include "../config.do"
+
+. /*  config.do */
+. 
+. 
+. 
+. if ( "`c(hostname)'" == "ecco.vrdc.cornell.edu" ) {
+. global root "/ssgprojects/project0002/MobZ.new"
+. }
+
+. 
+. if ( "`c(username)'" == "vilhuber" ) {
+. global root "/home/vilhuber/Workspace/git/larsvilhuber/MobZ"
+. }
+
+. 
+. if ( "`c(hostname)'" == "some.server.at.census" ) {
+. global root "/made/up/path/Mobz"
+. }
+
+. 
+. /* check if the author creates a log file. If not, adjust the following code 
+> fragment */
+. 
+. local c_date = c(current_date)
+
+. local cdate = subinstr("`c_date'", " ", "_", .)
+
+. local c_time = c(current_time)
+
+. local ctime = subinstr("`c_time'", ":", "_", .)
+
+. 
+. // log using "${root}/logfile_`cdate'-`ctime'.log", replace text
+. 
+. /* It will provide some info about how and when the program was run */
+. /* See https://www.stata.com/manuals13/pcreturn.pdf#pcreturn */
+. local variant = cond(c(MP),"MP",cond(c(SE),"SE",c(flavor)) )  
+
+. // alternatively, you could use 
+. // local variant = cond(c(stata_version)>13,c(real_flavor),"NA")  
+. 
+. di "=== SYSTEM DIAGNOSTICS ==="
+=== SYSTEM DIAGNOSTICS ===
+
+. di "Stata version: `c(stata_version)'"
+Stata version: 14.2
+
+. di "Updated as of: `c(born_date)'"
+Updated as of: 19 Dec 2017
+
+. di "Variant:       `variant'"
+Variant:       IC
+
+. di "Processors:    `c(processors)'"
+Processors:    1
+
+. di "OS:            `c(os)' `c(osdtl)'"
+OS:            Unix 
+
+. di "Machine type:  `c(machine_type)'"
+Machine type:  PC (64-bit x86-64)
+
+. di "=========================="
+==========================
+
+. 
+. 
+. 
+. 
+. /* define relative libraries */
+. 
+. global paperdir "${root}/paper"
+
+. global interwrk "${root}/data/interwrk"
+
+. global raw "${root}/raw"
+
+. global temp "${root}/temp"
+
+. global outputs "${root}/data"
+
+. global programs "${root}/programs"
+
+. global outgraphs "${root}/figures"
+
+. global logdir "${programs}/logs"
+
+. 
+. cap mkdir "$logdir"
+
+. log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
+(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile__3_Jul_2020
+> -17_22_15.log not found)
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile__3_Jul_202
+> 0-17_22_15.log
+  log type:  text
+ opened on:   3 Jul 2020, 17:22:15
+
+. cap mkdir "$temp"
+
+. cap mkdir "${root}/data"
+
+. cap mkdir "$interwrk"
+
+. cap mkdir "$raw"
+
+. cap mkdir "$outputs"
+
+. 
+. /* install any packages locally */
+. capture mkdir "${programs}/ado"
+
+. sysdir set PERSONAL "${programs}/ado/personal"
+
+. sysdir set PLUS     "${programs}/ado/plus"
+
+. sysdir set SITE     "${programs}/ado/site"
+
+. sysdir
+   STATA:  /usr/local/stata14/
+    BASE:  /usr/local/stata14/ado/base/
+    SITE:  /ssgprojects/project0002/MobZ.new/programs/ado/site/
+    PLUS:  /ssgprojects/project0002/MobZ.new/programs/ado/plus/
+PERSONAL:  /ssgprojects/project0002/MobZ.new/programs/ado/personal/
+OLDPLACE:  ~/ado/
+
+. 
+. /* define data sources */
+. 
+. /* QCEW */
+. /* data/working/mobz/qcew */
+.     global qcewdata "${raw}/qcew"  
+
+. /* /data/working/mobz/outputs */
+.     global czonedata "$outputs"  
+
+. 
+. /* ADH */
+.     global adhdata "${raw}/adh_data/Public Release Data/dta"
+
+. /* CZONE */
+.     global czonedata "${raw}/adh_data/"
+
+. 
+. /* CBP */
+.     /* this is where the raw Stata versions of CBP data reside */
+.    global cbpdata "/data/clean/cbp"
+
+. 
+. 
+. 
+. import excel using "${raw}/czlma903.xls", sheet("CZLMA903") firstrow case(low
+> er)
+
+. // import delimited /data/working/mobz/geo/cz90.csv , clear ;
+. //tostring countyfipscode, gen(fips) 
+. //    replace fips = "0" + fips if length(fips) == 4 ;
+. save "${interwrk}/czlma903", replace
+file /ssgprojects/project0002/MobZ.new/data/interwrk/czlma903.dta saved
+
+. 
+. sum
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+countyfips~e |          0
+        cz90 |          0
+  countyname |          0
+    distance |      3,141    .9547648    .0445989       .369          1
+populat~1990 |      3,141    79181.75    263812.7         52    8863164
+-------------+---------------------------------------------------------
+        cz80 |          0
+ruralur~1993 |          0
+     msa1993 |          0
+     msaname |          0
+stateplace~e |          0
+-------------+---------------------------------------------------------
+nameoflarg~i |          0
+
+. codebook
+
+-------------------------------------------------------------------------------
+countyfipscode                                                 County FIPS Code
+-------------------------------------------------------------------------------
+
+                  type:  string (str5)
+
+         unique values:  3,141                    missing "":  0/3,141
+
+              examples:  "17075"
+                         "26059"
+                         "36119"
+                         "47175"
+
+-------------------------------------------------------------------------------
+cz90                                                                       CZ90
+-------------------------------------------------------------------------------
+
+                  type:  string (str5)
+
+         unique values:  741                      missing "":  0/3,141
+
+              examples:  "08702"
+                         "16901"
+                         "26107"
+                         "31101"
+
+-------------------------------------------------------------------------------
+countyname                                                          County Name
+-------------------------------------------------------------------------------
+
+                  type:  string (str40)
+
+         unique values:  1,874                    missing "":  0/3,141
+
+              examples:  "Conway County"
+                         "Henry County"
+                         "Meigs County"
+                         "Sanborn County"
+
+               warning:  variable has embedded blanks
+
+-------------------------------------------------------------------------------
+distance                                                               Distance
+-------------------------------------------------------------------------------
+
+                  type:  numeric (double)
+
+                 range:  [.369,1]                     units:  .0001
+         unique values:  214                      missing .:  0/3,141
+
+                  mean:   .954765
+              std. dev:   .044599
+
+           percentiles:        10%       25%       50%       75%       90%
+                             .9214      .951     .9672     .9743     .9786
+
+-------------------------------------------------------------------------------
+population1990                                                  Population 1990
+-------------------------------------------------------------------------------
+
+                  type:  numeric (long)
+
+                 range:  [52,8863164]                 units:  1
+         unique values:  3,078                    missing .:  0/3,141
+
+                  mean:   79181.7
+              std. dev:    263813
+
+           percentiles:        10%       25%       50%       75%       90%
+                              5189     10332     22085     54753    149838
+
+-------------------------------------------------------------------------------
+cz80                                                                       CZ80
+-------------------------------------------------------------------------------
+
+                  type:  string (str5)
+
+         unique values:  765                      missing "":  4/3,141
+
+              examples:  "06903"
+                         "12902"
+                         "21301"
+                         "30001"
+
+-------------------------------------------------------------------------------
+ruralurbancontinuumcode1993        Rural-urban Continuum Code 1993 (Beale Code)
+-------------------------------------------------------------------------------
+
+                  type:  string (str1)
+
+         unique values:  11                       missing "":  0/3,141
+
+              examples:  "2"
+                         "6"
+                         "7"
+                         "8"
+
+-------------------------------------------------------------------------------
+msa1993                                                                MSA 1993
+-------------------------------------------------------------------------------
+
+                  type:  string (str4)
+
+         unique values:  270                      missing "":  0/3,141
+
+              examples:  "0000"
+                         "0000"
+                         "0000"
+                         "2000"
+
+-------------------------------------------------------------------------------
+msaname                                                                MSA Name
+-------------------------------------------------------------------------------
+
+                  type:  string (str57)
+
+         unique values:  310                      missing "":  2,305/3,141
+
+              examples:  ""
+                         ""
+                         ""
+                         "Danville, VA MSA"
+
+               warning:  variable has embedded blanks
+
+-------------------------------------------------------------------------------
+stateplacecode                                                 State Place Code
+-------------------------------------------------------------------------------
+
+                  type:  string (str7)
+
+         unique values:  736                      missing "":  0/3,141
+
+              examples:  "1733136"
+                         "2670520"
+                         "3722920"
+                         "4775940"
+
+-------------------------------------------------------------------------------
+nameoflargestplaceincommuti             Name of largest place in Commuting Zone
+-------------------------------------------------------------------------------
+
+                  type:  string (str30)
+
+         unique values:  736                      missing "":  0/3,141
+
+              examples:  "Colby city, KS"
+                         "Harrison city, AR"
+                         "Minneapolis city, MN"
+                         "Salt Lake City city, UT"
+
+               warning:  variable has embedded blanks
+
+. 
+. 
+end of do-file
