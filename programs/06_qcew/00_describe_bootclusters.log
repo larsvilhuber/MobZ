@@ -1,0 +1,1653 @@
+
+  ___  ____  ____  ____  ____ (R)
+ /__    /   ____/   /   ____/
+___/   /   /___/   /   /___/   14.2   Copyright 1985-2015 StataCorp LLC
+  Statistics/Data Analysis            StataCorp
+                                      4905 Lakeway Drive
+                                      College Station, Texas 77845 USA
+                                      800-STATA-PC        http://www.stata.com
+                                      979-696-4600        stata@stata.com
+                                      979-696-4601 (fax)
+
+8-user Stata network perpetual license:
+       Serial number:  501406244326
+         Licensed to:  ECCO Cornell University
+                       Ithaca, NY
+
+Notes:
+      1.  Stata is running in batch mode.
+      2.  Unicode is supported; see help unicode_advice.
+
+. do 00_describe_bootclusters.do 
+
+. /* just describes the input files */
+. 
+. include "../config.do"
+
+. /*  config.do */
+. 
+. 
+. 
+. if ( "`c(hostname)'" == "ecco.vrdc.cornell.edu" ) {
+. global root "/ssgprojects/project0002/MobZ.new"
+. }
+
+. 
+. if ( "`c(username)'" == "vilhuber" ) {
+. global root "/home/vilhuber/Workspace/git/larsvilhuber/MobZ"
+. }
+
+. 
+. if ( "`c(hostname)'" == "some.server.at.census" ) {
+. global root "/made/up/path/Mobz"
+. }
+
+. 
+. /* check if the author creates a log file. If not, adjust the following code 
+> fragment */
+. 
+. local c_date = c(current_date)
+
+. local cdate = subinstr("`c_date'", " ", "_", .)
+
+. local c_time = c(current_time)
+
+. local ctime = subinstr("`c_time'", ":", "_", .)
+
+. 
+. // log using "${root}/logfile_`cdate'-`ctime'.log", replace text
+. 
+. /* It will provide some info about how and when the program was run */
+. /* See https://www.stata.com/manuals13/pcreturn.pdf#pcreturn */
+. local variant = cond(c(MP),"MP",cond(c(SE),"SE",c(flavor)) )  
+
+. // alternatively, you could use 
+. // local variant = cond(c(stata_version)>13,c(real_flavor),"NA")  
+. 
+. di "=== SYSTEM DIAGNOSTICS ==="
+=== SYSTEM DIAGNOSTICS ===
+
+. di "Stata version: `c(stata_version)'"
+Stata version: 14.2
+
+. di "Updated as of: `c(born_date)'"
+Updated as of: 19 Dec 2017
+
+. di "Variant:       `variant'"
+Variant:       IC
+
+. di "Processors:    `c(processors)'"
+Processors:    1
+
+. di "OS:            `c(os)' `c(osdtl)'"
+OS:            Unix 
+
+. di "Machine type:  `c(machine_type)'"
+Machine type:  PC (64-bit x86-64)
+
+. di "=========================="
+==========================
+
+. 
+. 
+. 
+. 
+. /* define relative libraries */
+. 
+. global paperdir "${root}/paper"
+
+. global interwrk "${root}/data/interwrk"
+
+. global raw "${root}/raw"
+
+. global temp "${root}/temp"
+
+. global outputs "${root}/data"
+
+. global programs "${root}/programs"
+
+. global outgraphs "${root}/figures"
+
+. global logdir "${programs}/logs"
+
+. 
+. cap mkdir "$logdir"
+
+. log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
+(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile__3_Jul_2020
+> -17_24_47.log not found)
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile__3_Jul_202
+> 0-17_24_47.log
+  log type:  text
+ opened on:   3 Jul 2020, 17:24:47
+
+. cap mkdir "$temp"
+
+. cap mkdir "${root}/data"
+
+. cap mkdir "$interwrk"
+
+. cap mkdir "$raw"
+
+. cap mkdir "$outputs"
+
+. 
+. /* install any packages locally */
+. capture mkdir "${programs}/ado"
+
+. sysdir set PERSONAL "${programs}/ado/personal"
+
+. sysdir set PLUS     "${programs}/ado/plus"
+
+. sysdir set SITE     "${programs}/ado/site"
+
+. sysdir
+   STATA:  /usr/local/stata14/
+    BASE:  /usr/local/stata14/ado/base/
+    SITE:  /ssgprojects/project0002/MobZ.new/programs/ado/site/
+    PLUS:  /ssgprojects/project0002/MobZ.new/programs/ado/plus/
+PERSONAL:  /ssgprojects/project0002/MobZ.new/programs/ado/personal/
+OLDPLACE:  ~/ado/
+
+. 
+. /* define data sources */
+. 
+. /* QCEW */
+. /* data/working/mobz/qcew */
+.     global qcewdata "${raw}/qcew"  
+
+. /* /data/working/mobz/outputs */
+.     global czonedata "$outputs"  
+
+. 
+. /* ADH */
+.     global adhdata "${raw}/adh_data/Public Release Data/dta"
+
+. /* CZONE */
+.     global czonedata "${raw}/adh_data/"
+
+. 
+. /* CBP */
+.     /* this is where the raw Stata versions of CBP data reside */
+.    global cbpdata "/data/clean/cbp"
+
+. 
+. 
+. 
+. use "$outputs/bootclusters_jtw1990_moe_new.dta", clear
+
+. 
+. sum
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        fips |          0
+ clustername |          0
+clusterna~_1 |          0
+clusterna~_2 |          0
+clusterna~_3 |          0
+-------------+---------------------------------------------------------
+clusterna~_4 |          0
+clusterna~_5 |          0
+clusterna~_6 |          0
+clusterna~_7 |          0
+clusterna~_8 |          0
+-------------+---------------------------------------------------------
+clusterna~_9 |          0
+clusterna~10 |          0
+clusterna~11 |          0
+clusterna~12 |          0
+clusterna~13 |          0
+-------------+---------------------------------------------------------
+clusterna~14 |          0
+clusterna~15 |          0
+clusterna~16 |          0
+clusterna~17 |          0
+clusterna~18 |          0
+-------------+---------------------------------------------------------
+clusterna~19 |          0
+clusterna~20 |          0
+clusterna~21 |          0
+clusterna~22 |          0
+clusterna~23 |          0
+-------------+---------------------------------------------------------
+clusterna~24 |          0
+clusterna~25 |          0
+clusterna~26 |          0
+clusterna~27 |          0
+clusterna~28 |          0
+-------------+---------------------------------------------------------
+clusterna~29 |          0
+clusterna~30 |          0
+clusterna~31 |          0
+clusterna~32 |          0
+clusterna~33 |          0
+-------------+---------------------------------------------------------
+clusterna~34 |          0
+clusterna~35 |          0
+clusterna~36 |          0
+clusterna~37 |          0
+clusterna~38 |          0
+-------------+---------------------------------------------------------
+clusterna~39 |          0
+clusterna~40 |          0
+clusterna~41 |          0
+clusterna~42 |          0
+clusterna~43 |          0
+-------------+---------------------------------------------------------
+clusterna~44 |          0
+clusterna~45 |          0
+clusterna~46 |          0
+clusterna~47 |          0
+clusterna~48 |          0
+-------------+---------------------------------------------------------
+clusterna~49 |          0
+clusterna~50 |          0
+clusterna~51 |          0
+clusterna~52 |          0
+clusterna~53 |          0
+-------------+---------------------------------------------------------
+clusterna~54 |          0
+clusterna~55 |          0
+clusterna~56 |          0
+clusterna~57 |          0
+clusterna~58 |          0
+-------------+---------------------------------------------------------
+clusterna~59 |          0
+clusterna~60 |          0
+clusterna~61 |          0
+clusterna~62 |          0
+clusterna~63 |          0
+-------------+---------------------------------------------------------
+clusterna~64 |          0
+clusterna~65 |          0
+clusterna~66 |          0
+clusterna~67 |          0
+clusterna~68 |          0
+-------------+---------------------------------------------------------
+clusterna~69 |          0
+clusterna~70 |          0
+clusterna~71 |          0
+clusterna~72 |          0
+clusterna~73 |          0
+-------------+---------------------------------------------------------
+clusterna~74 |          0
+clusterna~75 |          0
+clusterna~76 |          0
+clusterna~77 |          0
+clusterna~78 |          0
+-------------+---------------------------------------------------------
+clusterna~79 |          0
+clusterna~80 |          0
+clusterna~81 |          0
+clusterna~82 |          0
+clusterna~83 |          0
+-------------+---------------------------------------------------------
+clusterna~84 |          0
+clusterna~85 |          0
+clusterna~86 |          0
+clusterna~87 |          0
+clusterna~88 |          0
+-------------+---------------------------------------------------------
+clusterna~89 |          0
+clusterna~90 |          0
+clusterna~91 |          0
+clusterna~92 |          0
+clusterna~93 |          0
+-------------+---------------------------------------------------------
+clusterna~94 |          0
+clusterna~95 |          0
+clusterna~96 |          0
+clusterna~97 |          0
+clusterna~98 |          0
+-------------+---------------------------------------------------------
+clusterna~99 |          0
+clustern~100 |          0
+clus_switc~d |      3,140    .4633758    .4987363          0          1
+
+. codebook
+
+-------------------------------------------------------------------------------
+fips                                                                (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str10), but longest is str5
+
+         unique values:  3,140                    missing "":  0/3,140
+
+              examples:  "17075"
+                         "26059"
+                         "36121"
+                         "47177"
+
+-------------------------------------------------------------------------------
+clustername                                                         (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  755                      missing "":  0/3,140
+
+              examples:  "CL17029"
+                         "CL26047"
+                         "CL37013"
+                         "CL47157"
+
+-------------------------------------------------------------------------------
+clustername_1                                                       (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  763                      missing "":  0/3,140
+
+              examples:  "CL16019"
+                         "CL24033"
+                         "CL36055"
+                         "CL47141"
+
+-------------------------------------------------------------------------------
+clustername_2                                                       (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  761                      missing "":  0/3,140
+
+              examples:  "CL17003"
+                         "CL25013"
+                         "CL37001"
+                         "CL47141"
+
+-------------------------------------------------------------------------------
+clustername_3                                                       (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  760                      missing "":  0/3,140
+
+              examples:  "CL16085"
+                         "CL26033"
+                         "CL37013"
+                         "CL47165"
+
+-------------------------------------------------------------------------------
+clustername_4                                                       (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  762                      missing "":  0/3,140
+
+              examples:  "CL17029"
+                         "CL26043"
+                         "CL36119"
+                         "CL47163"
+
+-------------------------------------------------------------------------------
+clustername_5                                                       (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  755                      missing "":  0/3,140
+
+              examples:  "CL16065"
+                         "CL25017"
+                         "CL37001"
+                         "CL47147"
+
+-------------------------------------------------------------------------------
+clustername_6                                                       (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  762                      missing "":  0/3,140
+
+              examples:  "CL17081"
+                         "CL26055"
+                         "CL37013"
+                         "CL47155"
+
+-------------------------------------------------------------------------------
+clustername_7                                                       (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  751                      missing "":  0/3,140
+
+              examples:  "CL16083"
+                         "CL25027"
+                         "CL36109"
+                         "CL47157"
+
+-------------------------------------------------------------------------------
+clustername_8                                                       (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  766                      missing "":  0/3,140
+
+              examples:  "CL17143"
+                         "CL26145"
+                         "CL37113"
+                         "CL48041"
+
+-------------------------------------------------------------------------------
+clustername_9                                                       (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  761                      missing "":  0/3,140
+
+              examples:  "CL16067"
+                         "CL26007"
+                         "CL37013"
+                         "CL47163"
+
+-------------------------------------------------------------------------------
+clustername_10                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  765                      missing "":  0/3,140
+
+              examples:  "CL17001"
+                         "CL25009"
+                         "CL36089"
+                         "CL47155"
+
+-------------------------------------------------------------------------------
+clustername_11                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  758                      missing "":  0/3,140
+
+              examples:  "CL17001"
+                         "CL26053"
+                         "CL37001"
+                         "CL47163"
+
+-------------------------------------------------------------------------------
+clustername_12                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  764                      missing "":  0/3,140
+
+              examples:  "CL16085"
+                         "CL26033"
+                         "CL36091"
+                         "CL47131"
+
+-------------------------------------------------------------------------------
+clustername_13                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  768                      missing "":  0/3,140
+
+              examples:  "CL17097"
+                         "CL26073"
+                         "CL37021"
+                         "CL47163"
+
+-------------------------------------------------------------------------------
+clustername_14                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  766                      missing "":  0/3,140
+
+              examples:  "CL17031"
+                         "CL26007"
+                         "CL37001"
+                         "CL47157"
+
+-------------------------------------------------------------------------------
+clustername_15                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  761                      missing "":  0/3,140
+
+              examples:  "CL16083"
+                         "CL26033"
+                         "CL36109"
+                         "CL47131"
+
+-------------------------------------------------------------------------------
+clustername_16                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  757                      missing "":  0/3,140
+
+              examples:  "CL16083"
+                         "CL26033"
+                         "CL37013"
+                         "CL47163"
+
+-------------------------------------------------------------------------------
+clustername_17                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  767                      missing "":  0/3,140
+
+              examples:  "CL17019"
+                         "CL25027"
+                         "CL37013"
+                         "CL47157"
+
+-------------------------------------------------------------------------------
+clustername_18                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  751                      missing "":  0/3,140
+
+              examples:  "CL17019"
+                         "CL26049"
+                         "CL37013"
+                         "CL47163"
+
+-------------------------------------------------------------------------------
+clustername_19                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  770                      missing "":  0/3,140
+
+              examples:  "CL17077"
+                         "CL26069"
+                         "CL37013"
+                         "CL47157"
+
+-------------------------------------------------------------------------------
+clustername_20                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  757                      missing "":  0/3,140
+
+              examples:  "CL17029"
+                         "CL26007"
+                         "CL37001"
+                         "CL47131"
+
+-------------------------------------------------------------------------------
+clustername_21                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  763                      missing "":  0/3,140
+
+              examples:  "CL17029"
+                         "CL26047"
+                         "CL36119"
+                         "CL47141"
+
+-------------------------------------------------------------------------------
+clustername_22                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  757                      missing "":  0/3,140
+
+              examples:  "CL16083"
+                         "CL25017"
+                         "CL36089"
+                         "CL47141"
+
+-------------------------------------------------------------------------------
+clustername_23                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  761                      missing "":  0/3,140
+
+              examples:  "CL16051"
+                         "CL25017"
+                         "CL37001"
+                         "CL47155"
+
+-------------------------------------------------------------------------------
+clustername_24                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  754                      missing "":  0/3,140
+
+              examples:  "CL16085"
+                         "CL26055"
+                         "CL36109"
+                         "CL47165"
+
+-------------------------------------------------------------------------------
+clustername_25                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  757                      missing "":  0/3,140
+
+              examples:  "CL16067"
+                         "CL25013"
+                         "CL36109"
+                         "CL47163"
+
+-------------------------------------------------------------------------------
+clustername_26                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  765                      missing "":  0/3,140
+
+              examples:  "CL17077"
+                         "CL26055"
+                         "CL37035"
+                         "CL47163"
+
+-------------------------------------------------------------------------------
+clustername_27                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  770                      missing "":  0/3,140
+
+              examples:  "CL17115"
+                         "CL26081"
+                         "CL37051"
+                         "CL48029"
+
+-------------------------------------------------------------------------------
+clustername_28                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  764                      missing "":  0/3,140
+
+              examples:  "CL17029"
+                         "CL26055"
+                         "CL36119"
+                         "CL47141"
+
+-------------------------------------------------------------------------------
+clustername_29                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  762                      missing "":  0/3,140
+
+              examples:  "CL16029"
+                         "CL24035"
+                         "CL36089"
+                         "CL47125"
+
+-------------------------------------------------------------------------------
+clustername_30                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  765                      missing "":  0/3,140
+
+              examples:  "CL16051"
+                         "CL24035"
+                         "CL36119"
+                         "CL47155"
+
+-------------------------------------------------------------------------------
+clustername_31                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  757                      missing "":  0/3,140
+
+              examples:  "CL16083"
+                         "CL26007"
+                         "CL37001"
+                         "CL47157"
+
+-------------------------------------------------------------------------------
+clustername_32                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  760                      missing "":  0/3,140
+
+              examples:  "CL17001"
+                         "CL26043"
+                         "CL37001"
+                         "CL47155"
+
+-------------------------------------------------------------------------------
+clustername_33                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  760                      missing "":  0/3,140
+
+              examples:  "CL17001"
+                         "CL26007"
+                         "CL36109"
+                         "CL47157"
+
+-------------------------------------------------------------------------------
+clustername_34                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  763                      missing "":  0/3,140
+
+              examples:  "CL16085"
+                         "CL25017"
+                         "CL37001"
+                         "CL47141"
+
+-------------------------------------------------------------------------------
+clustername_35                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  759                      missing "":  0/3,140
+
+              examples:  "CL16065"
+                         "CL25017"
+                         "CL36103"
+                         "CL47131"
+
+-------------------------------------------------------------------------------
+clustername_36                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  754                      missing "":  0/3,140
+
+              examples:  "CL16005"
+                         "CL25009"
+                         "CL36109"
+                         "CL47165"
+
+-------------------------------------------------------------------------------
+clustername_37                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  757                      missing "":  0/3,140
+
+              examples:  "CL17001"
+                         "CL26047"
+                         "CL37013"
+                         "CL47149"
+
+-------------------------------------------------------------------------------
+clustername_38                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  765                      missing "":  0/3,140
+
+              examples:  "CL17031"
+                         "CL26007"
+                         "CL36119"
+                         "CL47155"
+
+-------------------------------------------------------------------------------
+clustername_39                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  762                      missing "":  0/3,140
+
+              examples:  "CL16085"
+                         "CL26007"
+                         "CL37013"
+                         "CL47165"
+
+-------------------------------------------------------------------------------
+clustername_40                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  760                      missing "":  0/3,140
+
+              examples:  "CL17029"
+                         "CL26049"
+                         "CL37001"
+                         "CL47157"
+
+-------------------------------------------------------------------------------
+clustername_41                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  752                      missing "":  0/3,140
+
+              examples:  "CL17031"
+                         "CL26055"
+                         "CL37013"
+                         "CL47165"
+
+-------------------------------------------------------------------------------
+clustername_42                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  767                      missing "":  0/3,140
+
+              examples:  "CL17031"
+                         "CL26053"
+                         "CL37013"
+                         "CL47163"
+
+-------------------------------------------------------------------------------
+clustername_43                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  758                      missing "":  0/3,140
+
+              examples:  "CL17019"
+                         "CL26007"
+                         "CL36119"
+                         "CL47163"
+
+-------------------------------------------------------------------------------
+clustername_44                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  761                      missing "":  0/3,140
+
+              examples:  "CL16067"
+                         "CL25009"
+                         "CL36089"
+                         "CL47125"
+
+-------------------------------------------------------------------------------
+clustername_45                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  766                      missing "":  0/3,140
+
+              examples:  "CL17029"
+                         "CL26007"
+                         "CL36089"
+                         "CL47131"
+
+-------------------------------------------------------------------------------
+clustername_46                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  758                      missing "":  0/3,140
+
+              examples:  "CL17031"
+                         "CL26007"
+                         "CL37021"
+                         "CL47157"
+
+-------------------------------------------------------------------------------
+clustername_47                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  760                      missing "":  0/3,140
+
+              examples:  "CL17029"
+                         "CL26043"
+                         "CL37001"
+                         "CL47163"
+
+-------------------------------------------------------------------------------
+clustername_48                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  766                      missing "":  0/3,140
+
+              examples:  "CL17001"
+                         "CL26033"
+                         "CL36103"
+                         "CL47155"
+
+-------------------------------------------------------------------------------
+clustername_49                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  770                      missing "":  0/3,140
+
+              examples:  "CL16067"
+                         "CL25017"
+                         "CL37013"
+                         "CL47141"
+
+-------------------------------------------------------------------------------
+clustername_50                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  764                      missing "":  0/3,140
+
+              examples:  "CL17031"
+                         "CL26007"
+                         "CL36109"
+                         "CL47131"
+
+-------------------------------------------------------------------------------
+clustername_51                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  750                      missing "":  0/3,140
+
+              examples:  "CL17001"
+                         "CL26007"
+                         "CL36109"
+                         "CL47141"
+
+-------------------------------------------------------------------------------
+clustername_52                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  758                      missing "":  0/3,140
+
+              examples:  "CL17031"
+                         "CL26007"
+                         "CL36109"
+                         "CL47157"
+
+-------------------------------------------------------------------------------
+clustername_53                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  759                      missing "":  0/3,140
+
+              examples:  "CL16049"
+                         "CL24035"
+                         "CL36091"
+                         "CL47141"
+
+-------------------------------------------------------------------------------
+clustername_54                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  750                      missing "":  0/3,140
+
+              examples:  "CL17029"
+                         "CL26053"
+                         "CL37001"
+                         "CL47131"
+
+-------------------------------------------------------------------------------
+clustername_55                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  763                      missing "":  0/3,140
+
+              examples:  "CL16049"
+                         "CL25003"
+                         "CL36089"
+                         "CL47141"
+
+-------------------------------------------------------------------------------
+clustername_56                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  762                      missing "":  0/3,140
+
+              examples:  "CL16067"
+                         "CL26007"
+                         "CL36109"
+                         "CL47141"
+
+-------------------------------------------------------------------------------
+clustername_57                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  764                      missing "":  0/3,140
+
+              examples:  "CL16059"
+                         "CL25009"
+                         "CL37001"
+                         "CL47155"
+
+-------------------------------------------------------------------------------
+clustername_58                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  756                      missing "":  0/3,140
+
+              examples:  "CL16067"
+                         "CL25017"
+                         "CL36109"
+                         "CL47149"
+
+-------------------------------------------------------------------------------
+clustername_59                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  761                      missing "":  0/3,140
+
+              examples:  "CL16005"
+                         "CL25003"
+                         "CL36091"
+                         "CL47131"
+
+-------------------------------------------------------------------------------
+clustername_60                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  761                      missing "":  0/3,140
+
+              examples:  "CL16083"
+                         "CL25013"
+                         "CL36091"
+                         "CL47165"
+
+-------------------------------------------------------------------------------
+clustername_61                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  753                      missing "":  0/3,140
+
+              examples:  "CL17077"
+                         "CL26055"
+                         "CL37049"
+                         "CL47183"
+
+-------------------------------------------------------------------------------
+clustername_62                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  753                      missing "":  0/3,140
+
+              examples:  "CL17031"
+                         "CL26007"
+                         "CL36109"
+                         "CL47155"
+
+-------------------------------------------------------------------------------
+clustername_63                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  758                      missing "":  0/3,140
+
+              examples:  "CL16065"
+                         "CL25009"
+                         "CL36069"
+                         "CL47125"
+
+-------------------------------------------------------------------------------
+clustername_64                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  763                      missing "":  0/3,140
+
+              examples:  "CL17031"
+                         "CL26033"
+                         "CL37035"
+                         "CL47177"
+
+-------------------------------------------------------------------------------
+clustername_65                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  759                      missing "":  0/3,140
+
+              examples:  "CL16027"
+                         "CL25009"
+                         "CL36089"
+                         "CL47155"
+
+-------------------------------------------------------------------------------
+clustername_66                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  758                      missing "":  0/3,140
+
+              examples:  "CL16001"
+                         "CL24035"
+                         "CL36109"
+                         "CL47141"
+
+-------------------------------------------------------------------------------
+clustername_67                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  757                      missing "":  0/3,140
+
+              examples:  "CL16083"
+                         "CL25017"
+                         "CL36109"
+                         "CL47157"
+
+-------------------------------------------------------------------------------
+clustername_68                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  763                      missing "":  0/3,140
+
+              examples:  "CL17029"
+                         "CL26007"
+                         "CL36091"
+                         "CL47155"
+
+-------------------------------------------------------------------------------
+clustername_69                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  771                      missing "":  0/3,140
+
+              examples:  "CL17077"
+                         "CL26055"
+                         "CL37021"
+                         "CL47177"
+
+-------------------------------------------------------------------------------
+clustername_70                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  759                      missing "":  0/3,140
+
+              examples:  "CL17029"
+                         "CL26043"
+                         "CL36091"
+                         "CL47155"
+
+-------------------------------------------------------------------------------
+clustername_71                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  754                      missing "":  0/3,140
+
+              examples:  "CL16083"
+                         "CL26033"
+                         "CL37013"
+                         "CL47131"
+
+-------------------------------------------------------------------------------
+clustername_72                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  763                      missing "":  0/3,140
+
+              examples:  "CL17019"
+                         "CL26047"
+                         "CL37021"
+                         "CL47163"
+
+-------------------------------------------------------------------------------
+clustername_73                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  759                      missing "":  0/3,140
+
+              examples:  "CL16059"
+                         "CL25009"
+                         "CL36119"
+                         "CL47163"
+
+-------------------------------------------------------------------------------
+clustername_74                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  760                      missing "":  0/3,140
+
+              examples:  "CL16083"
+                         "CL25017"
+                         "CL37001"
+                         "CL47163"
+
+-------------------------------------------------------------------------------
+clustername_75                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  757                      missing "":  0/3,140
+
+              examples:  "CL16065"
+                         "CL25003"
+                         "CL36091"
+                         "CL47157"
+
+-------------------------------------------------------------------------------
+clustername_76                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  760                      missing "":  0/3,140
+
+              examples:  "CL17029"
+                         "CL26007"
+                         "CL37023"
+                         "CL47157"
+
+-------------------------------------------------------------------------------
+clustername_77                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  754                      missing "":  0/3,140
+
+              examples:  "CL16049"
+                         "CL25009"
+                         "CL36081"
+                         "CL47131"
+
+-------------------------------------------------------------------------------
+clustername_78                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  760                      missing "":  0/3,140
+
+              examples:  "CL16083"
+                         "CL26007"
+                         "CL36091"
+                         "CL47157"
+
+-------------------------------------------------------------------------------
+clustername_79                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  773                      missing "":  0/3,140
+
+              examples:  "CL16065"
+                         "CL25017"
+                         "CL36081"
+                         "CL47125"
+
+-------------------------------------------------------------------------------
+clustername_80                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  765                      missing "":  0/3,140
+
+              examples:  "CL17049"
+                         "CL26033"
+                         "CL36119"
+                         "CL47165"
+
+-------------------------------------------------------------------------------
+clustername_81                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  748                      missing "":  0/3,140
+
+              examples:  "CL16085"
+                         "CL26007"
+                         "CL36119"
+                         "CL47177"
+
+-------------------------------------------------------------------------------
+clustername_82                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  765                      missing "":  0/3,140
+
+              examples:  "CL16059"
+                         "CL25009"
+                         "CL36081"
+                         "CL47131"
+
+-------------------------------------------------------------------------------
+clustername_83                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  766                      missing "":  0/3,140
+
+              examples:  "CL17001"
+                         "CL25017"
+                         "CL36089"
+                         "CL47149"
+
+-------------------------------------------------------------------------------
+clustername_84                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  759                      missing "":  0/3,140
+
+              examples:  "CL17019"
+                         "CL26007"
+                         "CL37013"
+                         "CL47179"
+
+-------------------------------------------------------------------------------
+clustername_85                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  758                      missing "":  0/3,140
+
+              examples:  "CL17049"
+                         "CL26065"
+                         "CL37039"
+                         "CL47165"
+
+-------------------------------------------------------------------------------
+clustername_86                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  765                      missing "":  0/3,140
+
+              examples:  "CL17029"
+                         "CL26049"
+                         "CL37013"
+                         "CL47163"
+
+-------------------------------------------------------------------------------
+clustername_87                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  761                      missing "":  0/3,140
+
+              examples:  "CL17001"
+                         "CL26043"
+                         "CL36109"
+                         "CL47155"
+
+-------------------------------------------------------------------------------
+clustername_88                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  774                      missing "":  0/3,140
+
+              examples:  "CL17029"
+                         "CL26055"
+                         "CL37023"
+                         "CL47183"
+
+-------------------------------------------------------------------------------
+clustername_89                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  760                      missing "":  0/3,140
+
+              examples:  "CL16083"
+                         "CL26049"
+                         "CL36109"
+                         "CL47141"
+
+-------------------------------------------------------------------------------
+clustername_90                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  756                      missing "":  0/3,140
+
+              examples:  "CL17019"
+                         "CL26033"
+                         "CL36091"
+                         "CL47149"
+
+-------------------------------------------------------------------------------
+clustername_91                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  758                      missing "":  0/3,140
+
+              examples:  "CL16049"
+                         "CL25009"
+                         "CL36091"
+                         "CL47163"
+
+-------------------------------------------------------------------------------
+clustername_92                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  754                      missing "":  0/3,140
+
+              examples:  "CL16051"
+                         "CL25027"
+                         "CL36089"
+                         "CL47119"
+
+-------------------------------------------------------------------------------
+clustername_93                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  760                      missing "":  0/3,140
+
+              examples:  "CL16085"
+                         "CL26007"
+                         "CL37013"
+                         "CL47163"
+
+-------------------------------------------------------------------------------
+clustername_94                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  759                      missing "":  0/3,140
+
+              examples:  "CL17029"
+                         "CL26033"
+                         "CL37021"
+                         "CL47165"
+
+-------------------------------------------------------------------------------
+clustername_95                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  760                      missing "":  0/3,140
+
+              examples:  "CL16083"
+                         "CL25017"
+                         "CL37001"
+                         "CL47149"
+
+-------------------------------------------------------------------------------
+clustername_96                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  760                      missing "":  0/3,140
+
+              examples:  "CL17019"
+                         "CL26033"
+                         "CL37013"
+                         "CL47155"
+
+-------------------------------------------------------------------------------
+clustername_97                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  771                      missing "":  0/3,140
+
+              examples:  "CL17029"
+                         "CL26007"
+                         "CL36109"
+                         "CL47155"
+
+-------------------------------------------------------------------------------
+clustername_98                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  756                      missing "":  0/3,140
+
+              examples:  "CL16055"
+                         "CL25003"
+                         "CL36091"
+                         "CL47141"
+
+-------------------------------------------------------------------------------
+clustername_99                                                      (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  764                      missing "":  0/3,140
+
+              examples:  "CL17019"
+                         "CL26007"
+                         "CL37051"
+                         "CL47177"
+
+-------------------------------------------------------------------------------
+clustername_100                                                     (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  string (str12), but longest is str7
+
+         unique values:  761                      missing "":  0/3,140
+
+              examples:  "CL16067"
+                         "CL25027"
+                         "CL37035"
+                         "CL47155"
+
+-------------------------------------------------------------------------------
+clus_switched                                                       (unlabeled)
+-------------------------------------------------------------------------------
+
+                  type:  numeric (double)
+
+                 range:  [0,1]                        units:  1
+         unique values:  2                        missing .:  0/3,140
+
+            tabulation:  Freq.  Value
+                         1,685  0
+                         1,455  1
+
+. 
+. 
+end of do-file
