@@ -96,7 +96,7 @@ use `czone_ts', clear ;
       
 
       include "$programs/06_qcew/zz_bartik_merge.do" ;
-
+	keep if year>= 1990 & year<=2016 ; 
       xtset czone year; 
 sum bartik_it, d;
 local sd_ts = r(sd);
@@ -125,6 +125,8 @@ use `czone_rep' , clear ;
       
 
       include "$programs/06_qcew/zz_bartik_merge.do" ;
+      
+      keep if year>= 1990 & year<=2016 ; 
       xtset czone year; 
 sum bartik_it, d;
 local sd_fkv = r(sd);
