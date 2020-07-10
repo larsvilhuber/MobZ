@@ -12,6 +12,7 @@ data qcew_county (keep = fips naics2 /*annual_avg_emplvl*/ emp_month1 year quart
                             and aggregation_level='74' and naicssec ne '99')) ;
     fips = state||county ; 
     naics2 = naicssec; 
+    if year >= 1990 and year <= 2016;
 run;
 
 /* sort by info */
@@ -43,6 +44,7 @@ run;
 data qcew_earnings (keep = fips year quarter /*avg_annual_pay annual_avg_emplvl*/ empl_month1 total_wage) ;
     set INPUTS.bls_us_county /* (where=( quarter=1 and aggregation_level='70'))*/ ;
     fips = state||county ; 
+    if year >= 1990 and year <= 2016;
 run;
 /* sort by info */
 proc sort data=qcew_earnings;
