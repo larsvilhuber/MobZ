@@ -128,3 +128,4 @@ gen fips = statea+countya
 keep fips female_emp 
 
 save 1970female, replace 
+
