@@ -113,14 +113,14 @@ Machine type:  PC (64-bit x86-64)
 . cap mkdir "$logdir"
 
 . log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
-(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile__3_Jul_2020
-> -17_20_05.log not found)
+(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_10_Jul_2020
+> -14_20_06.log not found)
 -------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile__3_Jul_202
-> 0-17_20_05.log
+       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_10_Jul_202
+> 0-14_20_06.log
   log type:  text
- opened on:   3 Jul 2020, 17:20:05
+ opened on:  10 Jul 2020, 14:20:06
 
 . cap mkdir "$temp"
 
@@ -184,7 +184,7 @@ OLDPLACE:  ~/ado/
   variable year was double now int
   variable fips was str6 now str5
   variable naics2 was str6 now str5
-  (11,918,016 bytes saved)
+  (10,506,864 bytes saved)
 
 . save "$outputs/qcew_county.dta", replace
 file /ssgprojects/project0002/MobZ.new/data/qcew_county.dta saved
@@ -193,10 +193,10 @@ file /ssgprojects/project0002/MobZ.new/data/qcew_county.dta saved
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-        year |  1,489,752     2006.24    8.201803       1990       2019
+        year |  1,313,358    2004.661    7.426107       1990       2016
         fips |          0
       naics2 |          0
-annual_avg~l |  1,489,752    2085.921    9564.786          0   836339.3
+annual_avg~l |  1,313,358    2089.099    9472.836          0   836339.3
 
 . codebook
 
@@ -206,14 +206,14 @@ year                                                                       Year
 
                   type:  numeric (int)
 
-                 range:  [1990,2019]                  units:  1
-         unique values:  30                       missing .:  0/1,489,752
+                 range:  [1990,2016]                  units:  1
+         unique values:  27                       missing .:  0/1,313,358
 
-                  mean:   2006.24
-              std. dev:    8.2018
+                  mean:   2004.66
+              std. dev:   7.42611
 
            percentiles:        10%       25%       50%       75%       90%
-                              1994      2000      2007      2013      2017
+                              1993      1999      2005      2011      2014
 
 -------------------------------------------------------------------------------
 fips                                                                (unlabeled)
@@ -221,12 +221,12 @@ fips                                                                (unlabeled)
 
                   type:  string (str5)
 
-         unique values:  3,282                    missing "":  0/1,489,752
+         unique values:  3,282                    missing "":  0/1,313,358
 
               examples:  "17085"
                          "26097"
                          "37079"
-                         "48091"
+                         "48089"
 
 -------------------------------------------------------------------------------
 naics2                                                              (unlabeled)
@@ -234,7 +234,7 @@ naics2                                                              (unlabeled)
 
                   type:  string (str5)
 
-         unique values:  19                       missing "":  0/1,489,752
+         unique values:  19                       missing "":  0/1,313,358
 
               examples:  "31-33"
                          "48-49"
@@ -248,13 +248,13 @@ annual_avg_emplvl                                                   (unlabeled)
                   type:  numeric (double)
 
                  range:  [0,836339.25]                units:  .01
-         unique values:  89,283                   missing .:  0/1,489,752
+         unique values:  84,067                   missing .:  0/1,313,358
 
-                  mean:   2085.92
-              std. dev:   9564.79
+                  mean:    2089.1
+              std. dev:   9472.84
 
            percentiles:        10%       25%       50%       75%       90%
-                                 0     27.25    180.75     909.5    3837.5
+                                 0     30.75    188.25    927.75   3874.25
 
 . 
 . /*=================== Earnings file ==================*/
@@ -264,7 +264,7 @@ annual_avg_emplvl                                                   (unlabeled)
   variable year was double now int
   variable annual_avg_emplvl was double now byte
   variable fips was str6 now str5
-  (1,366,148 bytes saved)
+  (1,228,696 bytes saved)
 
 . save "$outputs/qcew_earnings.dta", replace
 file /ssgprojects/project0002/MobZ.new/data/qcew_earnings.dta saved
@@ -273,10 +273,10 @@ file /ssgprojects/project0002/MobZ.new/data/qcew_earnings.dta saved
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-        year |     97,582    2004.557    8.646403       1990       2019
+        year |     87,764    2003.054    7.782793       1990       2016
         fips |          0
 annual_avg~l |          0
-avg_annual~y |     97,582    1.05e+07    4.39e+07          0   1.97e+09
+avg_annual~y |     87,764     9986490    4.12e+07          0   1.55e+09
 
 . codebook
 
@@ -286,14 +286,14 @@ year                                                                       Year
 
                   type:  numeric (int)
 
-                 range:  [1990,2019]                  units:  1
-         unique values:  30                       missing .:  0/97,582
+                 range:  [1990,2016]                  units:  1
+         unique values:  27                       missing .:  0/87,764
 
-                  mean:   2004.56
-              std. dev:    8.6464
+                  mean:   2003.05
+              std. dev:   7.78279
 
            percentiles:        10%       25%       50%       75%       90%
-                              1993      1997      2005      2012      2017
+                              1992      1996      2003      2010      2014
 
 -------------------------------------------------------------------------------
 fips                                                                (unlabeled)
@@ -301,10 +301,10 @@ fips                                                                (unlabeled)
 
                   type:  string (str5)
 
-         unique values:  3,282                    missing "":  0/97,582
+         unique values:  3,282                    missing "":  0/87,764
 
               examples:  "17101"
-                         "26119"
+                         "26121"
                          "37089"
                          "48111"
 
@@ -315,10 +315,10 @@ annual_avg_emplvl                                                   (unlabeled)
                   type:  numeric (byte)
 
                  range:  [.,.]                        units:  .
-         unique values:  0                        missing .:  97,582/97,582
+         unique values:  0                        missing .:  87,764/87,764
 
             tabulation:  Freq.  Value
-                        97,582  .
+                        87,764  .
 
 -------------------------------------------------------------------------------
 avg_annual_pay                                                      (unlabeled)
@@ -326,14 +326,14 @@ avg_annual_pay                                                      (unlabeled)
 
                   type:  numeric (double)
 
-                 range:  [0,1.969e+09]                units:  1.000e-13
-         unique values:  97,569                   missing .:  0/97,582
+                 range:  [0,1.547e+09]                units:  1.000e-13
+         unique values:  87,755                   missing .:  0/87,764
 
                   mean:   1.0e+07
-              std. dev:   4.4e+07
+              std. dev:   4.1e+07
 
            percentiles:        10%       25%       50%       75%       90%
-                            221454    560770   1.6e+06   5.2e+06   1.9e+07
+                            219865    553932   1.6e+06   5.0e+06   1.8e+07
 
 . 
 . 
