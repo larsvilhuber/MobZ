@@ -18,7 +18,7 @@ foreach suff in female manu {
 	drop _merge
 } 
 gen year = "1970"
-keep pop* female* fips manu_emp  total_emp bachelors year
+keep pop* female* fips manu_emp  total_emp year
 tempfile 1970census
 save `1970census', replace
 
