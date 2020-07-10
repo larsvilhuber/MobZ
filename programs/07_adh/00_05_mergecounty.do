@@ -5,11 +5,12 @@ that we want to calculate.
 ********************************/   
 
 set more off
+include "../config.do"
 ***********************
 *STEP 1: industry employment
 ***********************
 
-use "$raw/cbp_allyears.dta", clear
+use "$interwrk/cbp_allyears.dta", clear
 
 replace fips = "12025" if fips == "12086" 
 sort fips year
@@ -83,6 +84,6 @@ drop if _merge == 2
 drop _merge
 
 sort fips year
-tempfile cty_censusdata
+*tempfile cty_censusdata
 save  "$interwrk/cty_censusdata.dta", replace
 
