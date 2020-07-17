@@ -10,10 +10,11 @@ save "$outputs/qcew_county.dta", replace
 sum 
 codebook
 
-/*=================== Earnings file ==================*/
-use "$outputs/qcew_earnings.dta", clear
+/*=================== Mostly raw BLS QCEW file ==================*/
+
+use "$interwrk/bls_us_county.dta", clear
 compress
-save "$outputs/qcew_earnings.dta", replace
-sum
+save "$interwrk/bls_us_county.dta", replace
+sum 
 codebook
 
