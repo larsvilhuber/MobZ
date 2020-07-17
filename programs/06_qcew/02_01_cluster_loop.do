@@ -104,7 +104,7 @@ forvalues i = 1/1000 { ;
       save `shell2', replace ;
       
 
-      include "$programs/qcew/zz_bartik_merge.do" ;
+      include "$programs/06_qcew/zz_bartik_merge.do" ;
       
       xtset czone year; 
 

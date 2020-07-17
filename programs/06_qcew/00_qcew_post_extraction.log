@@ -113,14 +113,14 @@ Machine type:  PC (64-bit x86-64)
 . cap mkdir "$logdir"
 
 . log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
-(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_10_Jul_2020
-> -14_20_06.log not found)
+(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_17_Jul_2020
+> -09_20_56.log not found)
 -------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_10_Jul_202
-> 0-14_20_06.log
+       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_17_Jul_202
+> 0-09_20_56.log
   log type:  text
- opened on:  10 Jul 2020, 14:20:06
+ opened on:  17 Jul 2020, 09:20:56
 
 . cap mkdir "$temp"
 
@@ -257,26 +257,30 @@ annual_avg_emplvl                                                   (unlabeled)
                                  0     30.75    188.25    927.75   3874.25
 
 . 
-. /*=================== Earnings file ==================*/
-. use "$outputs/qcew_earnings.dta", clear
+. /*=================== Mostly raw BLS QCEW file ==================*/
+. 
+. use "$interwrk/bls_us_county.dta", clear
 
 . compress
   variable year was double now int
-  variable annual_avg_emplvl was double now byte
+  variable quarter was double now byte
+  variable emp_month1 was double now long
   variable fips was str6 now str5
-  (1,228,696 bytes saved)
+  variable naics2 was str6 now str5
+  (99,815,208 bytes saved)
 
-. save "$outputs/qcew_earnings.dta", replace
-file /ssgprojects/project0002/MobZ.new/data/qcew_earnings.dta saved
+. save "$interwrk/bls_us_county.dta", replace
+file /ssgprojects/project0002/MobZ.new/data/interwrk/bls_us_county.dta saved
 
-. sum
+. sum 
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-        year |     87,764    2003.054    7.782793       1990       2016
+        year |  5,253,432    2004.661    7.426105       1990       2016
+     quarter |  5,253,432         2.5    1.118034          1          4
+  emp_month1 |  5,253,432    2089.099    9480.037          0     844348
         fips |          0
-annual_avg~l |          0
-avg_annual~y |     87,764     9986490    4.12e+07          0   1.55e+09
+      naics2 |          0
 
 . codebook
 
@@ -287,13 +291,43 @@ year                                                                       Year
                   type:  numeric (int)
 
                  range:  [1990,2016]                  units:  1
-         unique values:  27                       missing .:  0/87,764
+         unique values:  27                       missing .:  0/5,253,432
 
-                  mean:   2003.05
-              std. dev:   7.78279
+                  mean:   2004.66
+              std. dev:    7.4261
 
            percentiles:        10%       25%       50%       75%       90%
-                              1992      1996      2003      2010      2014
+                              1993      1999      2005      2011      2014
+
+-------------------------------------------------------------------------------
+quarter                                                                 Quarter
+-------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+
+                 range:  [1,4]                        units:  1
+         unique values:  4                        missing .:  0/5,253,432
+
+            tabulation:  Freq.  Value
+                     1,313,358  1
+                     1,313,358  2
+                     1,313,358  3
+                     1,313,358  4
+
+-------------------------------------------------------------------------------
+emp_month1                                                  Employment, Month 1
+-------------------------------------------------------------------------------
+
+                  type:  numeric (long)
+
+                 range:  [0,844348]                   units:  1
+         unique values:  69,707                   missing .:  0/5,253,432
+
+                  mean:    2089.1
+              std. dev:   9480.04
+
+           percentiles:        10%       25%       50%       75%       90%
+                                 0        27       186       929      3882
 
 -------------------------------------------------------------------------------
 fips                                                                (unlabeled)
@@ -301,39 +335,25 @@ fips                                                                (unlabeled)
 
                   type:  string (str5)
 
-         unique values:  3,282                    missing "":  0/87,764
+         unique values:  3,282                    missing "":  0/5,253,432
 
-              examples:  "17101"
-                         "26121"
-                         "37089"
-                         "48111"
-
--------------------------------------------------------------------------------
-annual_avg_emplvl                                                   (unlabeled)
--------------------------------------------------------------------------------
-
-                  type:  numeric (byte)
-
-                 range:  [.,.]                        units:  .
-         unique values:  0                        missing .:  87,764/87,764
-
-            tabulation:  Freq.  Value
-                        87,764  .
+              examples:  "17085"
+                         "26097"
+                         "37079"
+                         "48089"
 
 -------------------------------------------------------------------------------
-avg_annual_pay                                                      (unlabeled)
+naics2                                                              (unlabeled)
 -------------------------------------------------------------------------------
 
-                  type:  numeric (double)
+                  type:  string (str5)
 
-                 range:  [0,1.547e+09]                units:  1.000e-13
-         unique values:  87,755                   missing .:  0/87,764
+         unique values:  19                       missing "":  0/5,253,432
 
-                  mean:   1.0e+07
-              std. dev:   4.1e+07
-
-           percentiles:        10%       25%       50%       75%       90%
-                            219865    553932   1.6e+06   5.0e+06   1.8e+07
+              examples:  "31-33"
+                         "48-49"
+                         "54"
+                         "62"
 
 . 
 . 
