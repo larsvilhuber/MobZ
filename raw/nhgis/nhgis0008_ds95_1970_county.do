@@ -652,4 +652,5 @@ egen femalepop_16_65 = rowtotal(ce6118-ce6167)
 gen fips = statea+countya 
 
 keep fips pop_16_65 femalepop_16_65 
-save 1970female.dta, replace 
+save 1970pop.dta, replace 
+

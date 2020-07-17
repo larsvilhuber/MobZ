@@ -3,13 +3,15 @@
 Prep Aggregate Data
 *******************/
 
+include "../config.do"
+
 /*********************
 Trade data
 ***********************/
 
 /* source: Autor Dorn Hanson public data files */
 
-use "$datadir/adh_data/sic87dd_trade_data.dta", clear
+use "$adh_data/sic87dd_trade_data.dta", clear
 
 bys year sic87dd: egen M_ucjt = sum(imports*(exporter=="CHN")*(importer=="USA"))
 
@@ -39,12 +41,12 @@ keep del* M_* sic87dd year
 
 sort sic87dd year
 
-save "$datadir/tradedata.dta", replace
+save "$interwrk/tradedata.dta", replace
 
 /*****************************
 National Industry Employment
 *****************************/
-use "$datadir/industry_data.dta", clear
+use "$interwrk/industry_data.dta", clear
 
 collapse (sum) emp, by(sic87dd year)
 
@@ -52,7 +54,8 @@ rename emp L_ujt
 
 sort sic87dd year
 
-save "$datadir/industrydata.dta", replace
+/* used nowhere else? */
+*save "$interwrk/industrydata.dta", replace
 
 
 

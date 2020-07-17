@@ -12,6 +12,7 @@ data bls_us_county (keep = fips naics2 /*annual_avg_emplvl*/ emp_month1 year qua
                             and aggregation_level='74' and naicssec ne '99')) ;
     fips = state||county ; 
     naics2 = naicssec; 
+    if year >= 1990 and year <= 2016;
 run;
 
 /* sort by info */

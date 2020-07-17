@@ -1,5 +1,7 @@
 /****merge together all the data at 1990 cz level****/
 
+include "../config.do"
+
 /************* READ IN COMMUTING ZONE XWALK *******************/
 //import delimited "$datadir/czones.csv", clear 
 
@@ -17,7 +19,9 @@ tempfile czone
 save `czone', replace
 
 
-use  "$datadir/cty_censusdata.dta", clear
+/* from 00_05_mergecounty.do */
+
+use  "$interwrk/cty_censusdata.dta", clear
 
 
 sort fips 
@@ -70,7 +74,7 @@ save `mainfile', replace
 
 /**************** READING IN IPW *******************/
 
-use "$datadir/IPW_czone.dta", clear
+use "$interwrk/IPW_czone.dta", clear
 
 sort czone year
 
@@ -96,4 +100,4 @@ foreach suff in uit oit  {
 }                           
 
 
-save "$datadir/finalczdata.dta", replace
+save "$interwrk/finalczdata.dta", replace

@@ -213,3 +213,4 @@ egen pop_16_65 = rowtotal(fmz004-fmz017 fmz027-fmz040)
 keep fips female_pop_16_65 pop_16_65
 
 save 2000pop, replace
+
