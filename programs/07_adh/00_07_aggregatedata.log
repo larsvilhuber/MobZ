@@ -1,0 +1,282 @@
+
+  ___  ____  ____  ____  ____ (R)
+ /__    /   ____/   /   ____/
+___/   /   /___/   /   /___/   16.1   Copyright 1985-2019 StataCorp LLC
+  Statistics/Data analysis            StataCorp
+                                      4905 Lakeway Drive
+                                      College Station, Texas 77845 USA
+                                      800-STATA-PC        https://www.stata.com
+                                      979-696-4600        stata@stata.com
+                                      979-696-4601 (fax)
+
+Stata license: 5-user network perpetual
+Serial number: 501606316764
+  Licensed to: LDI Econ Cornell University
+               Ithaca, NY
+
+Notes:
+      1. Stata is running in batch mode.
+      2. Unicode is supported; see help unicode_advice.
+
+. do 00_07_aggregatedata.do 
+
+. 
+. /*****************
+> Prep Aggregate Data
+> *******************/
+. 
+. include "../config.do"
+
+. /*  config.do */
+. 
+. 
+. 
+. if ( "`c(hostname)'" == "ecco.vrdc.cornell.edu" ) {
+. global root "/ssgprojects/project0002/MobZ.new"
+. }
+
+. 
+. if ( "`c(username)'" == "vilhuber" ) {
+. global root "/home/vilhuber/Workspace/git/larsvilhuber/MobZ"
+. }
+
+. 
+. if ( "`c(hostname)'" == "some.server.at.census" ) {
+. global root "/made/up/path/Mobz"
+. }
+
+. 
+. /* check if the author creates a log file. If not, adjust the following code 
+> fragment */
+. 
+. local c_date = c(current_date)
+
+. local cdate = subinstr("`c_date'", " ", "_", .)
+
+. local c_time = c(current_time)
+
+. local ctime = subinstr("`c_time'", ":", "_", .)
+
+. 
+. // log using "${root}/logfile_`cdate'-`ctime'.log", replace text
+. 
+. /* It will provide some info about how and when the program was run */
+. /* See https://www.stata.com/manuals13/pcreturn.pdf#pcreturn */
+. local variant = cond(c(MP),"MP",cond(c(SE),"SE",c(flavor)) )  
+
+. // alternatively, you could use 
+. // local variant = cond(c(stata_version)>13,c(real_flavor),"NA")  
+. 
+. di "=== SYSTEM DIAGNOSTICS ==="
+=== SYSTEM DIAGNOSTICS ===
+
+. di "Stata version: `c(stata_version)'"
+Stata version: 16.1
+
+. di "Updated as of: `c(born_date)'"
+Updated as of: 30 Jun 2020
+
+. di "Variant:       `variant'"
+Variant:       IC
+
+. di "Processors:    `c(processors)'"
+Processors:    1
+
+. di "OS:            `c(os)' `c(osdtl)'"
+OS:            Unix 
+
+. di "Machine type:  `c(machine_type)'"
+Machine type:  PC (64-bit x86-64)
+
+. di "=========================="
+==========================
+
+. 
+. 
+. 
+. 
+. /* define relative libraries */
+. 
+. global paperdir "${root}/paper"
+
+. global interwrk "${root}/data/interwrk"
+
+. global raw "${root}/raw"
+
+. global temp "${root}/temp"
+
+. global outputs "${root}/data"
+
+. global programs "${root}/programs"
+
+. global outgraphs "${root}/figures"
+
+. global logdir "${programs}/logs"
+
+. 
+. cap mkdir "$logdir"
+
+. log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
+(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_17_Aug_2020
+> -08_20_29.log not found)
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_17_Aug_202
+> 0-08_20_29.log
+  log type:  text
+ opened on:  17 Aug 2020, 08:20:29
+
+. cap mkdir "$temp"
+
+. cap mkdir "${root}/data"
+
+. cap mkdir "$interwrk"
+
+. cap mkdir "$raw"
+
+. cap mkdir "$outputs"
+
+. 
+. /* install any packages locally */
+. capture mkdir "${programs}/ado"
+
+. sysdir set PERSONAL "${programs}/ado/personal"
+
+. sysdir set PLUS     "${programs}/ado/plus"
+
+. sysdir set SITE     "${programs}/ado/site"
+
+. sysdir
+   STATA:  /usr/local/stata16/
+    BASE:  /usr/local/stata16/ado/base/
+    SITE:  /ssgprojects/project0002/MobZ.new/programs/ado/site/
+    PLUS:  /ssgprojects/project0002/MobZ.new/programs/ado/plus/
+PERSONAL:  /ssgprojects/project0002/MobZ.new/programs/ado/personal/
+OLDPLACE:  ~/ado/
+
+. 
+. /* define data sources */
+. 
+. /* QCEW */
+. /* data/working/mobz/qcew */
+.     global qcewdata "${raw}/qcew"  
+
+. /* /data/working/mobz/outputs */
+.     global czonedata "$outputs"  
+
+. 
+. /* ADH */
+.     global adhdata "${raw}/adh_data/Public Release Data/dta"
+
+. /* CZONE */
+.     global czonedata "${raw}/adh_data/"
+
+. /* files provided separately by David Dorn */
+.     global dorndata "${raw}/ddorn/"
+
+. 
+. /* CBP */
+.     /* this is where the raw Stata versions of CBP data reside */
+.    global cbpdata "/data/clean/cbp"
+
+. 
+. 
+. 
+. /*********************
+> Trade data
+> ***********************/
+. 
+. /* source: Autor Dorn Hanson public data files */
+. 
+. use "$adhdata/sic87dd_trade_data.dta", clear
+(SIC trade data for ADH post collapse of problem SIC industries)
+
+. 
+. bys year sic87dd: egen M_ucjt = sum(imports*(exporter=="CHN")*(importer=="USA
+> "))
+
+. 
+. bys year sic87dd: egen M_ocjt = sum(imports*(exporter=="CHN")*(importer=="OTH
+> "))
+
+. 
+. keep if year == 1991 | year == 2000 | year == 2007
+(59,636 observations deleted)
+
+. collapse (first) M*, by(sic87dd year) 
+
+. 
+. /* this is fixing an issue with two of the sic codes that only show up in 200
+> 6 */
+. expand 3 if year == 2007 & (sic87dd == 2992 | sic87dd==3273)
+(4 observations created)
+
+. bys sic87dd year: egen seq = seq() 
+
+. replace year = 2000 if seq == 3
+(2 real changes made)
+
+. replace year = 1990 if seq == 2
+(2 real changes made)
+
+. replace M_ucjt = 0 if seq > 1
+(4 real changes made)
+
+. replace M_ocjt = 0 if seq > 1 
+(4 real changes made)
+
+. drop seq
+
+. 
+. sort sic87dd year 
+
+. 
+. gen del_M_ucjt = M_ucjt[_n+1]-M_ucjt if year<2007
+(397 missing values generated)
+
+. gen del_M_ocjt = M_ocjt[_n+1]-M_ocjt if year<2007
+(397 missing values generated)
+
+. 
+. drop if year == 2007
+(397 observations deleted)
+
+. replace year = 1990 if year == 1991 
+(395 real changes made)
+
+. 
+. keep del* M_* sic87dd year
+
+. 
+. sort sic87dd year
+
+. 
+. save "$interwrk/tradedata.dta", replace
+(note: file /ssgprojects/project0002/MobZ.new/data/interwrk/tradedata.dta not f
+> ound)
+file /ssgprojects/project0002/MobZ.new/data/interwrk/tradedata.dta saved
+
+. 
+. /*****************************
+> National Industry Employment
+> *****************************/
+. use "$interwrk/industry_data.dta", clear
+
+. 
+. collapse (sum) emp, by(sic87dd year)
+
+. 
+. rename emp L_ujt 
+
+. 
+. sort sic87dd year
+
+. 
+. /* used nowhere else? */
+. *save "$interwrk/industrydata.dta", replace
+. 
+. 
+. 
+. 
+. 
+end of do-file
