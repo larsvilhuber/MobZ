@@ -80,6 +80,14 @@ ADH-related files
 
 cw_cty_czone.dta is from here: https://www.ddorn.net/data/cw_cty_czone.zip
 
+cty_industryXXX.dta: provided via email by David Dorn. See [ddorn/README.md](ddorn/README.md).
+
+SEER population estimates
+-------------------------
+Used in ADH replication. Sourced from  https://seer.cancer.gov/popdata/yr1990_2018.singleages/us.1990_2018.singleages.adjusted.txt.gz
+
+
+
 
 Additional sources
 ------------------

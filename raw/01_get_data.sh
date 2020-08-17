@@ -45,3 +45,10 @@ fi
 
 # CZ
 curl https://www.ers.usda.gov/webdocs/DataFiles/48457/czlma903.xls?v=6997.1 > czlma903.xls
+
+# SEER data
+if [ ! -f  us.1990_2018.singleages.adjusted.txt.gz ]
+then
+curl  https://seer.cancer.gov/popdata/yr1990_2018.singleages/us.1990_2018.singleages.adjusted.txt.gz >  us.1990_2018.singleages.adjusted.txt.gz
+fi
+
