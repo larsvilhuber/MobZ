@@ -79,6 +79,8 @@ sysdir
     global adhdata "${raw}/adh_data/Public Release Data/dta"
 /* CZONE */
     global czonedata "${raw}/adh_data/"
+/* files provided separately by David Dorn */
+    global dorndata "${raw}/ddorn/"
 
 /* CBP */
     /* this is where the raw Stata versions of CBP data reside */
