@@ -50,8 +50,9 @@ twoway (hist beta if iteration!=0 )
 	legend(off)
 	;
 	
-	graph export "$outgraph/beta_bartik_distribution_moe_new.png", replace; 
-	graph export "$outgraph/qcew_betadist.png", replace ; 
+	*graph export "$outgraph/beta_bartik_distribution_moe_new.png", replace; 
+	graph export "$outgraph/beta_bartik_distribution.pdf", replace; 
+	*graph export "$outgraph/qcew_betadist.png", replace ; 
 /*************************************
 graphing t-statistics 
 *************************************/
@@ -68,7 +69,8 @@ twoway (hist tstat if iteration!=0)
        legend(off)
        ;
        
-       graph export "$outgraph/tdistribution_bartik_moe_new.png", replace ;
-	graph export "$outgraph/qcew_tstatdist.png", replace;  
+       *graph export "$outgraph/tdistribution_bartik_moe_new.png", replace ;
+       graph export "$outgraph/tdistribution_bartik.pdf", replace ;
+       *graph export "$outgraph/qcew_tstatdist.png", replace;  
 
 

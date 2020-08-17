@@ -15,4 +15,5 @@ twoway (rarea top bottom cutoff, color(gs13))
        xtitle("Cluster Height Cutoff")
        legend(off) ;
 
-graph export "$outgraph/cutoff_bartik.png", replace ; 
+*graph export "$outgraph/cutoff_bartik.png", replace ; 
+graph export "$outgraph/cutoff_bartik.pdf", replace ; 
