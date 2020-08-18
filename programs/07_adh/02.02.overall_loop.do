@@ -68,7 +68,7 @@ here we are estimating effects with our replicated CZs - we need to find
 the optimal level before running this for real.
 */	
 	
-forvalues i = 1/1000 {;
+forvalues i = 1/$bootstrap_num {;
         di "ITERATION IS `i', TIME IS $S_TIME on $S_DATE" ;
 	* step2 ;
 	use "`czonedataset'", clear;
