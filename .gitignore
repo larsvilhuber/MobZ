@@ -5,4 +5,7 @@
 *.sas7bdat
 *.dta
 *.log
+config-bootstrap.do
+nohup.out
+test.*
 
