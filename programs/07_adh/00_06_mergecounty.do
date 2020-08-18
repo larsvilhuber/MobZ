@@ -34,7 +34,7 @@ save `adhemp', replace
 * STEP 2: census data
 **********************
 
-use "$interwrk/popcounts.dta", clear
+use "$raw/popcounts.dta", clear
 
 rename county fips 
 replace fips = "12025" if fips == "12086"
