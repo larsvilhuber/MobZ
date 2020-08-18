@@ -117,7 +117,7 @@ list ;
 
 sum beta_1990 beta_2000 beta_all, d;
 
-save "$clusdir/bootstrap_results.dta", replace ;
+save "$interwrk/bootstrap_results.dta", replace ;
 
 erase `czoneresults' ;
 erase `ipw_regs' ;

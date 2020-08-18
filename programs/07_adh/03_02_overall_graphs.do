@@ -3,7 +3,9 @@ This makes graphs of
 distribution of results
 *******************/
 
-use "$clusdir/bootstrap_results.dta", clear
+include "../config.do"
+
+use "$interwrk/bootstrap_results.dta", clear
 sort iteration
 local true_est = beta_1990[1] 
 di "`true_est'"
@@ -17,7 +19,7 @@ di "CONFIDENCE INTERVAL: [" %5.4f `lower' ", " %5.4f `upper' "]"
 twoway (hist beta_1990 if iteration!=0)
 	(kdensity beta_1990 if iteration!=0)
 	(scatteri 0 `true_est' 40 `true_est', recast(line) lcolor(red) lwidth(thick) lpattern(dash)),
-       saving("$graphdir/1990_distribution.gph", replace)
+       saving("$outgraphs/1990_distribution.gph", replace)
        xtitle("Estimated Coefficient")
        ytitle("Density")
        title("Estimated Effect from Autor, Dorn and Hanson (2013)"
@@ -35,7 +37,7 @@ twoway (hist beta_1990 if iteration!=0)
 	            , box place(ne) fcolor(white)  just(left) color(red) margin(small))
        ;
        
-       graph export "$outgraph/1990_distribution_SOLE.png", replace ;
+       graph export "$outgraphs/1990_distribution_SOLE.png", replace ;
        
        twoway (hist beta_1990 if iteration!=0)
 	(kdensity beta_1990 if iteration!=0)
@@ -48,7 +50,7 @@ twoway (hist beta_1990 if iteration!=0)
        legend(off)              
        ;
        
-       graph export "$outgraph/1990_distribution.png", replace ;
+       graph export "$outgraphs/1990_distribution.png", replace ;
 
 sum tstat_1990 beta_1990 if iteration!=0,d;
 
@@ -73,7 +75,7 @@ twoway (hist tstat_1990 if iteration!=0)
 	(scatteri 0 `lower_bound' 2 `lower_bound', recast(line) lcolor(gs12) lwidth(thick) lpattern(dash))
 	(scatteri 0 `upper_bound' 2 `upper_bound', recast(line) lcolor(gs12) lwidth(thick) lpattern(dash))
 	(scatteri 0 `actual_tstat' 2 `actual_tstat', recast(line) lcolor(blue) lwidth(thick) lpattern(dash)),
-       saving("$graphdir/1990_tdistribution.gph", replace)
+       saving("$outgraphs/1990_tdistribution.gph", replace)
        xtitle("T-statistic")
        ytitle("Density")
       /* xline(`true_est',lstyle(foreground) lpattern(dash) lcolor(red))*/
@@ -81,28 +83,28 @@ twoway (hist tstat_1990 if iteration!=0)
        legend(off)
        ;
        
-       graph export "$outgraph/1990_tstat_distribution.png", replace ;
+       graph export "$outgraphs/1990_tstat_distribution.png", replace ;
 
 end ;
 end
 twoway (hist beta_2000 if iteration!=0)
 (kdensity beta_2000 if iteration!=0),
-       saving("$graphdir/2000_distribution.gph", replace)
+       saving("$outgraphs/2000_distribution.gph", replace)
        xtitle("Coefficient")
        ytitle("Density")
        title("Distribution of Estimated Effect, 1990")
        legend(off)
        xline(`true_est');
 
-graph export "$outgraph/2000_distribution.png", replace ;
+graph export "$outgraphs/2000_distribution.png", replace ;
        
 twoway (hist beta_all if iteration!=0)
 	(kdensity beta_all if iteration!=0),
-       saving("$graphdir/all_distribution.gph", replace)
+       saving("$outgraphs/all_distribution.gph", replace)
        xtitle("Coefficient")
        ytitle("Density")
        title("Distribution of Estimated Effect, 1990")
        legend(off)
        xline(`true_est');       
 
-graph export "$outgraph/all_distribution.png", replace ;
+graph export "$outgraphs/all_distribution.png", replace ;

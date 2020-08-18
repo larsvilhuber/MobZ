@@ -38,24 +38,24 @@ twoway 	(rarea top_1990 bottom_1990 cutoff, color(gs13))
 	(connected beta_1990 cutoff)
 	(scatteri -0.8875 0.9 -0.8875 0.98, recast(line) lcolor(red) lwidth(thick) lpattern(dash)),
 	
-	saving("${graphdir}/cutoff_1990.gph", replace)
+	saving("${outgraphs}/cutoff_1990.gph", replace)
 	ytitle("Effect") /*yline(-0.8875)*/
 	/*title("Effect by cutoff height")*/
 	xtitle("Cluster Height Cutoff")
 	legend(off);
 
-graph export "$outgraph/cutoff_1990.png", replace ;
+graph export "$outgraphs/cutoff_1990.png", replace ;
 
 twoway 	(connected F_90 cutoff)
 	,
 	xline(`realcutoff') 
-	saving("${graphdir}/cutoff_1990.gph", replace)
+	saving("${outgraphs}/cutoff_1990.gph", replace)
 	ytitle("F-Statistic of First Stage") 
 	title("Strength of First-Stage, by CZ Cutoff")
 	xtitle("Cluster Height Cutoff")
 	legend(off);
 
-graph export "$outgraph/Fstat_1990.png", replace ;
+graph export "$outgraphs/Fstat_1990.png", replace ;
 
 
 
@@ -70,11 +70,11 @@ twoway (rarea top_iqr_1990 bottom_iqr_1990 cutoff, color(gs13))
 	(connected beta_iqr_1990 cutoff)
 	,
 	xline(`realcutoff')
-	saving("$graphdir/cutoff_iqr_1990.gph", replace)
+	saving("$outgraphs/cutoff_iqr_1990.gph", replace)
 	ytitle("Effect for IQR")
 	xtitle("Cluster Height Cutoff")
 	legend(off);
 
-graph export "$outgraph/cutoff_iqr_1990.png", replace ; 
+graph export "$outgraphs/cutoff_iqr_1990.png", replace ; 
 
 log close ;
