@@ -116,13 +116,13 @@ Machine type:  PC (64-bit x86-64)
 
 . log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
 (note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_18_Aug_2020
-> -10_24_04.log not found)
+> -12_19_57.log not found)
 -------------------------------------------------------------------------------
       name:  <unnamed>
        log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_18_Aug_202
-> 0-10_24_04.log
+> 0-12_19_57.log
   log type:  text
- opened on:  18 Aug 2020, 10:24:04
+ opened on:  18 Aug 2020, 12:19:57
 
 . cap mkdir "$temp"
 
@@ -240,8 +240,8 @@ file /ssgprojects/project0002/MobZ.new/data/interwrk/1970pop.dta saved
 . tempfile 1970census
 
 . save `1970census', replace
-(note: file /tmp/St26552.000001 not found)
-file /tmp/St26552.000001 saved
+(note: file /tmp/St04511.000001 not found)
+file /tmp/St04511.000001 saved
 
 . 
 . *cd "$indir\nhgis0006_fixed"
@@ -280,8 +280,8 @@ file /ssgprojects/project0002/MobZ.new/data/interwrk/1980pop.dta saved
 . tempfile 1980census
 
 . save `1980census', replace
-(note: file /tmp/St26552.000002 not found)
-file /tmp/St26552.000002 saved
+(note: file /tmp/St04511.000002 not found)
+file /tmp/St04511.000002 saved
 
 . local j = 3
 
@@ -316,8 +316,8 @@ file /ssgprojects/project0002/MobZ.new/data/interwrk/1990emp.dta saved
             matched (3) |      3,141      100.00      100.00
 ------------------------+-----------------------------------
                   Total |      3,141      100.00
-(note: file /tmp/St26552.000003 not found)
-file /tmp/St26552.000003 saved
+(note: file /tmp/St04511.000003 not found)
+file /tmp/St04511.000003 saved
 file /ssgprojects/project0002/MobZ.new/data/interwrk/2000pop.dta saved
 file /ssgprojects/project0002/MobZ.new/data/interwrk/2000emp.dta saved
 
@@ -332,8 +332,8 @@ file /ssgprojects/project0002/MobZ.new/data/interwrk/2000emp.dta saved
             matched (3) |      3,141      100.00      100.00
 ------------------------+-----------------------------------
                   Total |      3,141      100.00
-(note: file /tmp/St26552.000004 not found)
-file /tmp/St26552.000004 saved
+(note: file /tmp/St04511.000004 not found)
+file /tmp/St04511.000004 saved
 file /ssgprojects/project0002/MobZ.new/data/interwrk/2009pop.dta saved
 file /ssgprojects/project0002/MobZ.new/data/interwrk/2009emp.dta saved
 
@@ -348,8 +348,8 @@ file /ssgprojects/project0002/MobZ.new/data/interwrk/2009emp.dta saved
             matched (3) |      3,221      100.00      100.00
 ------------------------+-----------------------------------
                   Total |      3,221      100.00
-(note: file /tmp/St26552.000005 not found)
-file /tmp/St26552.000005 saved
+(note: file /tmp/St04511.000005 not found)
+file /tmp/St04511.000005 saved
 
 . use `1970census', clear
 

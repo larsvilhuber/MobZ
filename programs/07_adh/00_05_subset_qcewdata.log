@@ -18,9 +18,9 @@ Notes:
       1. Stata is running in batch mode.
       2. Unicode is supported; see help unicode_advice.
 
-. do 00_07_cz_merge.do 
+. do 00_05_subset_qcewdata.do 
 
-. /****merge together all the data at 1990 cz level****/
+. /* subset the QCEW data */
 . 
 . include "../config.do"
 
@@ -115,13 +115,13 @@ Machine type:  PC (64-bit x86-64)
 
 . log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
 (note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_18_Aug_2020
-> -12_20_55.log not found)
+> -12_20_47.log not found)
 -------------------------------------------------------------------------------
       name:  <unnamed>
        log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_18_Aug_202
-> 0-12_20_55.log
+> 0-12_20_47.log
   log type:  text
- opened on:  18 Aug 2020, 12:20:55
+ opened on:  18 Aug 2020, 12:20:47
 
 . cap mkdir "$temp"
 
@@ -179,119 +179,22 @@ OLDPLACE:  ~/ado/
 . 
 . 
 . 
-. /************* READ IN COMMUTING ZONE XWALK *******************/
-. //import delimited "$datadir/czones.csv", clear 
-. 
-. //tostring fips, replace force
-. //replace fips = "0" + fips if length(fips) == 4
-. *replace fips = "12086" if fips == "12025"
-.     use "${interwrk}/czlma903", clear
-
-.     rename countyfipscode fips
-
-.     rename cz90 czone 
-
-.     keep fips czone 
-
-. 
-. sort fips 
-
-. //rename czone1990 czone
-. tempfile czone 
-
-. save `czone', replace
-(note: file /tmp/St04567.000001 not found)
-file /tmp/St04567.000001 saved
-
-. destring czone, replace 
-czone: all characters numeric; replaced as long
-
-. 
-. /* from 00_05_mergecounty.do */
-. 
-. use  "$interwrk/cty_censusdata.dta", clear
-
-. 
-. 
-. sort fips 
-
-. merge m:1 fips using `czone'
-
-    Result                           # of obs.
-    -----------------------------------------
-    not matched                            34
-        from master                         3  (_merge==1)
-        from using                         31  (_merge==2)
-
-    matched                            15,540  (_merge==3)
-    -----------------------------------------
-
-. tab _merge 
-
-                 _merge |      Freq.     Percent        Cum.
-------------------------+-----------------------------------
-        master only (1) |          3        0.02        0.02
-         using only (2) |         31        0.20        0.22
-            matched (3) |     15,540       99.78      100.00
-------------------------+-----------------------------------
-                  Total |     15,574      100.00
-
-. tab fips if _merge == 1
-
-                                   fips |      Freq.     Percent        Cum.
-----------------------------------------+-----------------------------------
-                                  08014 |          1       33.33       33.33
-                                  46131 |          1       33.33       66.67
-                                  51123 |          1       33.33      100.00
-----------------------------------------+-----------------------------------
-                                  Total |          3      100.00
-
-. drop if _merge != 3 
-(34 observations deleted)
-
-. drop _merge
-
-. 
-. drop if substr(fips,1,2) == "02" | substr(fips,1,2) == "15" 
-(0 observations deleted)
-
-. 
-. #delimit ;
+. #delimit ; 
 delimiter now ;
-. collapse (sum) manuemp_adh manufacturing_emp totalpop total_employment pop_16
-> _65 population_census_1665 female_emp manu_emp 
->                                 bachelors total_emp female_pop_16_65 foreign 
-> manu_emp_cbp , by(czone year);
+. use $outputs/qcew_county.dta, clear ;
 
-. #delimit cr
-delimiter now cr
-. 
-. label variable manufacturing_emp "Manufacturing Employment, QCEW"
+.  keep if year == 1990 | year == 2000 | year ==2007;
+(1,186,625 observations deleted)
 
-. label variable manu_emp "Manufacturing Employment, Census"
+. bys fips year: egen manufacturing_employment = sum(annual_avg_emplvl*(naics2=
+> ="31")) ;
 
-. 
-. label variable total_employment "Total Employment, QCEW"
+. bys fips year: egen total_employment = sum(annual_avg_emplvl) ;
 
-. label variable total_emp "Total Employment, Census"
+. collapse (first) manufacturing_employment total_employment , by (fips year) ;
 
-. tab year
-
-       year |      Freq.     Percent        Cum.
-------------+-----------------------------------
-       1970 |        722       20.00       20.00
-       1980 |        722       20.00       40.00
-       1990 |        722       20.00       60.00
-       2000 |        722       20.00       80.00
-       2007 |        722       20.00      100.00
-------------+-----------------------------------
-      Total |      3,610      100.00
+. save $interwrk/tmp_qcewdata.dta, replace;
+file /ssgprojects/project0002/MobZ.new/data/interwrk/tmp_qcewdata.dta saved
 
 . 
-. xtset czone year
-string variables not allowed in varlist;
-czone is a string variable
-r(109);
-
 end of do-file
-r(109);

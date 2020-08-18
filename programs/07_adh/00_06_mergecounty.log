@@ -121,13 +121,13 @@ Machine type:  PC (64-bit x86-64)
 
 . log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
 (note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_18_Aug_2020
-> -10_24_38.log not found)
+> -12_20_48.log not found)
 -------------------------------------------------------------------------------
       name:  <unnamed>
        log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_18_Aug_202
-> 0-10_24_38.log
+> 0-12_20_48.log
   log type:  text
- opened on:  18 Aug 2020, 10:24:38
+ opened on:  18 Aug 2020, 12:20:48
 
 . cap mkdir "$temp"
 
@@ -199,8 +199,8 @@ OLDPLACE:  ~/ado/
 . tempfile cbp
 
 . save `cbp' , replace
-(note: file /tmp/St26568.000001 not found)
-file /tmp/St26568.000001 saved
+(note: file /tmp/St04556.000001 not found)
+file /tmp/St04556.000001 saved
 
 . 
 . use "$interwrk/industry_data.dta", clear
@@ -227,8 +227,8 @@ fips generated as str5
 . tempfile adhemp
 
 . save `adhemp', replace
-(note: file /tmp/St26568.000002 not found)
-file /tmp/St26568.000002 saved
+(note: file /tmp/St04556.000002 not found)
+file /tmp/St04556.000002 saved
 
 . 
 . **********************
@@ -253,8 +253,8 @@ file /tmp/St26568.000002 saved
 . tempfile population
 
 . save `population', replace
-(note: file /tmp/St26568.000003 not found)
-file /tmp/St26568.000003 saved
+(note: file /tmp/St04556.000003 not found)
+file /tmp/St04556.000003 saved
 
 . 
 . use "$interwrk/censusdata.dta", clear

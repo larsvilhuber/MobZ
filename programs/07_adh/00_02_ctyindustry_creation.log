@@ -115,14 +115,12 @@ Machine type:  PC (64-bit x86-64)
 . cap mkdir "$logdir"
 
 . log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
-(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_17_Aug_2020
-> -08_05_26.log not found)
 -------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_17_Aug_202
-> 0-08_05_26.log
+       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_18_Aug_202
+> 0-12_19_57.log
   log type:  text
- opened on:  17 Aug 2020, 08:05:26
+ opened on:  18 Aug 2020, 12:19:57
 
 . cap mkdir "$temp"
 
@@ -218,8 +216,6 @@ fips generated as str5
 
 . 
 . save "$interwrk/industry_data", replace
-(note: file /ssgprojects/project0002/MobZ.new/data/interwrk/industry_data.dta n
-> ot found)
 file /ssgprojects/project0002/MobZ.new/data/interwrk/industry_data.dta saved
 
 . 
