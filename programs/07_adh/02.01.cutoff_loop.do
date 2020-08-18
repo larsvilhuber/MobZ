@@ -17,12 +17,15 @@ It has three steps
 cap log close
 log using cutoff_loop.log, replace 
 
-local czonedataset = "${clusdir}/clusters_cutoff_jtw1990.dta"
-global czone_iteration = "${clusdir}/czones_cutoff.dta"
-local ipw_regs "${clusdir}/cutoff_post.dta"
+include "../config.do"
 
+/* local macros */
+local czonedataset = "${outputs}/clusters_cutoff_jtw1990.dta"
+global czone_iteration = "${interwrk}/czones_cutoff.dta"
+global dodir "${programs}/07_adh/"
+global ipw_regs "${interwrk}/cutoff_post.dta"
 
-include "$dodir/replication/iteration/aggregatedata.do"
+include "$dodir/zz_aggregatedata.do"
 
 
 
@@ -48,7 +51,7 @@ foreach clus of varlist clus* { ;
 
 postfile `czoneresults' cutoff beta_1990 se_1990 F_90 beta_2000 se_2000 beta_all se_all
                                iqr_1990 iqr_2000 iqr_all
-			using `ipw_regs', replace ;
+			using $ipw_regs, replace ;
 			
 /* 
 missing step: estimate effects using our "replicated" Commuting Zones, which
@@ -67,7 +70,7 @@ foreach i in `values'  { ;
 		save "$czone_iteration", replace; 
 		
 	*step3 ;
-	include "$dodir/county_merge.do";
+	include "$dodir/zz_ctymerge.do";
 	
 	qui sum IPW_uit if year == 1990, d; 
 		local iqr_1990 = r(p75) - r(p25) ;

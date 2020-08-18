@@ -15,10 +15,16 @@ It has three steps
 	
 ***************************/
 
-local czonedataset = "${clusdir}/bootclusters_jtw1990_moe_new.dta"
-global czone_iteration = "${clusdir}/czones.dta" 
+include "../config.do"
+
+/* local configuration */
+local czonedataset = "${outputs}/bootclusters_jtw1990_moe_new.dta"
+global czone_iteration = "${interwrk}/czones.dta" 
+global dodir "${programs}/07_adh/"
+
+
 di "`czonedataset'" 
-qui include "$dodir/aggregatedata.do"
+include "$dodir/zz_aggregatedata.do"
 set more off
 #delimit ;
 
