@@ -115,13 +115,13 @@ Machine type:  PC (64-bit x86-64)
 
 . log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
 (note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_18_Aug_2020
-> -12_20_55.log not found)
+> -12_31_54.log not found)
 -------------------------------------------------------------------------------
       name:  <unnamed>
        log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_18_Aug_202
-> 0-12_20_55.log
+> 0-12_31_54.log
   log type:  text
- opened on:  18 Aug 2020, 12:20:55
+ opened on:  18 Aug 2020, 12:31:54
 
 . cap mkdir "$temp"
 
@@ -197,14 +197,14 @@ OLDPLACE:  ~/ado/
 . sort fips 
 
 . //rename czone1990 czone
+. destring czone, replace 
+czone: all characters numeric; replaced as long
+
 . tempfile czone 
 
 . save `czone', replace
-(note: file /tmp/St04567.000001 not found)
-file /tmp/St04567.000001 saved
-
-. destring czone, replace 
-czone: all characters numeric; replaced as long
+(note: file /tmp/St05844.000001 not found)
+file /tmp/St05844.000001 saved
 
 . 
 . /* from 00_05_mergecounty.do */
@@ -289,9 +289,142 @@ delimiter now cr
 
 . 
 . xtset czone year
-string variables not allowed in varlist;
-czone is a string variable
-r(109);
+       panel variable:  czone (strongly balanced)
+        time variable:  year, 1970 to 2007, but with gaps
+                delta:  1 unit
 
+. 
+. gen L_m = 100*manu_emp/population_census_1665
+
+. 
+. gen del_L_m = F10.L_m - L_m if year == 1990
+(2,888 missing values generated)
+
+.         replace del_L_m = F7.L_m - L_m if year == 2000
+(722 real changes made)
+
+.         /***** CONVERTING TO DECADAL CHANGE *****/
+.         replace del_L_m = 10*del_L_m/7 if year == 2000
+(722 real changes made)
+
+.         
+.         
+. gen L_mprime = 100*manufacturing_emp/population_census_1665
+
+. 
+. gen del_L_mprime = F10.L_mprime - L_mprime if year == 1990
+(2,888 missing values generated)
+
+.         replace del_L_mprime = F7.L_mprime - L_mprime if year == 2000
+(722 real changes made)
+
+.         /***** CONVERTING TO DECADAL CHANGE *****/
+.         replace del_L_mprime = 10*del_L_mprime/7 if year == 2000
+(0 real changes made)
+
+.         
+. gen L_mprime2 = 100*manu_emp_cbp/population_census_1665
+
+. 
+. gen del_L_mprime2 = F10.L_mprime2 - L_mprime2 if year == 1990
+(2,888 missing values generated)
+
+.         replace del_L_mprime2 = F7.L_mprime2 - L_mprime2 if year == 2000
+(722 real changes made)
+
+.         /***** CONVERTING TO DECADAL CHANGE *****/
+.         replace del_L_mprime2 = 10*del_L_mprime2/7 if year == 2000
+(0 real changes made)
+
+.         
+. tempfile mainfile
+
+. save `mainfile', replace
+(note: file /tmp/St05844.000002 not found)
+file /tmp/St05844.000002 saved
+
+. 
+. /**************** READING IN IPW *******************/
+. 
+. use "$interwrk/IPW_czone.dta", clear
+
+. 
+. sort czone year
+
+. 
+. tempfile ipw
+
+. save `ipw',replace
+(note: file /tmp/St05844.000003 not found)
+file /tmp/St05844.000003 saved
+
+. /*************** MERGING IT ALL TOGETHER *****************/
+. use `mainfile', clear
+
+. 
+. sort czone year
+
+. merge 1:1 czone year using `ipw'
+(note: variable czone was long, now double to accommodate using data's
+       values)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         1,444
+        from master                     1,444  (_merge==1)
+        from using                          0  (_merge==2)
+
+    matched                             2,166  (_merge==3)
+    -----------------------------------------
+
+. tab _merge
+
+                 _merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+        master only (1) |      1,444       40.00       40.00
+            matched (3) |      2,166       60.00      100.00
+------------------------+-----------------------------------
+                  Total |      3,610      100.00
+
+. tab year _merge 
+
+           |        _merge
+      year | master on  matched ( |     Total
+-----------+----------------------+----------
+      1970 |       722          0 |       722 
+      1980 |         0        722 |       722 
+      1990 |         0        722 |       722 
+      2000 |         0        722 |       722 
+      2007 |       722          0 |       722 
+-----------+----------------------+----------
+     Total |     1,444      2,166 |     3,610 
+
+. drop if _merge == 2
+(0 observations deleted)
+
+. drop _merge
+
+. 
+. bys year: egen tot_pop_16_65 = sum(pop_16_65)
+
+. 
+. gen share_czpop = pop_16_65/tot_pop_16_65
+(1,444 missing values generated)
+
+. 
+. foreach suff in uit oit  { 
+  2.     replace IPW_`suff' = IPW_`suff'/0.7 if year == 2000
+  3.     replace IPW_`suff' = IPW_`suff'/0.9 if year == 1990
+  4. }                           
+(722 real changes made)
+(722 real changes made)
+(722 real changes made)
+(720 real changes made)
+
+. 
+. 
+. save "$interwrk/finalczdata.dta", replace
+file /ssgprojects/project0002/MobZ.new/data/interwrk/finalczdata.dta saved
+
+. 
 end of do-file
-r(109);

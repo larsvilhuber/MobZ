@@ -15,9 +15,9 @@ include "../config.do"
 
 sort fips 
 //rename czone1990 czone
+destring czone, replace 
 tempfile czone 
 save `czone', replace
-destring czone, replace 
 
 /* from 00_05_mergecounty.do */
 
