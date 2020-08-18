@@ -1,3 +1,5 @@
+/* subset the QCEW data */
+
 include "../config.do"
 
 #delimit ; 
@@ -11,4 +13,4 @@ bys fips year: egen total_employment = sum(annual_avg_emplvl) ;
 
 collapse (first) manufacturing_employment total_employment , by (fips year) ;
 
-save $interwrk/qcewdata.dta, replace; 
+save $interwrk/tmp_qcewdata.dta, replace; 

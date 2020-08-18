@@ -61,9 +61,8 @@ drop _merge
 
 tabstat pop_16_65 population_census_1665, by(year)
 
-
 sort fips year
-merge 1:1 fips year using "$interwrk/qcewdata.dta"
+merge 1:1 fips year using "$interwrk/tmp_qcewdata.dta"
 tab _merge
 drop if _merge == 2
 drop _merge
