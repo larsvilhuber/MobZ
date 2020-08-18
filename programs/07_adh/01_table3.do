@@ -3,9 +3,10 @@ This regression
 ***********************************/
     
 cap log close 
+include "../config.do"
 log using "$logdir/comparison_regressions.log", replace
 
-use "$datadir/adh_data/workfile_china.dta", clear
+use "$adhdata/workfile_china.dta", clear
 
 #delimit ; 
 keep d_sh_empl_mfg d_tradeusch_pw d_tradeotch_pw_lag 
@@ -16,7 +17,7 @@ sort czone year ;
 tempfile adh_data;
 save `adh_data', replace ;
 
-use "$datadir/finalczdata.dta", clear;
+use "$interwrk/finalczdata.dta", clear;
 gen y2000 = year==2000;
  
 keep del_L_m* IPW_uit IPW_oit czone year y2000 share_czpop ;
