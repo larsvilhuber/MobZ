@@ -58,9 +58,18 @@ gen del_L_m = F10.L_m - L_m if year == 1990
 gen L_mprime = 100*manufacturing_emp/population_census_1665
 
 gen del_L_mprime = F10.L_mprime - L_mprime if year == 1990
+
+tabstat del_L_mprime L_mprime, by(year) 
+
 	replace del_L_mprime = F7.L_mprime - L_mprime if year == 2000
+	
+	tabstat del_L_mprime L_mprime, by(year) 
+
 	/***** CONVERTING TO DECADAL CHANGE *****/
 	replace del_L_mprime = 10*del_L_mprime/7 if year == 2000
+	
+	tabstat del_L_mprime L_mprime, by(year) 
+
 	
 gen L_mprime2 = 100*manu_emp_cbp/population_census_1665
 
