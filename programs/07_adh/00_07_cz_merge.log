@@ -1,22 +1,22 @@
 
   ___  ____  ____  ____  ____ (R)
  /__    /   ____/   /   ____/
-___/   /   /___/   /   /___/   16.1   Copyright 1985-2019 StataCorp LLC
-  Statistics/Data analysis            StataCorp
+___/   /   /___/   /   /___/   14.2   Copyright 1985-2015 StataCorp LLC
+  Statistics/Data Analysis            StataCorp
                                       4905 Lakeway Drive
                                       College Station, Texas 77845 USA
-                                      800-STATA-PC        https://www.stata.com
+                                      800-STATA-PC        http://www.stata.com
                                       979-696-4600        stata@stata.com
                                       979-696-4601 (fax)
 
-Stata license: 5-user network perpetual
-Serial number: 501606316764
-  Licensed to: LDI Econ Cornell University
-               Ithaca, NY
+8-user Stata network perpetual license:
+       Serial number:  501406244326
+         Licensed to:  ECCO Cornell University
+                       Ithaca, NY
 
 Notes:
-      1. Stata is running in batch mode.
-      2. Unicode is supported; see help unicode_advice.
+      1.  Stata is running in batch mode.
+      2.  Unicode is supported; see help unicode_advice.
 
 . do 00_07_cz_merge.do 
 
@@ -68,10 +68,10 @@ Notes:
 === SYSTEM DIAGNOSTICS ===
 
 . di "Stata version: `c(stata_version)'"
-Stata version: 16.1
+Stata version: 14.2
 
 . di "Updated as of: `c(born_date)'"
-Updated as of: 30 Jun 2020
+Updated as of: 19 Dec 2017
 
 . di "Variant:       `variant'"
 Variant:       IC
@@ -115,13 +115,13 @@ Machine type:  PC (64-bit x86-64)
 
 . log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
 (note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_18_Aug_2020
-> -12_31_54.log not found)
+> -18_23_00.log not found)
 -------------------------------------------------------------------------------
       name:  <unnamed>
        log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_18_Aug_202
-> 0-12_31_54.log
+> 0-18_23_00.log
   log type:  text
- opened on:  18 Aug 2020, 12:31:54
+ opened on:  18 Aug 2020, 18:23:00
 
 . cap mkdir "$temp"
 
@@ -144,8 +144,8 @@ Machine type:  PC (64-bit x86-64)
 . sysdir set SITE     "${programs}/ado/site"
 
 . sysdir
-   STATA:  /usr/local/stata16/
-    BASE:  /usr/local/stata16/ado/base/
+   STATA:  /usr/local/stata14/
+    BASE:  /usr/local/stata14/ado/base/
     SITE:  /ssgprojects/project0002/MobZ.new/programs/ado/site/
     PLUS:  /ssgprojects/project0002/MobZ.new/programs/ado/plus/
 PERSONAL:  /ssgprojects/project0002/MobZ.new/programs/ado/personal/
@@ -203,8 +203,8 @@ czone: all characters numeric; replaced as long
 . tempfile czone 
 
 . save `czone', replace
-(note: file /tmp/St05844.000001 not found)
-file /tmp/St05844.000001 saved
+(note: file /tmp/St05801.000001 not found)
+file /tmp/St05801.000001 saved
 
 . 
 . /* from 00_05_mergecounty.do */
@@ -315,13 +315,67 @@ delimiter now cr
 . gen del_L_mprime = F10.L_mprime - L_mprime if year == 1990
 (2,888 missing values generated)
 
+. 
+. tabstat del_L_mprime L_mprime, by(year) 
+
+Summary statistics: mean
+  by categories of: year 
+
+    year |  del_L_~e  L_mprime
+---------+--------------------
+    1970 |         .         0
+    1980 |         .         0
+    1990 |         0         0
+    2000 |         .         0
+    2007 |         .         0
+---------+--------------------
+   Total |         0         0
+------------------------------
+
+. 
 .         replace del_L_mprime = F7.L_mprime - L_mprime if year == 2000
 (722 real changes made)
 
+.         
+.         tabstat del_L_mprime L_mprime, by(year) 
+
+Summary statistics: mean
+  by categories of: year 
+
+    year |  del_L_~e  L_mprime
+---------+--------------------
+    1970 |         .         0
+    1980 |         .         0
+    1990 |         0         0
+    2000 |         0         0
+    2007 |         .         0
+---------+--------------------
+   Total |         0         0
+------------------------------
+
+. 
 .         /***** CONVERTING TO DECADAL CHANGE *****/
 .         replace del_L_mprime = 10*del_L_mprime/7 if year == 2000
 (0 real changes made)
 
+.         
+.         tabstat del_L_mprime L_mprime, by(year) 
+
+Summary statistics: mean
+  by categories of: year 
+
+    year |  del_L_~e  L_mprime
+---------+--------------------
+    1970 |         .         0
+    1980 |         .         0
+    1990 |         0         0
+    2000 |         0         0
+    2007 |         .         0
+---------+--------------------
+   Total |         0         0
+------------------------------
+
+. 
 .         
 . gen L_mprime2 = 100*manu_emp_cbp/population_census_1665
 
@@ -340,8 +394,8 @@ delimiter now cr
 . tempfile mainfile
 
 . save `mainfile', replace
-(note: file /tmp/St05844.000002 not found)
-file /tmp/St05844.000002 saved
+(note: file /tmp/St05801.000002 not found)
+file /tmp/St05801.000002 saved
 
 . 
 . /**************** READING IN IPW *******************/
@@ -355,8 +409,8 @@ file /tmp/St05844.000002 saved
 . tempfile ipw
 
 . save `ipw',replace
-(note: file /tmp/St05844.000003 not found)
-file /tmp/St05844.000003 saved
+(note: file /tmp/St05801.000003 not found)
+file /tmp/St05801.000003 saved
 
 . /*************** MERGING IT ALL TOGETHER *****************/
 . use `mainfile', clear
@@ -398,6 +452,7 @@ file /tmp/St05844.000003 saved
       2007 |       722          0 |       722 
 -----------+----------------------+----------
      Total |     1,444      2,166 |     3,610 
+
 
 . drop if _merge == 2
 (0 observations deleted)
