@@ -33,4 +33,13 @@ options sasautos=(SASAUTOS, "&dirprog./macros") mautosource nocenter ps=1000;
 *  - paper: 1000;
 *  - testing: 3;
 
-%let bootstrap_num = 100;
+%let bootstrap_num = 1000;
+
+/* write this out for Stata */
+data _null_;
+   file "&dirprog./config-bootstrap.do";
+   put "/* Configuration written out by SAS -- config.sas            */";
+   put "/* -- any edits will be overwritten next time SAS is run! -- */";
+   put "global bootstrap_num &bootstrap_num.";
+run;
+

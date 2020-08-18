@@ -15,6 +15,7 @@ It has three steps:
 ****************************/
 
 include "../config.do"
+include "$programs/config-bootstrap.do"
 
 #delimit ; 
 set more off ; 
@@ -90,7 +91,7 @@ cap erase `mergefile' ;
 
 /* loop here over all possible values */
 
-forvalues i = 1/1000 { ;
+forvalues i = 1/$bootstrap_num { ;
       di "starting iteration `i'" ;
       use "`czonedataset'", clear ;
       qui egen czone = group(clustername_`i') ;
