@@ -2,8 +2,8 @@
 This regression 
 ***********************************/
     
-cap log close 
 include "../config.do"
+cap log close 
 log using "$logdir/comparison_regressions.log", replace
 
 use "$adhdata/workfile_china.dta", clear
