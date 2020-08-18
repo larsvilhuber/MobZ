@@ -1,0 +1,399 @@
+
+  ___  ____  ____  ____  ____ (R)
+ /__    /   ____/   /   ____/
+___/   /   /___/   /   /___/   16.1   Copyright 1985-2019 StataCorp LLC
+  Statistics/Data analysis            StataCorp
+                                      4905 Lakeway Drive
+                                      College Station, Texas 77845 USA
+                                      800-STATA-PC        https://www.stata.com
+                                      979-696-4600        stata@stata.com
+                                      979-696-4601 (fax)
+
+Stata license: 5-user network perpetual
+Serial number: 501606316764
+  Licensed to: LDI Econ Cornell University
+               Ithaca, NY
+
+Notes:
+      1. Stata is running in batch mode.
+      2. Unicode is supported; see help unicode_advice.
+
+. do 00_01_census_creation.do 
+
+. /* create a file combining multiple census information sources */
+. /* pre-requisites: run the NHGIS data read-in scripts under ..../raw */
+. 
+. include "../config.do"
+
+. /*  config.do */
+. 
+. 
+. 
+. if ( "`c(hostname)'" == "ecco.vrdc.cornell.edu" ) {
+. global root "/ssgprojects/project0002/MobZ.new"
+. }
+
+. 
+. if ( "`c(username)'" == "vilhuber" ) {
+. global root "/home/vilhuber/Workspace/git/larsvilhuber/MobZ"
+. }
+
+. 
+. if ( "`c(hostname)'" == "some.server.at.census" ) {
+. global root "/made/up/path/Mobz"
+. }
+
+. 
+. /* check if the author creates a log file. If not, adjust the following code 
+> fragment */
+. 
+. local c_date = c(current_date)
+
+. local cdate = subinstr("`c_date'", " ", "_", .)
+
+. local c_time = c(current_time)
+
+. local ctime = subinstr("`c_time'", ":", "_", .)
+
+. 
+. // log using "${root}/logfile_`cdate'-`ctime'.log", replace text
+. 
+. /* It will provide some info about how and when the program was run */
+. /* See https://www.stata.com/manuals13/pcreturn.pdf#pcreturn */
+. local variant = cond(c(MP),"MP",cond(c(SE),"SE",c(flavor)) )  
+
+. // alternatively, you could use 
+. // local variant = cond(c(stata_version)>13,c(real_flavor),"NA")  
+. 
+. di "=== SYSTEM DIAGNOSTICS ==="
+=== SYSTEM DIAGNOSTICS ===
+
+. di "Stata version: `c(stata_version)'"
+Stata version: 16.1
+
+. di "Updated as of: `c(born_date)'"
+Updated as of: 30 Jun 2020
+
+. di "Variant:       `variant'"
+Variant:       IC
+
+. di "Processors:    `c(processors)'"
+Processors:    1
+
+. di "OS:            `c(os)' `c(osdtl)'"
+OS:            Unix 
+
+. di "Machine type:  `c(machine_type)'"
+Machine type:  PC (64-bit x86-64)
+
+. di "=========================="
+==========================
+
+. 
+. 
+. 
+. 
+. /* define relative libraries */
+. 
+. global paperdir "${root}/paper"
+
+. global interwrk "${root}/data/interwrk"
+
+. global raw "${root}/raw"
+
+. global temp "${root}/temp"
+
+. global outputs "${root}/data"
+
+. global programs "${root}/programs"
+
+. global outgraphs "${root}/figures"
+
+. global logdir "${programs}/logs"
+
+. 
+. cap mkdir "$logdir"
+
+. log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
+(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_18_Aug_2020
+> -10_24_04.log not found)
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_18_Aug_202
+> 0-10_24_04.log
+  log type:  text
+ opened on:  18 Aug 2020, 10:24:04
+
+. cap mkdir "$temp"
+
+. cap mkdir "${root}/data"
+
+. cap mkdir "$interwrk"
+
+. cap mkdir "$raw"
+
+. cap mkdir "$outputs"
+
+. 
+. /* install any packages locally */
+. capture mkdir "${programs}/ado"
+
+. sysdir set PERSONAL "${programs}/ado/personal"
+
+. sysdir set PLUS     "${programs}/ado/plus"
+
+. sysdir set SITE     "${programs}/ado/site"
+
+. sysdir
+   STATA:  /usr/local/stata16/
+    BASE:  /usr/local/stata16/ado/base/
+    SITE:  /ssgprojects/project0002/MobZ.new/programs/ado/site/
+    PLUS:  /ssgprojects/project0002/MobZ.new/programs/ado/plus/
+PERSONAL:  /ssgprojects/project0002/MobZ.new/programs/ado/personal/
+OLDPLACE:  ~/ado/
+
+. 
+. /* define data sources */
+. 
+. /* QCEW */
+. /* data/working/mobz/qcew */
+.     global qcewdata "${raw}/qcew"  
+
+. /* /data/working/mobz/outputs */
+.     global czonedata "$outputs"  
+
+. 
+. /* ADH */
+.     global adhdata "${raw}/adh_data/Public Release Data/dta"
+
+. /* CZONE */
+.     global czonedata "${raw}/adh_data/"
+
+. /* files provided separately by David Dorn */
+.     global dorndata "${raw}/ddorn/"
+
+. 
+. /* CBP */
+.     /* this is where the raw Stata versions of CBP data reside */
+.    global cbpdata "/data/clean/cbp"
+
+. 
+. 
+. 
+. * cd "$indir\nhgis0001_fixed"
+. 
+. set more off
+
+. foreach suff in female manu pop { 
+  2.         use "$raw/nhgis/1970`suff'", clear
+  3.         sort fips
+  4.         save "$interwrk/1970`suff'",replace
+  5. }
+file /ssgprojects/project0002/MobZ.new/data/interwrk/1970female.dta saved
+file /ssgprojects/project0002/MobZ.new/data/interwrk/1970manu.dta saved
+file /ssgprojects/project0002/MobZ.new/data/interwrk/1970pop.dta saved
+
+. 
+. foreach suff in female manu { 
+  2.         merge 1:1 fips using "$interwrk/1970`suff'"
+  3.         tab _merge
+  4.         drop _merge
+  5. } 
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             3
+        from master                         1  (_merge==1)
+        from using                          2  (_merge==2)
+
+    matched                             3,139  (_merge==3)
+    -----------------------------------------
+
+                 _merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+        master only (1) |          1        0.03        0.03
+         using only (2) |          2        0.06        0.10
+            matched (3) |      3,139       99.90      100.00
+------------------------+-----------------------------------
+                  Total |      3,142      100.00
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             1
+        from master                         1  (_merge==1)
+        from using                          0  (_merge==2)
+
+    matched                             3,141  (_merge==3)
+    -----------------------------------------
+
+                 _merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+        master only (1) |          1        0.03        0.03
+            matched (3) |      3,141       99.97      100.00
+------------------------+-----------------------------------
+                  Total |      3,142      100.00
+
+. gen year = "1970"
+
+. keep pop* female* fips manu_emp  total_emp year
+
+. tempfile 1970census
+
+. save `1970census', replace
+(note: file /tmp/St26552.000001 not found)
+file /tmp/St26552.000001 saved
+
+. 
+. *cd "$indir\nhgis0006_fixed"
+. 
+. foreach suff in manu pop { 
+  2.         use "$raw/nhgis/1980`suff'", clear
+  3.         sort fips 
+  4.         save "$interwrk/1980`suff'", replace
+  5. } 
+file /ssgprojects/project0002/MobZ.new/data/interwrk/1980manu.dta saved
+file /ssgprojects/project0002/MobZ.new/data/interwrk/1980pop.dta saved
+
+. 
+.         merge 1:1 fips using "$interwrk/1980manu"
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             3,137  (_merge==3)
+    -----------------------------------------
+
+.         tab _merge
+
+                 _merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+            matched (3) |      3,137      100.00      100.00
+------------------------+-----------------------------------
+                  Total |      3,137      100.00
+
+.         drop _merge
+
+.         cap drop year
+
+.         gen year = "1980"
+
+. tempfile 1980census
+
+. save `1980census', replace
+(note: file /tmp/St26552.000002 not found)
+file /tmp/St26552.000002 saved
+
+. local j = 3
+
+. foreach yr in 1990 2000 2009 {
+  2. 
+. *cd "$indir\nhgis000`j'_fixed"
+. 
+.         foreach suff in pop emp { 
+  3.                 use "$raw/nhgis/`yr'`suff'", clear
+  4.                 sort fips
+  5.                 save "$interwrk/`yr'`suff'",replace
+  6.         } 
+  7.         merge 1:1 fips using "$interwrk/`yr'pop"
+  8.         tab _merge
+  9.         drop _merge
+ 10.         gen year = "`yr'"
+ 11.         tempfile `yr'census
+ 12.         save ``yr'census', replace
+ 13.         local j = `j' + 1 
+ 14. } 
+file /ssgprojects/project0002/MobZ.new/data/interwrk/1990pop.dta saved
+file /ssgprojects/project0002/MobZ.new/data/interwrk/1990emp.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             3,141  (_merge==3)
+    -----------------------------------------
+
+                 _merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+            matched (3) |      3,141      100.00      100.00
+------------------------+-----------------------------------
+                  Total |      3,141      100.00
+(note: file /tmp/St26552.000003 not found)
+file /tmp/St26552.000003 saved
+file /ssgprojects/project0002/MobZ.new/data/interwrk/2000pop.dta saved
+file /ssgprojects/project0002/MobZ.new/data/interwrk/2000emp.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             3,141  (_merge==3)
+    -----------------------------------------
+
+                 _merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+            matched (3) |      3,141      100.00      100.00
+------------------------+-----------------------------------
+                  Total |      3,141      100.00
+(note: file /tmp/St26552.000004 not found)
+file /tmp/St26552.000004 saved
+file /ssgprojects/project0002/MobZ.new/data/interwrk/2009pop.dta saved
+file /ssgprojects/project0002/MobZ.new/data/interwrk/2009emp.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             3,221  (_merge==3)
+    -----------------------------------------
+
+                 _merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+            matched (3) |      3,221      100.00      100.00
+------------------------+-----------------------------------
+                  Total |      3,221      100.00
+(note: file /tmp/St26552.000005 not found)
+file /tmp/St26552.000005 saved
+
+. use `1970census', clear
+
+. foreach yr in  1980 1990 2000 2009 { 
+  2.         append using ``yr'census', force
+  3. } 
+
+. destring year, force replace
+year: all characters numeric; replaced as int
+
+. drop if real(fips)>56999
+(78 observations deleted)
+
+. replace female_pop_16_65 = femalepop_16_65 if year == 1970
+(3,140 real changes made)
+
+. 
+. keep pop* female* fips manu_emp  total_emp foreign bachelors year
+
+. drop femalepop*
+
+. 
+. order fips year 
+
+. 
+. tab year
+
+       year |      Freq.     Percent        Cum.
+------------+-----------------------------------
+       1970 |      3,142       20.01       20.01
+       1980 |      3,137       19.98       39.98
+       1990 |      3,141       20.00       59.98
+       2000 |      3,141       20.00       79.99
+       2009 |      3,143       20.01      100.00
+------------+-----------------------------------
+      Total |     15,704      100.00
+
+. 
+. sort fips year
+
+. 
+. save "$interwrk/censusdata.dta", replace
+file /ssgprojects/project0002/MobZ.new/data/interwrk/censusdata.dta saved
+
+. 
+. 
+end of do-file

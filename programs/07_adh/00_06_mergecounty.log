@@ -1,0 +1,482 @@
+
+  ___  ____  ____  ____  ____ (R)
+ /__    /   ____/   /   ____/
+___/   /   /___/   /   /___/   16.1   Copyright 1985-2019 StataCorp LLC
+  Statistics/Data analysis            StataCorp
+                                      4905 Lakeway Drive
+                                      College Station, Texas 77845 USA
+                                      800-STATA-PC        https://www.stata.com
+                                      979-696-4600        stata@stata.com
+                                      979-696-4601 (fax)
+
+Stata license: 5-user network perpetual
+Serial number: 501606316764
+  Licensed to: LDI Econ Cornell University
+               Ithaca, NY
+
+Notes:
+      1. Stata is running in batch mode.
+      2. Unicode is supported; see help unicode_advice.
+
+. do 00_06_mergecounty.do 
+
+. /******************************
+> This program gets all the relevant datasets
+> into a county-year form, with all the variables
+> that we want to calculate.
+> ********************************/   
+. 
+. set more off
+
+. include "../config.do"
+
+. /*  config.do */
+. 
+. 
+. 
+. if ( "`c(hostname)'" == "ecco.vrdc.cornell.edu" ) {
+. global root "/ssgprojects/project0002/MobZ.new"
+. }
+
+. 
+. if ( "`c(username)'" == "vilhuber" ) {
+. global root "/home/vilhuber/Workspace/git/larsvilhuber/MobZ"
+. }
+
+. 
+. if ( "`c(hostname)'" == "some.server.at.census" ) {
+. global root "/made/up/path/Mobz"
+. }
+
+. 
+. /* check if the author creates a log file. If not, adjust the following code 
+> fragment */
+. 
+. local c_date = c(current_date)
+
+. local cdate = subinstr("`c_date'", " ", "_", .)
+
+. local c_time = c(current_time)
+
+. local ctime = subinstr("`c_time'", ":", "_", .)
+
+. 
+. // log using "${root}/logfile_`cdate'-`ctime'.log", replace text
+. 
+. /* It will provide some info about how and when the program was run */
+. /* See https://www.stata.com/manuals13/pcreturn.pdf#pcreturn */
+. local variant = cond(c(MP),"MP",cond(c(SE),"SE",c(flavor)) )  
+
+. // alternatively, you could use 
+. // local variant = cond(c(stata_version)>13,c(real_flavor),"NA")  
+. 
+. di "=== SYSTEM DIAGNOSTICS ==="
+=== SYSTEM DIAGNOSTICS ===
+
+. di "Stata version: `c(stata_version)'"
+Stata version: 16.1
+
+. di "Updated as of: `c(born_date)'"
+Updated as of: 30 Jun 2020
+
+. di "Variant:       `variant'"
+Variant:       IC
+
+. di "Processors:    `c(processors)'"
+Processors:    1
+
+. di "OS:            `c(os)' `c(osdtl)'"
+OS:            Unix 
+
+. di "Machine type:  `c(machine_type)'"
+Machine type:  PC (64-bit x86-64)
+
+. di "=========================="
+==========================
+
+. 
+. 
+. 
+. 
+. /* define relative libraries */
+. 
+. global paperdir "${root}/paper"
+
+. global interwrk "${root}/data/interwrk"
+
+. global raw "${root}/raw"
+
+. global temp "${root}/temp"
+
+. global outputs "${root}/data"
+
+. global programs "${root}/programs"
+
+. global outgraphs "${root}/figures"
+
+. global logdir "${programs}/logs"
+
+. 
+. cap mkdir "$logdir"
+
+. log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
+(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_18_Aug_2020
+> -10_24_38.log not found)
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_18_Aug_202
+> 0-10_24_38.log
+  log type:  text
+ opened on:  18 Aug 2020, 10:24:38
+
+. cap mkdir "$temp"
+
+. cap mkdir "${root}/data"
+
+. cap mkdir "$interwrk"
+
+. cap mkdir "$raw"
+
+. cap mkdir "$outputs"
+
+. 
+. /* install any packages locally */
+. capture mkdir "${programs}/ado"
+
+. sysdir set PERSONAL "${programs}/ado/personal"
+
+. sysdir set PLUS     "${programs}/ado/plus"
+
+. sysdir set SITE     "${programs}/ado/site"
+
+. sysdir
+   STATA:  /usr/local/stata16/
+    BASE:  /usr/local/stata16/ado/base/
+    SITE:  /ssgprojects/project0002/MobZ.new/programs/ado/site/
+    PLUS:  /ssgprojects/project0002/MobZ.new/programs/ado/plus/
+PERSONAL:  /ssgprojects/project0002/MobZ.new/programs/ado/personal/
+OLDPLACE:  ~/ado/
+
+. 
+. /* define data sources */
+. 
+. /* QCEW */
+. /* data/working/mobz/qcew */
+.     global qcewdata "${raw}/qcew"  
+
+. /* /data/working/mobz/outputs */
+.     global czonedata "$outputs"  
+
+. 
+. /* ADH */
+.     global adhdata "${raw}/adh_data/Public Release Data/dta"
+
+. /* CZONE */
+.     global czonedata "${raw}/adh_data/"
+
+. /* files provided separately by David Dorn */
+.     global dorndata "${raw}/ddorn/"
+
+. 
+. /* CBP */
+.     /* this is where the raw Stata versions of CBP data reside */
+.    global cbpdata "/data/clean/cbp"
+
+. 
+. 
+. ***********************
+. *STEP 1: industry employment
+. ***********************
+. 
+. use "$interwrk/cbp_allyears.dta", clear
+
+. 
+. replace fips = "12025" if fips == "12086" 
+(0 real changes made)
+
+. sort fips year
+
+. tempfile cbp
+
+. save `cbp' , replace
+(note: file /tmp/St26568.000001 not found)
+file /tmp/St26568.000001 saved
+
+. 
+. use "$interwrk/industry_data.dta", clear
+
+. 
+. collapse (sum) emp, by(cty_fips year) 
+
+. tostring cty_fips, gen(fips) force
+fips generated as str5
+
+. replace fips = "0" + fips if length(fips) == 4
+(858 real changes made)
+
+. replace fips = "12025" if fips == "12086"
+(0 real changes made)
+
+. 
+. rename emp manuemp_adh
+
+. keep fips year manuemp_adh 
+
+. sort fips year 
+
+. tempfile adhemp
+
+. save `adhemp', replace
+(note: file /tmp/St26568.000002 not found)
+file /tmp/St26568.000002 saved
+
+. 
+. **********************
+. * STEP 2: census data
+. **********************
+. 
+. use "$raw/popcounts.dta", clear
+
+. 
+. rename county fips 
+
+. replace fips = "12025" if fips == "12086"
+(25 real changes made)
+
+. drop if fips == "30113" | (substr(fips,1,2)=="02" | substr(fips,1,2) == "15" 
+> )
+(748 observations deleted)
+
+. 
+. sort fips year
+
+. tempfile population
+
+. save `population', replace
+(note: file /tmp/St26568.000003 not found)
+file /tmp/St26568.000003 saved
+
+. 
+. use "$interwrk/censusdata.dta", clear
+
+. replace year = 2007 if year > 2000 
+(3,143 real changes made)
+
+. 
+. rename  pop_16_65 population_census_1665
+
+. replace fips = "12025" if fips == "12086"
+(2 real changes made)
+
+. 
+. sort fips year
+
+. merge 1:1 fips year using `population'
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        74,771
+        from master                     6,395  (_merge==1)
+        from using                     68,376  (_merge==2)
+
+    matched                             9,309  (_merge==3)
+    -----------------------------------------
+
+. 
+. tab _merge
+
+                 _merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+        master only (1) |      6,395        7.61        7.61
+         using only (2) |     68,376       81.32       88.93
+            matched (3) |      9,309       11.07      100.00
+------------------------+-----------------------------------
+                  Total |     84,080      100.00
+
+. tab year _merge
+
+           |              _merge
+      year | master on  using onl  matched ( |     Total
+-----------+---------------------------------+----------
+      1970 |     3,142          0          0 |     3,142 
+      1980 |     3,137          0          0 |     3,137 
+      1990 |        41          6      3,100 |     3,147 
+      1991 |         0      3,106          0 |     3,106 
+      1992 |         0      3,106          0 |     3,106 
+      1993 |         0      3,106          0 |     3,106 
+      1994 |         0      3,107          0 |     3,107 
+      1995 |         0      3,107          0 |     3,107 
+      1996 |         0      3,107          0 |     3,107 
+      1997 |         0      3,107          0 |     3,107 
+      1998 |         0      3,107          0 |     3,107 
+      1999 |         0      3,107          0 |     3,107 
+      2000 |        39          5      3,102 |     3,146 
+      2001 |         0      3,107          0 |     3,107 
+      2002 |         0      3,108          0 |     3,108 
+      2003 |         0      3,108          0 |     3,108 
+      2004 |         0      3,108          0 |     3,108 
+      2005 |         0      3,109          0 |     3,109 
+      2006 |         0      3,108          0 |     3,108 
+      2007 |        36          1      3,107 |     3,144 
+      2008 |         0      3,108          0 |     3,108 
+      2009 |         0      3,108          0 |     3,108 
+      2010 |         0      3,108          0 |     3,108 
+      2011 |         0      3,108          0 |     3,108 
+      2012 |         0      3,108          0 |     3,108 
+      2013 |         0      3,108          0 |     3,108 
+      2014 |         0      3,108          0 |     3,108 
+-----------+---------------------------------+----------
+     Total |     6,395     68,376      9,309 |    84,080 
+
+. *tab fips if _merge == 2 
+. drop if _merge == 2
+(68,376 observations deleted)
+
+. drop _merge
+
+. 
+. tabstat pop_16_65 population_census_1665, by(year)
+
+Summary statistics: mean
+  by categories of: year 
+
+    year |  pop_1~65  pop~1665
+---------+--------------------
+    1970 |         .  38937.39
+    1980 |         .  47035.63
+    1990 |   4208.64  51824.35
+    2000 |  5332.058  59273.09
+    2007 |  5797.768  62956.04
+---------+--------------------
+   Total |  5113.384  52008.79
+------------------------------
+
+. 
+. sort fips year
+
+. merge 1:1 fips year using "$interwrk/tmp_qcewdata.dta"
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         6,682
+        from master                     6,385  (_merge==1)
+        from using                        297  (_merge==2)
+
+    matched                             9,319  (_merge==3)
+    -----------------------------------------
+
+. tab _merge
+
+                 _merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+        master only (1) |      6,385       39.90       39.90
+         using only (2) |        297        1.86       41.76
+            matched (3) |      9,319       58.24      100.00
+------------------------+-----------------------------------
+                  Total |     16,001      100.00
+
+. drop if _merge == 2
+(297 observations deleted)
+
+. drop _merge
+
+. drop if fips == "30113" | (substr(fips,1,2)=="02" | substr(fips,1,2) == "15" 
+> )
+(161 observations deleted)
+
+. 
+. sort fips year
+
+. merge 1:1 fips year using `cbp'
+(note: variable fips was str5, now str2003 to accommodate using data's
+       values)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        24,804
+        from master                    15,543  (_merge==1)
+        from using                      9,261  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+
+. tab _merge
+
+                 _merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+        master only (1) |     15,543       62.66       62.66
+         using only (2) |      9,261       37.34      100.00
+------------------------+-----------------------------------
+                  Total |     24,804      100.00
+
+. tab year _merge 
+
+           |        _merge
+      year | master on  using onl |     Total
+-----------+----------------------+----------
+      1970 |     3,107          0 |     3,107 
+      1980 |     3,108          0 |     3,108 
+      1990 |     3,110      3,114 |     6,224 
+      2000 |     3,109      3,067 |     6,176 
+      2007 |     3,109      3,080 |     6,189 
+-----------+----------------------+----------
+     Total |    15,543      9,261 |    24,804 
+
+. drop if _merge == 2 
+(9,261 observations deleted)
+
+. drop _merge
+
+. 
+. sort fips year
+
+. merge 1:1 fips year using `adhemp'
+(note: variable year was int, now float to accommodate using data's values)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         6,219
+        from master                     6,216  (_merge==1)
+        from using                          3  (_merge==2)
+
+    matched                             9,327  (_merge==3)
+    -----------------------------------------
+
+. tab _merge
+
+                 _merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+        master only (1) |      6,216       39.98       39.98
+         using only (2) |          3        0.02       40.00
+            matched (3) |      9,327       60.00      100.00
+------------------------+-----------------------------------
+                  Total |     15,546      100.00
+
+. tab year _merge 
+
+           |              _merge
+      year | master on  using onl  matched ( |     Total
+-----------+---------------------------------+----------
+      1970 |     3,107          0          0 |     3,107 
+      1980 |         0          1      3,108 |     3,109 
+      1990 |         0          1      3,110 |     3,111 
+      2000 |         0          1      3,109 |     3,110 
+      2007 |     3,109          0          0 |     3,109 
+-----------+---------------------------------+----------
+     Total |     6,216          3      9,327 |    15,546 
+
+. drop if _merge == 2 
+(3 observations deleted)
+
+. drop _merge
+
+. 
+. sort fips year
+
+. *tempfile cty_censusdata
+. save  "$interwrk/cty_censusdata.dta", replace
+file /ssgprojects/project0002/MobZ.new/data/interwrk/cty_censusdata.dta saved
+
+. 
+. 
+end of do-file
