@@ -11,7 +11,7 @@ Trade data
 
 /* source: Autor Dorn Hanson public data files */
 
-use "$adh_data/sic87dd_trade_data.dta", clear
+use "$adhdata/sic87dd_trade_data.dta", clear
 
 bys year sic87dd: egen M_ucjt = sum(imports*(exporter=="CHN")*(importer=="USA"))
 
