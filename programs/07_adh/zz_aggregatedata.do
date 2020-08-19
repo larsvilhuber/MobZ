@@ -3,8 +3,6 @@
 Prep Aggregate Data
 *******************/
 
-include "../config.do"
-
 /*********************
 Trade data
 ***********************/
