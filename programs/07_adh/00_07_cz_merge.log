@@ -114,14 +114,14 @@ Machine type:  PC (64-bit x86-64)
 . cap mkdir "$logdir"
 
 . log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
-(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_18_Aug_2020
-> -18_23_00.log not found)
+(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_19_Aug_2020
+> -10_18_34.log not found)
 -------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_18_Aug_202
-> 0-18_23_00.log
+       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_19_Aug_202
+> 0-10_18_34.log
   log type:  text
- opened on:  18 Aug 2020, 18:23:00
+ opened on:  19 Aug 2020, 10:18:34
 
 . cap mkdir "$temp"
 
@@ -203,8 +203,8 @@ czone: all characters numeric; replaced as long
 . tempfile czone 
 
 . save `czone', replace
-(note: file /tmp/St05801.000001 not found)
-file /tmp/St05801.000001 saved
+(note: file /tmp/St26063.000001 not found)
+file /tmp/St26063.000001 saved
 
 . 
 . /* from 00_05_mergecounty.do */
@@ -212,7 +212,8 @@ file /tmp/St05801.000001 saved
 . use  "$interwrk/cty_censusdata.dta", clear
 
 . 
-. 
+. rename manufacturing_employment manufacturing_emp
+
 . sort fips 
 
 . merge m:1 fips using `czone'
@@ -394,8 +395,8 @@ Summary statistics: mean
 . tempfile mainfile
 
 . save `mainfile', replace
-(note: file /tmp/St05801.000002 not found)
-file /tmp/St05801.000002 saved
+(note: file /tmp/St26063.000002 not found)
+file /tmp/St26063.000002 saved
 
 . 
 . /**************** READING IN IPW *******************/
@@ -409,8 +410,8 @@ file /tmp/St05801.000002 saved
 . tempfile ipw
 
 . save `ipw',replace
-(note: file /tmp/St05801.000003 not found)
-file /tmp/St05801.000003 saved
+(note: file /tmp/St26063.000003 not found)
+file /tmp/St26063.000003 saved
 
 . /*************** MERGING IT ALL TOGETHER *****************/
 . use `mainfile', clear
