@@ -23,7 +23,7 @@ save `czone', replace
 
 use  "$interwrk/cty_censusdata.dta", clear
 
-rename manufacturing_employment manufacturing_emp
+
 sort fips 
 merge m:1 fips using `czone'
 tab _merge 

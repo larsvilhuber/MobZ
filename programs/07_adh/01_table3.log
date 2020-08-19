@@ -1,22 +1,22 @@
 
   ___  ____  ____  ____  ____ (R)
  /__    /   ____/   /   ____/
-___/   /   /___/   /   /___/   16.1   Copyright 1985-2019 StataCorp LLC
-  Statistics/Data analysis            StataCorp
+___/   /   /___/   /   /___/   14.2   Copyright 1985-2015 StataCorp LLC
+  Statistics/Data Analysis            StataCorp
                                       4905 Lakeway Drive
                                       College Station, Texas 77845 USA
-                                      800-STATA-PC        https://www.stata.com
+                                      800-STATA-PC        http://www.stata.com
                                       979-696-4600        stata@stata.com
                                       979-696-4601 (fax)
 
-Stata license: 5-user network perpetual
-Serial number: 501606316764
-  Licensed to: LDI Econ Cornell University
-               Ithaca, NY
+8-user Stata network perpetual license:
+       Serial number:  501406244326
+         Licensed to:  ECCO Cornell University
+                       Ithaca, NY
 
 Notes:
-      1. Stata is running in batch mode.
-      2. Unicode is supported; see help unicode_advice.
+      1.  Stata is running in batch mode.
+      2.  Unicode is supported; see help unicode_advice.
 
 . do 01_table3.do 
 
@@ -70,10 +70,10 @@ Notes:
 === SYSTEM DIAGNOSTICS ===
 
 . di "Stata version: `c(stata_version)'"
-Stata version: 16.1
+Stata version: 14.2
 
 . di "Updated as of: `c(born_date)'"
-Updated as of: 30 Jun 2020
+Updated as of: 19 Dec 2017
 
 . di "Variant:       `variant'"
 Variant:       IC
@@ -116,14 +116,14 @@ Machine type:  PC (64-bit x86-64)
 . cap mkdir "$logdir"
 
 . log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
-(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_18_Aug_2020
-> -12_32_50.log not found)
+(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_19_Aug_2020
+> -14_58_01.log not found)
 -------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_18_Aug_202
-> 0-12_32_50.log
+       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_19_Aug_202
+> 0-14_58_01.log
   log type:  text
- opened on:  18 Aug 2020, 12:32:50
+ opened on:  19 Aug 2020, 14:58:01
 
 . cap mkdir "$temp"
 
@@ -146,8 +146,8 @@ Machine type:  PC (64-bit x86-64)
 . sysdir set SITE     "${programs}/ado/site"
 
 . sysdir
-   STATA:  /usr/local/stata16/
-    BASE:  /usr/local/stata16/ado/base/
+   STATA:  /usr/local/stata14/
+    BASE:  /usr/local/stata14/ado/base/
     SITE:  /ssgprojects/project0002/MobZ.new/programs/ado/site/
     PLUS:  /ssgprojects/project0002/MobZ.new/programs/ado/plus/
 PERSONAL:  /ssgprojects/project0002/MobZ.new/programs/ado/personal/
@@ -183,14 +183,12 @@ OLDPLACE:  ~/ado/
 . cap log close 
 
 . log using "$logdir/comparison_regressions.log", replace
-(note: file /ssgprojects/project0002/MobZ.new/programs/logs/comparison_regressi
-> ons.log not found)
 -------------------------------------------------------------------------------
       name:  <unnamed>
        log:  /ssgprojects/project0002/MobZ.new/programs/logs/comparison_regress
 > ions.log
   log type:  text
- opened on:  18 Aug 2020, 12:32:50
+ opened on:  19 Aug 2020, 14:58:01
 
 . 
 . use "$adhdata/workfile_china.dta", clear
@@ -208,8 +206,8 @@ delimiter now ;
 . tempfile adh_data;
 
 . save `adh_data', replace ;
-(note: file /tmp/St05883.000001 not found)
-file /tmp/St05883.000001 saved
+(note: file /tmp/St19693.000001 not found)
+file /tmp/St19693.000001 saved
 
 . use "$interwrk/finalczdata.dta", clear;
 
@@ -333,8 +331,130 @@ Instruments:   IPW_oit
 > ivregress 2sls del_L_mprime (IPW_uit=IPW_oit) [aw=share_czpop] if year==1990,
 > cluster(statefip) ;
 (sum of wgt is   1.0000e+00)
-del_L_mprime is constant and zero
-r(459);
 
+Instrumental variables (2SLS) regression          Number of obs   =        722
+                                                  Wald chi2(1)    =      32.30
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =          .
+                                                  Root MSE        =     1.7763
+
+                              (Std. Err. adjusted for 48 clusters in statefip)
+------------------------------------------------------------------------------
+             |               Robust
+del_L_mprime |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     IPW_uit |  -.8818334   .1551584    -5.68   0.000    -1.185938   -.5777285
+       _cons |  -.3915194   .1865409    -2.10   0.036    -.7571329   -.0259059
+------------------------------------------------------------------------------
+Instrumented:  IPW_uit
+Instruments:   IPW_oit
+
+.         local beta_6 = _b[IPW_uit] ;
+
+.         local se_6 = _se[IPW_uit] ;
+
+. /********** NOT CLUSTERING ON CZ *************/
+> ivregress 2sls del_L_mprime (IPW_uit=IPW_oit) [aw=share_czpop] if year==1990,
+> cluster(czone);
+(sum of wgt is   1.0000e+00)
+
+Instrumental variables (2SLS) regression          Number of obs   =        722
+                                                  Wald chi2(1)    =      49.69
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =          .
+                                                  Root MSE        =     1.7763
+
+                                (Std. Err. adjusted for 722 clusters in czone)
+------------------------------------------------------------------------------
+             |               Robust
+del_L_mprime |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     IPW_uit |  -.8818334   .1251039    -7.05   0.000    -1.127033   -.6366343
+       _cons |  -.3915194   .1583488    -2.47   0.013    -.7018774   -.0811614
+------------------------------------------------------------------------------
+Instrumented:  IPW_uit
+Instruments:   IPW_oit
+
+.         local beta_7 = _b[IPW_uit] ;
+
+.         local se_7 = _se[IPW_uit] ;
+
+. foreach coeff in beta se { ;
+  2.         forvalues i = 1/7 { ;
+  3.                 di %5.4f ``coeff'_`i'' "    " _continue ;
+  4.         } ;
+  5.         di "" ;
+  6. } ;
+-0.8875            -0.8871    -1.0017    -0.8818    -0.8818    
+0.1812            0.1811    0.1878    0.1552    0.1251    
+
+. /**************** SHOWING RATIO OF IPW TO D_TRADEUSCH******************/
+> 
+> gen ratio_us = IPW_uit/d_tradeusch_pw ;
+(2,166 missing values generated)
+
+. gen ratio_oth = IPW_oit/d_tradeotch_pw_lag;
+(2,168 missing values generated)
+
+. sum ratio* if year == 1990, d ;
+
+                          ratio_us
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%     1.000057       .9998223
+ 5%     1.000146       .9999982
+10%     1.000254       1.000004       Obs                 722
+25%     1.000407       1.000011       Sum of Wgt.         722
+
+50%     1.000676                      Mean           1.001541
+                        Largest       Std. Dev.      .0043093
+75%     1.001245       1.029935
+90%      1.00256       1.031277       Variance       .0000186
+95%     1.005056       1.041786       Skewness       11.55159
+99%     1.016622        1.08109       Kurtosis        181.375
+
+                          ratio_oth
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%     .9999999       .9999998
+ 5%     .9999999       .9999998
+10%     .9999999       .9999998       Obs                 720
+25%     .9999999       .9999998       Sum of Wgt.         720
+
+50%            1                      Mean                  1
+                        Largest       Std. Dev.      7.72e-08
+75%            1              1
+90%            1              1       Variance       5.96e-15
+95%            1              1       Skewness       7.166148
+99%            1       1.000001       Kurtosis       119.0541
+
+. gen ratio_manu = del_L_m/d_sh_empl_mfg ;
+(2,166 missing values generated)
+
+. sum ratio_manu, d ;
+
+                         ratio_manu
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%    -10.81319      -365.2776
+ 5%    -2.341954      -112.5809
+10%     -.795499      -82.45802       Obs               1,444
+25%     .4652747      -40.82906       Sum of Wgt.       1,444
+
+50%     .9554577                      Mean           1.437507
+                        Largest       Std. Dev.      18.89786
+75%      1.42202       164.8033
+90%     2.589291       213.9174       Variance       357.1291
+95%     4.786518       294.5731       Skewness       5.716691
+99%     22.62141       407.6978       Kurtosis       303.2607
+
+. log close ;
+      name:  <unnamed>
+       log:  /ssgprojects/project0002/MobZ.new/programs/logs/comparison_regress
+> ions.log
+  log type:  text
+ closed on:  19 Aug 2020, 14:58:01
+-------------------------------------------------------------------------------
+
+. 
 end of do-file
-r(459);

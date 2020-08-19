@@ -1,22 +1,22 @@
 
   ___  ____  ____  ____  ____ (R)
  /__    /   ____/   /   ____/
-___/   /   /___/   /   /___/   16.1   Copyright 1985-2019 StataCorp LLC
-  Statistics/Data analysis            StataCorp
+___/   /   /___/   /   /___/   14.2   Copyright 1985-2015 StataCorp LLC
+  Statistics/Data Analysis            StataCorp
                                       4905 Lakeway Drive
                                       College Station, Texas 77845 USA
-                                      800-STATA-PC        https://www.stata.com
+                                      800-STATA-PC        http://www.stata.com
                                       979-696-4600        stata@stata.com
                                       979-696-4601 (fax)
 
-Stata license: 5-user network perpetual
-Serial number: 501606316764
-  Licensed to: LDI Econ Cornell University
-               Ithaca, NY
+8-user Stata network perpetual license:
+       Serial number:  501406244326
+         Licensed to:  ECCO Cornell University
+                       Ithaca, NY
 
 Notes:
-      1. Stata is running in batch mode.
-      2. Unicode is supported; see help unicode_advice.
+      1.  Stata is running in batch mode.
+      2.  Unicode is supported; see help unicode_advice.
 
 . do 00_06_mergecounty.do 
 
@@ -74,10 +74,10 @@ Notes:
 === SYSTEM DIAGNOSTICS ===
 
 . di "Stata version: `c(stata_version)'"
-Stata version: 16.1
+Stata version: 14.2
 
 . di "Updated as of: `c(born_date)'"
-Updated as of: 30 Jun 2020
+Updated as of: 19 Dec 2017
 
 . di "Variant:       `variant'"
 Variant:       IC
@@ -120,14 +120,14 @@ Machine type:  PC (64-bit x86-64)
 . cap mkdir "$logdir"
 
 . log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
-(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_18_Aug_2020
-> -12_20_48.log not found)
+(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_19_Aug_2020
+> -14_57_40.log not found)
 -------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_18_Aug_202
-> 0-12_20_48.log
+       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_19_Aug_202
+> 0-14_57_40.log
   log type:  text
- opened on:  18 Aug 2020, 12:20:48
+ opened on:  19 Aug 2020, 14:57:40
 
 . cap mkdir "$temp"
 
@@ -150,8 +150,8 @@ Machine type:  PC (64-bit x86-64)
 . sysdir set SITE     "${programs}/ado/site"
 
 . sysdir
-   STATA:  /usr/local/stata16/
-    BASE:  /usr/local/stata16/ado/base/
+   STATA:  /usr/local/stata14/
+    BASE:  /usr/local/stata14/ado/base/
     SITE:  /ssgprojects/project0002/MobZ.new/programs/ado/site/
     PLUS:  /ssgprojects/project0002/MobZ.new/programs/ado/plus/
 PERSONAL:  /ssgprojects/project0002/MobZ.new/programs/ado/personal/
@@ -199,8 +199,8 @@ OLDPLACE:  ~/ado/
 . tempfile cbp
 
 . save `cbp' , replace
-(note: file /tmp/St04556.000001 not found)
-file /tmp/St04556.000001 saved
+(note: file /tmp/St19660.000001 not found)
+file /tmp/St19660.000001 saved
 
 . 
 . use "$interwrk/industry_data.dta", clear
@@ -227,8 +227,8 @@ fips generated as str5
 . tempfile adhemp
 
 . save `adhemp', replace
-(note: file /tmp/St04556.000002 not found)
-file /tmp/St04556.000002 saved
+(note: file /tmp/St19660.000002 not found)
+file /tmp/St19660.000002 saved
 
 . 
 . **********************
@@ -253,8 +253,8 @@ file /tmp/St04556.000002 saved
 . tempfile population
 
 . save `population', replace
-(note: file /tmp/St04556.000003 not found)
-file /tmp/St04556.000003 saved
+(note: file /tmp/St19660.000003 not found)
+file /tmp/St19660.000003 saved
 
 . 
 . use "$interwrk/censusdata.dta", clear
@@ -327,6 +327,7 @@ file /tmp/St04556.000003 saved
       2014 |         0      3,108          0 |     3,108 
 -----------+---------------------------------+----------
      Total |     6,395     68,376      9,309 |    84,080 
+
 
 . *tab fips if _merge == 2 
 . drop if _merge == 2
@@ -422,6 +423,7 @@ Summary statistics: mean
 -----------+----------------------+----------
      Total |    15,543      9,261 |    24,804 
 
+
 . drop if _merge == 2 
 (9,261 observations deleted)
 
@@ -464,6 +466,7 @@ Summary statistics: mean
       2007 |     3,109          0          0 |     3,109 
 -----------+---------------------------------+----------
      Total |     6,216          3      9,327 |    15,546 
+
 
 . drop if _merge == 2 
 (3 observations deleted)

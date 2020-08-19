@@ -1,22 +1,22 @@
 
   ___  ____  ____  ____  ____ (R)
  /__    /   ____/   /   ____/
-___/   /   /___/   /   /___/   16.1   Copyright 1985-2019 StataCorp LLC
-  Statistics/Data analysis            StataCorp
+___/   /   /___/   /   /___/   14.2   Copyright 1985-2015 StataCorp LLC
+  Statistics/Data Analysis            StataCorp
                                       4905 Lakeway Drive
                                       College Station, Texas 77845 USA
-                                      800-STATA-PC        https://www.stata.com
+                                      800-STATA-PC        http://www.stata.com
                                       979-696-4600        stata@stata.com
                                       979-696-4601 (fax)
 
-Stata license: 5-user network perpetual
-Serial number: 501606316764
-  Licensed to: LDI Econ Cornell University
-               Ithaca, NY
+8-user Stata network perpetual license:
+       Serial number:  501406244326
+         Licensed to:  ECCO Cornell University
+                       Ithaca, NY
 
 Notes:
-      1. Stata is running in batch mode.
-      2. Unicode is supported; see help unicode_advice.
+      1.  Stata is running in batch mode.
+      2.  Unicode is supported; see help unicode_advice.
 
 . do 00_05_subset_qcewdata.do 
 
@@ -68,10 +68,10 @@ Notes:
 === SYSTEM DIAGNOSTICS ===
 
 . di "Stata version: `c(stata_version)'"
-Stata version: 16.1
+Stata version: 14.2
 
 . di "Updated as of: `c(born_date)'"
-Updated as of: 30 Jun 2020
+Updated as of: 19 Dec 2017
 
 . di "Variant:       `variant'"
 Variant:       IC
@@ -114,14 +114,14 @@ Machine type:  PC (64-bit x86-64)
 . cap mkdir "$logdir"
 
 . log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
-(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_18_Aug_2020
-> -12_20_47.log not found)
+(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_19_Aug_2020
+> -14_57_30.log not found)
 -------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_18_Aug_202
-> 0-12_20_47.log
+       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_19_Aug_202
+> 0-14_57_30.log
   log type:  text
- opened on:  18 Aug 2020, 12:20:47
+ opened on:  19 Aug 2020, 14:57:30
 
 . cap mkdir "$temp"
 
@@ -144,8 +144,8 @@ Machine type:  PC (64-bit x86-64)
 . sysdir set SITE     "${programs}/ado/site"
 
 . sysdir
-   STATA:  /usr/local/stata16/
-    BASE:  /usr/local/stata16/ado/base/
+   STATA:  /usr/local/stata14/
+    BASE:  /usr/local/stata14/ado/base/
     SITE:  /ssgprojects/project0002/MobZ.new/programs/ado/site/
     PLUS:  /ssgprojects/project0002/MobZ.new/programs/ado/plus/
 PERSONAL:  /ssgprojects/project0002/MobZ.new/programs/ado/personal/
@@ -186,12 +186,35 @@ delimiter now ;
 .  keep if year == 1990 | year == 2000 | year ==2007;
 (1,186,625 observations deleted)
 
-. bys fips year: egen manufacturing_employment = sum(annual_avg_emplvl*(naics2=
-> ="31")) ;
+. bys fips year: egen manufacturing_emp = sum(annual_avg_emplvl*(naics2=="31-33
+> ")) ;
 
 . bys fips year: egen total_employment = sum(annual_avg_emplvl) ;
 
-. collapse (first) manufacturing_employment total_employment , by (fips year) ;
+. collapse (first) manufacturing_emp total_employment , by (fips year) ;
+
+. sum ;
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        year |      9,616    1999.088    6.984396       1990       2007
+        fips |          0
+manufactur~p |      9,616     5064.28    18285.77          0   836339.3
+total_empl~t |      9,616    31147.28    121683.9          0    3732650
+
+. tabstat manufacturing_emp, by(year) ;
+
+Summary for variables: manufacturing_emp
+     by categories of: year (Year)
+
+    year |      mean
+---------+----------
+    1990 |  5581.537
+    2000 |  5413.533
+    2007 |   4224.51
+---------+----------
+   Total |   5064.28
+--------------------
 
 . save $interwrk/tmp_qcewdata.dta, replace;
 file /ssgprojects/project0002/MobZ.new/data/interwrk/tmp_qcewdata.dta saved
