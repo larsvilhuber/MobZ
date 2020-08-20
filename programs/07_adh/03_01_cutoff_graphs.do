@@ -14,9 +14,9 @@ It has three steps
 	store regressions.
 	
 ***************************/
+include "../config.do"
 cap log close
 log using cutoff_graphs.log, replace 
-include "../config.do"
 
 local czonedataset = "${outputs}/clusters_cutoff_jtw1990.dta"
 global czone_iteration = "${interwrk}/czones_cutoff.dta"

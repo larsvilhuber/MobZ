@@ -21,13 +21,13 @@ rename emp L_ijt
 rename tot_emp_cty L_it 
 
 sort sic87dd year
-merge sic87dd year using "$datadir/industrydata.dta"
+merge sic87dd year using "$interwrk/tmp_industrydata.dta"
 tab _merge
 
 drop _merge
 
 sort sic87dd year
-merge sic87dd year using "$datadir/tradedata.dta"
+merge sic87dd year using "$interwrk/tmp_tradedata.dta"
 
 tab _merge
 *drop _merge
@@ -58,7 +58,7 @@ Manufacturing employment and
 Census data
 *****************************/
 
-use  "$datadir/cty_censusdata.dta", clear
+use  "$interwrk/cty_censusdata.dta", clear
 
 sort fips 
 merge m:1 fips using "$czone_iteration"

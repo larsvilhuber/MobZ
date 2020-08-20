@@ -39,7 +39,7 @@ keep del* M_* sic87dd year
 
 sort sic87dd year
 
-save "$interwrk/tradedata.dta", replace
+save "$interwrk/tmp_tradedata.dta", replace
 
 /*****************************
 National Industry Employment
@@ -53,7 +53,7 @@ rename emp L_ujt
 sort sic87dd year
 
 /* used nowhere else? */
-*save "$interwrk/industrydata.dta", replace
+save "$interwrk/tmp_industrydata.dta", replace
 
 
 

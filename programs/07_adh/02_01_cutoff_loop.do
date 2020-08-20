@@ -14,10 +14,10 @@ It has three steps
 	store regressions.
 	
 ***************************/
-cap log close
-log using cutoff_loop.log, replace 
 
 include "../config.do"
+cap log close
+log using cutoff_loop.log, replace 
 
 /* local macros */
 local czonedataset = "${outputs}/clusters_cutoff_jtw1990.dta"
@@ -105,4 +105,3 @@ postclose `czoneresults' ;
 
 log close ;
 
-end;

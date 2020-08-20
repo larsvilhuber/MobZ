@@ -48,7 +48,7 @@ postfile `czoneresults' iteration beta_1990 se_1990 tstat_1990
 		save "$czone_iteration", replace; 
 	
 	*step3 ;
-	include "$dodir/county_merge.do";
+	include "$dodir/zz_ctymerge.do";
 		
 	*step4 ; 
 	ivregress 2sls del_L_mprime (IPW_uit = IPW_oit ) if year == 1990 [weight=share_czpop];
@@ -85,7 +85,7 @@ forvalues i = 1/$bootstrap_num {;
 		save "$czone_iteration", replace; 
 		
 	*step3 ;
-	include "$dodir/county_merge.do";
+	include "$dodir/zz_ctymerge.do";
 		
 	*step4 ; 
 	ivregress 2sls del_L_mprime (IPW_uit = IPW_oit ) if year == 1990 [weight=share_czpop];
