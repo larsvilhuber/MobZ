@@ -1,0 +1,799 @@
+
+  ___  ____  ____  ____  ____ (R)
+ /__    /   ____/   /   ____/
+___/   /   /___/   /   /___/   14.2   Copyright 1985-2015 StataCorp LLC
+  Statistics/Data Analysis            StataCorp
+                                      4905 Lakeway Drive
+                                      College Station, Texas 77845 USA
+                                      800-STATA-PC        http://www.stata.com
+                                      979-696-4600        stata@stata.com
+                                      979-696-4601 (fax)
+
+8-user Stata network perpetual license:
+       Serial number:  501406244326
+         Licensed to:  ECCO Cornell University
+                       Ithaca, NY
+
+Notes:
+      1.  Stata is running in batch mode.
+      2.  Unicode is supported; see help unicode_advice.
+
+. do 02_02_overall_loop.do 
+
+. /**********************
+> This is the do-file loop
+> 
+> It has three steps
+> 
+> 1. Calculate the aggregate data
+>         (national level)
+> 
+> 2. Decide which czone defn to use
+> 
+> 3. Aggregate cty data to czone
+> 
+> 4. Run regressions of delM on delIPW, 
+>         store regressions.
+>         
+> ***************************/
+. 
+. include "../config.do"
+
+. /*  config.do */
+. 
+. 
+. 
+. if ( "`c(hostname)'" == "ecco.vrdc.cornell.edu" ) {
+. global root "/ssgprojects/project0002/MobZ.new"
+. }
+
+. 
+. if ( "`c(username)'" == "vilhuber" ) {
+. global root "/home/vilhuber/Workspace/git/larsvilhuber/MobZ"
+. }
+
+. 
+. if ( "`c(hostname)'" == "some.server.at.census" ) {
+. global root "/made/up/path/Mobz"
+. }
+
+. 
+. /* check if the author creates a log file. If not, adjust the following code 
+> fragment */
+. 
+. local c_date = c(current_date)
+
+. local cdate = subinstr("`c_date'", " ", "_", .)
+
+. local c_time = c(current_time)
+
+. local ctime = subinstr("`c_time'", ":", "_", .)
+
+. 
+. // log using "${root}/logfile_`cdate'-`ctime'.log", replace text
+. 
+. /* It will provide some info about how and when the program was run */
+. /* See https://www.stata.com/manuals13/pcreturn.pdf#pcreturn */
+. local variant = cond(c(MP),"MP",cond(c(SE),"SE",c(flavor)) )  
+
+. // alternatively, you could use 
+. // local variant = cond(c(stata_version)>13,c(real_flavor),"NA")  
+. 
+. di "=== SYSTEM DIAGNOSTICS ==="
+=== SYSTEM DIAGNOSTICS ===
+
+. di "Stata version: `c(stata_version)'"
+Stata version: 14.2
+
+. di "Updated as of: `c(born_date)'"
+Updated as of: 19 Dec 2017
+
+. di "Variant:       `variant'"
+Variant:       IC
+
+. di "Processors:    `c(processors)'"
+Processors:    1
+
+. di "OS:            `c(os)' `c(osdtl)'"
+OS:            Unix 
+
+. di "Machine type:  `c(machine_type)'"
+Machine type:  PC (64-bit x86-64)
+
+. di "=========================="
+==========================
+
+. 
+. 
+. 
+. 
+. /* define relative libraries */
+. 
+. global paperdir "${root}/paper"
+
+. global interwrk "${root}/data/interwrk"
+
+. global raw "${root}/raw"
+
+. global temp "${root}/temp"
+
+. global outputs "${root}/data"
+
+. global programs "${root}/programs"
+
+. global outgraphs "${root}/figures"
+
+. global logdir "${programs}/logs"
+
+. 
+. cap mkdir "$logdir"
+
+. log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
+(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_19_Aug_2020
+> -20_56_53.log not found)
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_19_Aug_202
+> 0-20_56_53.log
+  log type:  text
+ opened on:  19 Aug 2020, 20:56:53
+
+. cap mkdir "$temp"
+
+. cap mkdir "${root}/data"
+
+. cap mkdir "$interwrk"
+
+. cap mkdir "$raw"
+
+. cap mkdir "$outputs"
+
+. 
+. /* install any packages locally */
+. capture mkdir "${programs}/ado"
+
+. sysdir set PERSONAL "${programs}/ado/personal"
+
+. sysdir set PLUS     "${programs}/ado/plus"
+
+. sysdir set SITE     "${programs}/ado/site"
+
+. sysdir
+   STATA:  /usr/local/stata14/
+    BASE:  /usr/local/stata14/ado/base/
+    SITE:  /ssgprojects/project0002/MobZ.new/programs/ado/site/
+    PLUS:  /ssgprojects/project0002/MobZ.new/programs/ado/plus/
+PERSONAL:  /ssgprojects/project0002/MobZ.new/programs/ado/personal/
+OLDPLACE:  ~/ado/
+
+. 
+. /* define data sources */
+. 
+. /* QCEW */
+. /* data/working/mobz/qcew */
+.     global qcewdata "${raw}/qcew"  
+
+. /* /data/working/mobz/outputs */
+.     global czonedata "$outputs"  
+
+. 
+. /* ADH */
+.     global adhdata "${raw}/adh_data/Public Release Data/dta"
+
+. /* CZONE */
+.     global czonedata "${raw}/adh_data/"
+
+. /* files provided separately by David Dorn */
+.     global dorndata "${raw}/ddorn/"
+
+. 
+. /* CBP */
+.     /* this is where the raw Stata versions of CBP data reside */
+.    global cbpdata "/data/clean/cbp"
+
+. 
+. 
+. 
+. /* local configuration */
+. local czonedataset = "${outputs}/bootclusters_jtw1990_moe_new.dta"
+
+. global czone_iteration = "${interwrk}/czones.dta" 
+
+. global dodir "${programs}/07_adh/"
+
+. 
+. 
+. di "`czonedataset'" 
+/ssgprojects/project0002/MobZ.new/data/bootclusters_jtw1990_moe_new.dta
+
+. include "$dodir/zz_aggregatedata.do"
+
+. 
+. /*****************
+> Prep Aggregate Data
+> *******************/
+. 
+. /*********************
+> Trade data
+> ***********************/
+. 
+. /* source: Autor Dorn Hanson public data files */
+. 
+. use "$adhdata/sic87dd_trade_data.dta", clear
+(SIC trade data for ADH post collapse of problem SIC industries)
+
+. 
+. bys year sic87dd: egen M_ucjt = sum(imports*(exporter=="CHN")*(importer=="USA
+> "))
+
+. 
+. bys year sic87dd: egen M_ocjt = sum(imports*(exporter=="CHN")*(importer=="OTH
+> "))
+
+. 
+. keep if year == 1991 | year == 2000 | year == 2007
+(59,636 observations deleted)
+
+. collapse (first) M*, by(sic87dd year) 
+
+. 
+. /* this is fixing an issue with two of the sic codes that only show up in 200
+> 6 */
+. expand 3 if year == 2007 & (sic87dd == 2992 | sic87dd==3273)
+(4 observations created)
+
+. bys sic87dd year: egen seq = seq() 
+
+. replace year = 2000 if seq == 3
+(2 real changes made)
+
+. replace year = 1990 if seq == 2
+(2 real changes made)
+
+. replace M_ucjt = 0 if seq > 1
+(4 real changes made)
+
+. replace M_ocjt = 0 if seq > 1 
+(4 real changes made)
+
+. drop seq
+
+. 
+. sort sic87dd year 
+
+. 
+. gen del_M_ucjt = M_ucjt[_n+1]-M_ucjt if year<2007
+(397 missing values generated)
+
+. gen del_M_ocjt = M_ocjt[_n+1]-M_ocjt if year<2007
+(397 missing values generated)
+
+. 
+. drop if year == 2007
+(397 observations deleted)
+
+. replace year = 1990 if year == 1991 
+(395 real changes made)
+
+. 
+. keep del* M_* sic87dd year
+
+. 
+. sort sic87dd year
+
+. 
+. save "$interwrk/tmp_tradedata.dta", replace
+file /ssgprojects/project0002/MobZ.new/data/interwrk/tmp_tradedata.dta saved
+
+. 
+. /*****************************
+> National Industry Employment
+> *****************************/
+. use "$interwrk/industry_data.dta", clear
+
+. 
+. collapse (sum) emp, by(sic87dd year)
+
+. 
+. rename emp L_ujt 
+
+. 
+. sort sic87dd year
+
+. 
+. /* used nowhere else? */
+. save "$interwrk/tmp_industrydata.dta", replace
+file /ssgprojects/project0002/MobZ.new/data/interwrk/tmp_industrydata.dta saved
+
+. 
+. 
+. 
+. 
+. 
+. set more off
+
+. #delimit ;
+delimiter now ;
+. use "`czonedataset'", clear ;
+
+. des ;
+
+Contains data from /ssgprojects/project0002/MobZ.new/data/bootclusters_jtw1990_
+> moe_new.dta
+  obs:         3,140                          
+ vars:           103                          
+ size:     3,862,200                          
+-------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+fips            str10   %10s                  
+clustername     str12   %12s                  
+clustername_1   str12   %12s                  
+clustername_2   str12   %12s                  
+clustername_3   str12   %12s                  
+clustername_4   str12   %12s                  
+clustername_5   str12   %12s                  
+clustername_6   str12   %12s                  
+clustername_7   str12   %12s                  
+clustername_8   str12   %12s                  
+clustername_9   str12   %12s                  
+clustername_10  str12   %12s                  
+clustername_11  str12   %12s                  
+clustername_12  str12   %12s                  
+clustername_13  str12   %12s                  
+clustername_14  str12   %12s                  
+clustername_15  str12   %12s                  
+clustername_16  str12   %12s                  
+clustername_17  str12   %12s                  
+clustername_18  str12   %12s                  
+clustername_19  str12   %12s                  
+clustername_20  str12   %12s                  
+clustername_21  str12   %12s                  
+clustername_22  str12   %12s                  
+clustername_23  str12   %12s                  
+clustername_24  str12   %12s                  
+clustername_25  str12   %12s                  
+clustername_26  str12   %12s                  
+clustername_27  str12   %12s                  
+clustername_28  str12   %12s                  
+clustername_29  str12   %12s                  
+clustername_30  str12   %12s                  
+clustername_31  str12   %12s                  
+clustername_32  str12   %12s                  
+clustername_33  str12   %12s                  
+clustername_34  str12   %12s                  
+clustername_35  str12   %12s                  
+clustername_36  str12   %12s                  
+clustername_37  str12   %12s                  
+clustername_38  str12   %12s                  
+clustername_39  str12   %12s                  
+clustername_40  str12   %12s                  
+clustername_41  str12   %12s                  
+clustername_42  str12   %12s                  
+clustername_43  str12   %12s                  
+clustername_44  str12   %12s                  
+clustername_45  str12   %12s                  
+clustername_46  str12   %12s                  
+clustername_47  str12   %12s                  
+clustername_48  str12   %12s                  
+clustername_49  str12   %12s                  
+clustername_50  str12   %12s                  
+clustername_51  str12   %12s                  
+clustername_52  str12   %12s                  
+clustername_53  str12   %12s                  
+clustername_54  str12   %12s                  
+clustername_55  str12   %12s                  
+clustername_56  str12   %12s                  
+clustername_57  str12   %12s                  
+clustername_58  str12   %12s                  
+clustername_59  str12   %12s                  
+clustername_60  str12   %12s                  
+clustername_61  str12   %12s                  
+clustername_62  str12   %12s                  
+clustername_63  str12   %12s                  
+clustername_64  str12   %12s                  
+clustername_65  str12   %12s                  
+clustername_66  str12   %12s                  
+clustername_67  str12   %12s                  
+clustername_68  str12   %12s                  
+clustername_69  str12   %12s                  
+clustername_70  str12   %12s                  
+clustername_71  str12   %12s                  
+clustername_72  str12   %12s                  
+clustername_73  str12   %12s                  
+clustername_74  str12   %12s                  
+clustername_75  str12   %12s                  
+clustername_76  str12   %12s                  
+clustername_77  str12   %12s                  
+clustername_78  str12   %12s                  
+clustername_79  str12   %12s                  
+clustername_80  str12   %12s                  
+clustername_81  str12   %12s                  
+clustername_82  str12   %12s                  
+clustername_83  str12   %12s                  
+clustername_84  str12   %12s                  
+clustername_85  str12   %12s                  
+clustername_86  str12   %12s                  
+clustername_87  str12   %12s                  
+clustername_88  str12   %12s                  
+clustername_89  str12   %12s                  
+clustername_90  str12   %12s                  
+clustername_91  str12   %12s                  
+clustername_92  str12   %12s                  
+clustername_93  str12   %12s                  
+clustername_94  str12   %12s                  
+clustername_95  str12   %12s                  
+clustername_96  str12   %12s                  
+clustername_97  str12   %12s                  
+clustername_98  str12   %12s                  
+clustername_99  str12   %12s                  
+clustername_100 str12   %12s                  
+clus_switched   double  %12.0g                
+-------------------------------------------------------------------------------
+Sorted by: 
+
+.  tempname czoneresults;
+
+. tempfile ipw_regs;
+
+. postfile `czoneresults' iteration beta_1990 se_1990 tstat_1990
+>                                   beta_2000 se_2000 tstat_2000
+>                                   beta_all se_all tstat_all
+>                         using `ipw_regs', replace ;
+(note: file /tmp/St21289.000001 not found)
+
+.                         * first, run the legitimate regressions ;
+.         * step2 ;
+.         use "`czonedataset'", clear;
+
+.                 *rename home_cty fips ;
+.                 egen czone = group(clustername) ;
+
+.                 keep fips czone;
+
+.                 sort fips ;
+
+.                 save "$czone_iteration", replace;
+file /ssgprojects/project0002/MobZ.new/data/interwrk/czones.dta saved
+
+.                 *step3 ;
+.         include "$dodir/zz_ctymerge.do";
+
+. /******************************
+> This do-file takes the commuting
+> zone file (fed from on high), 
+> collapses everything according to
+> czone, and then merges it all together
+> to get del_M and IPW, the key
+> parts of the estimation
+> *******************************/
+. 
+. use "$interwrk/industry_data.dta", clear
+
+. 
+. drop if fips == "30113" | (substr(fips,1,2)=="02" | substr(fips,1,2) == "15")
+(794 observations deleted)
+
+. sort fips 
+
+. merge fips using "$czone_iteration"
+(note: you are using old merge syntax; see [D] merge for new syntax)
+variable fips does not uniquely identify observations in the master data
+(note: variable fips was str5, now str10 to accommodate using data's values)
+
+. tab _merge
+
+     _merge |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          2 |         30        0.00        0.00
+          3 |  3,703,216      100.00      100.00
+------------+-----------------------------------
+      Total |  3,703,246      100.00
+
+. drop if _merge == 2
+(30 observations deleted)
+
+.  
+. collapse (sum) emp tot_emp_cty, by(czone sic87dd year)
+
+. 
+. rename emp L_ijt
+
+. rename tot_emp_cty L_it 
+
+. 
+. sort sic87dd year
+
+. merge sic87dd year using "$interwrk/tmp_industrydata.dta"
+(note: you are using old merge syntax; see [D] merge for new syntax)
+variables sic87dd year do not uniquely identify observations in the master
+    data
+
+. tab _merge
+
+     _merge |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          3 |    893,250      100.00      100.00
+------------+-----------------------------------
+      Total |    893,250      100.00
+
+. 
+. drop _merge
+
+. 
+. sort sic87dd year
+
+. merge sic87dd year using "$interwrk/tmp_tradedata.dta"
+(note: you are using old merge syntax; see [D] merge for new syntax)
+variables sic87dd year do not uniquely identify observations in the master
+    data
+
+. 
+. tab _merge
+
+     _merge |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |    297,750       33.33       33.33
+          3 |    595,500       66.67      100.00
+------------+-----------------------------------
+      Total |    893,250      100.00
+
+. *drop _merge
+. 
+. sort czone sic87dd year 
+
+. 
+. gen first_frac_u = L_ijt/L_ujt
+
+. gen second_frac_u = del_M_ucjt/L_it
+(297,750 missing values generated)
+
+. 
+. gen first_frac_o = L_ijt[_n-1]/L_ujt[_n-1] if year!=1980
+(297,750 missing values generated)
+
+. gen second_frac_o = del_M_ocjt/L_it[_n-1] if year!=1980
+(297,750 missing values generated)
+
+. 
+. bys czone year: egen IPW_uit =  sum(first_frac_u*second_frac_u)
+
+. bys czone year: egen IPW_oit = sum(first_frac_o*second_frac_o)
+
+. 
+. collapse (first) IPW*, by(czone year) 
+
+. 
+. label variable IPW_uit "Import Competition from China for county i"
+
+. label variable IPW_oit "Import Flows to Other Rich Nations (instrument)"
+
+. 
+. sort czone year 
+
+. 
+. tempfile IPW
+
+. save `IPW', replace
+(note: file /tmp/St21289.000002 not found)
+file /tmp/St21289.000002 saved
+
+. 
+. /****************************
+> Manufacturing employment and
+> Census data
+> *****************************/
+. 
+. use  "$interwrk/cty_censusdata.dta", clear
+
+. 
+. sort fips 
+
+. merge m:1 fips using "$czone_iteration"
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                            33
+        from master                         3  (_merge==1)
+        from using                         30  (_merge==2)
+
+    matched                            15,540  (_merge==3)
+    -----------------------------------------
+
+. tab _merge 
+
+                 _merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+        master only (1) |          3        0.02        0.02
+         using only (2) |         30        0.19        0.21
+            matched (3) |     15,540       99.79      100.00
+------------------------+-----------------------------------
+                  Total |     15,573      100.00
+
+. tab fips if _merge == 1
+
+                                   fips |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+                                  08014 |          1       33.33       33.33
+                                  46131 |          1       33.33       66.67
+                                  51123 |          1       33.33      100.00
+----------------------------------------+-----------------------------------
+                                  Total |          3      100.00
+
+. drop if _merge != 3 
+(33 observations deleted)
+
+. drop _merge
+
+. 
+. drop if substr(fips,1,2) == "02" | substr(fips,1,2) == "15" 
+(0 observations deleted)
+
+. 
+. #delimit ;
+delimiter now ;
+. collapse (sum) manuemp_adh manufacturing_emp totalpop total_employment 
+>                                 pop_16_65 population_census_1665 female_emp m
+> anu_emp 
+>                                 bachelors total_emp female_pop_16_65 foreign 
+>                                 manu_emp_cbp , by(czone year);
+
+. #delimit cr
+delimiter now cr
+. 
+. label variable manufacturing_emp "Manufacturing Employment, QCEW"
+
+. label variable manu_emp "Manufacturing Employment, Census"
+
+. 
+. label variable total_employment "Total Employment, QCEW"
+
+. label variable total_emp "Total Employment, Census"
+
+. tab year
+
+       year |      Freq.     Percent        Cum.
+------------+-----------------------------------
+       1970 |        750       20.00       20.00
+       1980 |        750       20.00       40.00
+       1990 |        750       20.00       60.00
+       2000 |        750       20.00       80.00
+       2007 |        750       20.00      100.00
+------------+-----------------------------------
+      Total |      3,750      100.00
+
+. 
+. xtset czone year
+       panel variable:  czone (strongly balanced)
+        time variable:  year, 1970 to 2007, but with gaps
+                delta:  1 unit
+
+. 
+. gen L_m = 100*manu_emp/population_census_1665
+
+. 
+. gen del_L_m = F10.L_m - L_m if year == 1990
+(3,000 missing values generated)
+
+.         replace del_L_m = F7.L_m - L_m if year == 2000
+(750 real changes made)
+
+.         /***** CONVERTING TO DECADAL CHANGE *****/
+.         replace del_L_m = 10*del_L_m/7 if year == 2000
+(750 real changes made)
+
+.         
+.         
+. gen L_mprime = 100*manufacturing_emp/population_census_1665
+
+. 
+. gen del_L_mprime = F10.L_mprime - L_mprime if year == 1990
+(3,000 missing values generated)
+
+.         replace del_L_mprime = F7.L_mprime - L_mprime if year == 2000
+(750 real changes made)
+
+.         /***** CONVERTING TO DECADAL CHANGE *****/
+.         replace del_L_mprime = 10*del_L_mprime/7 if year == 2000
+(749 real changes made)
+
+.         
+. gen L_mprime2 = 100*manu_emp_cbp/population_census_1665
+
+. 
+. gen del_L_mprime2 = F10.L_mprime2 - L_mprime2 if year == 1990
+(3,000 missing values generated)
+
+.         replace del_L_mprime2 = F7.L_mprime2 - L_mprime2 if year == 2000
+(750 real changes made)
+
+.         /***** CONVERTING TO DECADAL CHANGE *****/
+.         replace del_L_mprime2 = 10*del_L_mprime2/7 if year == 2000
+(0 real changes made)
+
+.         
+. 
+. sort czone year
+
+. merge 1:1 czone year using `IPW'
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         1,500
+        from master                     1,500  (_merge==1)
+        from using                          0  (_merge==2)
+
+    matched                             2,250  (_merge==3)
+    -----------------------------------------
+
+. tab _merge
+
+                 _merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+        master only (1) |      1,500       40.00       40.00
+            matched (3) |      2,250       60.00      100.00
+------------------------+-----------------------------------
+                  Total |      3,750      100.00
+
+. tab year _merge 
+
+           |        _merge
+      year | master on  matched ( |     Total
+-----------+----------------------+----------
+      1970 |       750          0 |       750 
+      1980 |         0        750 |       750 
+      1990 |         0        750 |       750 
+      2000 |         0        750 |       750 
+      2007 |       750          0 |       750 
+-----------+----------------------+----------
+     Total |     1,500      2,250 |     3,750 
+
+
+. 
+. bys year: egen tot_pop_16_65 = sum(pop_16_65)
+
+. gen share_czpop = pop_16_65/tot_pop_16_65
+(1,500 missing values generated)
+
+. 
+. gen y2000 = year==2000
+
+. 
+. erase `IPW' 
+
+. /* Now run regression on it, and then get the coefficient and store it */
+. 
+.                         *step4 ;
+.         ivregress 2sls del_L_mprime (IPW_uit = IPW_oit ) if year == 1990 [wei
+> ght=share_czpop];
+(analytic weights assumed)
+(sum of wgt is   1.0000e+00)
+
+Instrumental variables (2SLS) regression          Number of obs   =        749
+                                                  Wald chi2(1)    =      74.71
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =          .
+                                                  Root MSE        =     1.9119
+
+------------------------------------------------------------------------------
+del_L_mprime |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     IPW_uit |  -.8770238   .1014639    -8.64   0.000    -1.075889   -.6781581
+       _cons |  -.4801703   .1287063    -3.73   0.000      -.73243   -.2279106
+------------------------------------------------------------------------------
+Instrumented:  IPW_uit
+Instruments:   IPW_oit
+
+.                 local beta90 = _b[IPW_uit] ;
+
+.                 local se90 _se[IPW_uit] ;
+
+. end
+>         ivregress 2sls del_L_mprime (IPW_uit = IPW_oit ) if year == 2000 [wei
+> ght=share_czpop];
+command end is unrecognized
+r(199);
+
+end of do-file
+r(199);
