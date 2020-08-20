@@ -16,6 +16,7 @@ It has three steps
 ***************************/
 
 include "../config.do"
+include "$programs/config-bootstrap.do"
 
 /* local configuration */
 local czonedataset = "${outputs}/bootclusters_jtw1990_moe_new.dta"
@@ -53,7 +54,7 @@ postfile `czoneresults' iteration beta_1990 se_1990 tstat_1990
 	*step4 ; 
 	ivregress 2sls del_L_mprime (IPW_uit = IPW_oit ) if year == 1990 [weight=share_czpop];
 		local beta90 = _b[IPW_uit] ;
-                local se90 _se[IPW_uit] ;end
+                local se90 _se[IPW_uit] ;
 	ivregress 2sls del_L_mprime (IPW_uit = IPW_oit ) if year == 2000 [weight=share_czpop];
 		local beta00 = _b[IPW_uit] ;
                 local se00 = _se[IPW_uit] ;
