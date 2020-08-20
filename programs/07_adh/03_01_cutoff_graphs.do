@@ -44,7 +44,7 @@ twoway 	(rarea top_1990 bottom_1990 cutoff, color(gs13))
 	xtitle("Cluster Height Cutoff")
 	legend(off);
 
-graph export "$outgraphs/cutoff_1990.png", replace ;
+graph export "$outgraphs/cutoff_1990.pdf", replace ;
 
 twoway 	(connected F_90 cutoff)
 	,
@@ -55,7 +55,7 @@ twoway 	(connected F_90 cutoff)
 	xtitle("Cluster Height Cutoff")
 	legend(off);
 
-graph export "$outgraphs/Fstat_1990.png", replace ;
+graph export "$outgraphs/Fstat_1990.pdf", replace ;
 
 
 
@@ -75,6 +75,6 @@ twoway (rarea top_iqr_1990 bottom_iqr_1990 cutoff, color(gs13))
 	xtitle("Cluster Height Cutoff")
 	legend(off);
 
-graph export "$outgraphs/cutoff_iqr_1990.png", replace ; 
+graph export "$outgraphs/cutoff_iqr_1990.pdf", replace ; 
 
 log close ;
