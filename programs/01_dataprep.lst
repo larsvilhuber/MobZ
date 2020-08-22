@@ -1,0 +1,81 @@
+The SAS System                                                                                        21:18 Friday, May 22, 2020   1
+
+The CONTENTS Procedure
+
+Data Set Name        OUTPUTS.FLOWS_JTW1990                                    Observations          216659
+Member Type          DATA                                                     Variables             3     
+Engine               V9                                                       Indexes               0     
+Created              05/21/2020 23:24:57                                      Observation Length    24    
+Last Modified        05/21/2020 23:24:57                                      Deleted Observations  0     
+Protection                                                                    Compressed            NO    
+Data Set Type                                                                 Sorted                NO    
+Label                                                                                                     
+Data Representation  SOLARIS_X86_64, LINUX_X86_64, ALPHA_TRU64, LINUX_IA64                                
+Encoding             latin1  Western (ISO)                                                                
+
+
+                            Engine/Host Dependent Information
+
+Data Set Page Size          65536                                                        
+Number of Data Set Pages    80                                                           
+First Data Page             1                                                            
+Max Obs per Page            2714                                                         
+Obs in First Data Page      2625                                                         
+Number of Data Set Repairs  0                                                            
+Filename                    /ssgprojects/project0002/MobZ.new/data/flows_jtw1990.sas7bdat
+Release Created             9.0401M0                                                     
+Host Created                Linux                                                        
+Inode Number                244299                                                       
+Access Permission           rw-rw----                                                    
+Owner Name                  lv39                                                         
+File Size (bytes)           5308416                                                      
+
+
+Alphabetic List of Variables and Attributes
+ 
+#    Variable    Type    Len
+
+3    home_cty    Char      5
+2    jobsflow    Num       8
+1    work_cty    Char      5
+The SAS System                                                                                        21:18 Friday, May 22, 2020   2
+
+The CONTENTS Procedure
+
+Data Set Name        OUTPUTS.FLOWS_JTW2009                                    Observations          135721
+Member Type          DATA                                                     Variables             4     
+Engine               V9                                                       Indexes               0     
+Created              05/21/2020 23:24:57                                      Observation Length    32    
+Last Modified        05/21/2020 23:24:57                                      Deleted Observations  0     
+Protection                                                                    Compressed            NO    
+Data Set Type                                                                 Sorted                NO    
+Label                                                                                                     
+Data Representation  SOLARIS_X86_64, LINUX_X86_64, ALPHA_TRU64, LINUX_IA64                                
+Encoding             latin1  Western (ISO)                                                                
+
+
+                            Engine/Host Dependent Information
+
+Data Set Page Size          65536                                                        
+Number of Data Set Pages    67                                                           
+First Data Page             1                                                            
+Max Obs per Page            2038                                                         
+Obs in First Data Page      1968                                                         
+Number of Data Set Repairs  0                                                            
+Filename                    /ssgprojects/project0002/MobZ.new/data/flows_jtw2009.sas7bdat
+Release Created             9.0401M0                                                     
+Host Created                Linux                                                        
+Inode Number                244306                                                       
+Access Permission           rw-rw----                                                    
+Owner Name                  lv39                                                         
+File Size (bytes)           4456448                                                      
+
+
+Alphabetic List of Variables and Attributes
+ 
+#    Variable    Type    Len
+
+2    home_cty    Char      5
+3    jobsflow    Num       8
+4    moe         Num       8
+1    work_cty    Char      5
