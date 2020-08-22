@@ -12,7 +12,6 @@ module_graph runs the %review for jtw1990, over
 a wide             
 **************************************/    
 %let run_cutoff = 1 ; 
-%let run_graph = 0;
 
 
 /*-----------------------------------------------------------
@@ -62,12 +61,8 @@ run;
     run;
 %mend;
 
-%macro m_graph;
-    %graph_cutoff(jtw1990,&cutoff_bottom.,&cutoff_top.,graphpath=&dirfig.);
-%mend;
 
 * run each module ;
 
 %runmod(&run_cutoff, m_cutoff );  
-%runmod(&run_graph., m_graph ) ;
 

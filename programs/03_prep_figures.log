@@ -1,0 +1,279 @@
+1                                                          The SAS System                                08:00 Tuesday, May 26, 2020
+
+NOTE: Copyright (c) 2002-2012 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software 9.4 (TS1M0) 
+      Licensed to CORNELL UNIVERSITY-T&R, Site 70084769.
+NOTE: This session is executing on the Linux 2.6.32-696.18.7.el6.x86_64 (LIN X64) platform.
+
+
+
+NOTE: Updated analytical products:
+      
+      SAS/STAT 12.3 (maintenance)
+      SAS/ETS 12.3 (maintenance)
+      SAS/OR 12.3 (maintenance)
+      SAS/IML 12.3 (maintenance)
+      SAS/QC 12.3 (maintenance)
+
+NOTE: Additional host information:
+
+ Linux LIN X64 2.6.32-696.18.7.el6.x86_64 #1 SMP Thu Jan 4 17:31:22 UTC 2018 x86_64 CentOS release 6.3 (Final) 
+
+You are running SAS 9. Some SAS 8 files will be automatically converted 
+by the V9 engine; others are incompatible.  Please see 
+http://support.sas.com/rnd/migration/planning/platform/64bit.html
+
+PROC MIGRATE will preserve current SAS file attributes and is 
+recommended for converting all your SAS libraries from any 
+SAS 8 release to SAS 9.  For details and examples, please see
+http://support.sas.com/rnd/migration/index.html
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the file "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+
+NOTE: SAS initialization used:
+      real time           0.35 seconds
+      cpu time            0.02 seconds
+      
+
+NOTE: AUTOEXEC processing beginning; file is /home/fs01/lv39/autoexec.sas.
+
+NOTE: Libref OPMQA was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/lv39/Desktop/opm-qa
+NOTE: Libref HERE was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /ssgprojects/project0002/MobZ.new/programs
+=========== running on ecco.vrdc.cornell.edu ============
+
+NOTE: AUTOEXEC processing completed.
+
+1          * Mobility Zones (MobZ);
+2          * Execute control program to run selected modules;	
+3          options  mlogic symbolgen spool fullstimer;
+4          * Modules, set to 1 to run, otherwise 0;	
+2 The SAS System                                                                                         08:00 Tuesday, May 26, 2020
+
+5          
+6          %include "config.sas" ;
+SYMBOLGEN:  Macro variable ROOT resolves to /ssgprojects/project0002/MobZ.new
+SYMBOLGEN:  Macro variable ROOT resolves to /ssgprojects/project0002/MobZ.new
+SYMBOLGEN:  Macro variable ROOT resolves to /ssgprojects/project0002/MobZ.new
+SYMBOLGEN:  Macro variable ROOT resolves to /ssgprojects/project0002/MobZ.new
+SYMBOLGEN:  Macro variable DIRPROG resolves to /ssgprojects/project0002/MobZ.new/programs
+SYMBOLGEN:  Macro variable DIROUTPUTS resolves to /ssgprojects/project0002/MobZ.new/data
+NOTE: Libref OUTPUTS was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /ssgprojects/project0002/MobZ.new/data
+SYMBOLGEN:  Macro variable DIROUTPUTS resolves to /ssgprojects/project0002/MobZ.new/data
+NOTE: Libref GEO refers to the same physical library as OUTPUTS.
+NOTE: Libref GEO was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /ssgprojects/project0002/MobZ.new/data
+SYMBOLGEN:  Macro variable RAW resolves to /ssgprojects/project0002/MobZ.new/raw
+NOTE: Libref INPUTS was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /ssgprojects/project0002/MobZ.new/raw
+SYMBOLGEN:  Macro variable DIRPROG resolves to /ssgprojects/project0002/MobZ.new/programs
+MLOGIC:  Beginning compilation of TRIM using the autocall file /opt/SAS_9.4/SASFoundation/9.4/sasautos/trim.sas.
+MLOGIC:  Ending compilation of TRIM.
+MLOGIC(TRIM):  Beginning execution.
+MLOGIC(TRIM):  This macro was compiled from the autocall file /opt/SAS_9.4/SASFoundation/9.4/sasautos/trim.sas
+SYMBOLGEN:  Macro variable T resolves to 22061
+MLOGIC(TRIM):  Parameter VALUE has value 2020
+MLOGIC(TRIM):  %LOCAL  I
+SYMBOLGEN:  Macro variable VALUE resolves to 2020
+MLOGIC(TRIM):  %DO loop beginning; index variable I; start value is 4; stop value is 1; by value is -1.  
+SYMBOLGEN:  Macro variable VALUE resolves to 2020
+SYMBOLGEN:  Macro variable I resolves to 4
+MLOGIC(TRIM):  %IF condition %qsubstr(&value,&i,1) ne   is TRUE
+MLOGIC(TRIM):  %GOTO TRIMMED (label resolves to TRIMMED).
+SYMBOLGEN:  Macro variable I resolves to 4
+MLOGIC(TRIM):  %IF condition &i>0 is TRUE
+SYMBOLGEN:  Macro variable VALUE resolves to 2020
+SYMBOLGEN:  Macro variable I resolves to 4
+MLOGIC(TRIM):  Ending execution.
+MLOGIC(TRIM):  Beginning execution.
+MLOGIC(TRIM):  This macro was compiled from the autocall file /opt/SAS_9.4/SASFoundation/9.4/sasautos/trim.sas
+SYMBOLGEN:  Macro variable T resolves to 22061
+MLOGIC(TRIM):  Parameter VALUE has value 05
+MLOGIC(TRIM):  %LOCAL  I
+SYMBOLGEN:  Macro variable VALUE resolves to 05
+MLOGIC(TRIM):  %DO loop beginning; index variable I; start value is 2; stop value is 1; by value is -1.  
+SYMBOLGEN:  Macro variable VALUE resolves to 05
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition %qsubstr(&value,&i,1) ne   is TRUE
+MLOGIC(TRIM):  %GOTO TRIMMED (label resolves to TRIMMED).
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition &i>0 is TRUE
+SYMBOLGEN:  Macro variable VALUE resolves to 05
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  Ending execution.
+MLOGIC(TRIM):  Beginning execution.
+MLOGIC(TRIM):  This macro was compiled from the autocall file /opt/SAS_9.4/SASFoundation/9.4/sasautos/trim.sas
+SYMBOLGEN:  Macro variable T resolves to 22061
+MLOGIC(TRIM):  Parameter VALUE has value 26
+MLOGIC(TRIM):  %LOCAL  I
+SYMBOLGEN:  Macro variable VALUE resolves to 26
+MLOGIC(TRIM):  %DO loop beginning; index variable I; start value is 2; stop value is 1; by value is -1.  
+SYMBOLGEN:  Macro variable VALUE resolves to 26
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition %qsubstr(&value,&i,1) ne   is TRUE
+MLOGIC(TRIM):  %GOTO TRIMMED (label resolves to TRIMMED).
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition &i>0 is TRUE
+SYMBOLGEN:  Macro variable VALUE resolves to 26
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  Ending execution.
+SYMBOLGEN:  Macro variable DSTAMP resolves to 20200526
+MLOGIC(TRIM):  Beginning execution.
+MLOGIC(TRIM):  This macro was compiled from the autocall file /opt/SAS_9.4/SASFoundation/9.4/sasautos/trim.sas
+SYMBOLGEN:  Macro variable TT resolves to 28825.6860320568
+MLOGIC(TRIM):  Parameter VALUE has value 08
+MLOGIC(TRIM):  %LOCAL  I
+SYMBOLGEN:  Macro variable VALUE resolves to 08
+MLOGIC(TRIM):  %DO loop beginning; index variable I; start value is 2; stop value is 1; by value is -1.  
+SYMBOLGEN:  Macro variable VALUE resolves to 08
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition %qsubstr(&value,&i,1) ne   is TRUE
+MLOGIC(TRIM):  %GOTO TRIMMED (label resolves to TRIMMED).
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition &i>0 is TRUE
+SYMBOLGEN:  Macro variable VALUE resolves to 08
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  Ending execution.
+MLOGIC(TRIM):  Beginning execution.
+MLOGIC(TRIM):  This macro was compiled from the autocall file /opt/SAS_9.4/SASFoundation/9.4/sasautos/trim.sas
+SYMBOLGEN:  Macro variable TT resolves to 28825.6860320568
+MLOGIC(TRIM):  Parameter VALUE has value 00
+MLOGIC(TRIM):  %LOCAL  I
+SYMBOLGEN:  Macro variable VALUE resolves to 00
+MLOGIC(TRIM):  %DO loop beginning; index variable I; start value is 2; stop value is 1; by value is -1.  
+SYMBOLGEN:  Macro variable VALUE resolves to 00
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition %qsubstr(&value,&i,1) ne   is TRUE
+MLOGIC(TRIM):  %GOTO TRIMMED (label resolves to TRIMMED).
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition &i>0 is TRUE
+SYMBOLGEN:  Macro variable VALUE resolves to 00
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  Ending execution.
+MLOGIC(TRIM):  Beginning execution.
+MLOGIC(TRIM):  This macro was compiled from the autocall file /opt/SAS_9.4/SASFoundation/9.4/sasautos/trim.sas
+SYMBOLGEN:  Macro variable TT resolves to 28825.6860320568
+MLOGIC(TRIM):  Parameter VALUE has value 26
+MLOGIC(TRIM):  %LOCAL  I
+SYMBOLGEN:  Macro variable VALUE resolves to 26
+MLOGIC(TRIM):  %DO loop beginning; index variable I; start value is 2; stop value is 1; by value is -1.  
+SYMBOLGEN:  Macro variable VALUE resolves to 26
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition %qsubstr(&value,&i,1) ne   is TRUE
+MLOGIC(TRIM):  %GOTO TRIMMED (label resolves to TRIMMED).
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition &i>0 is TRUE
+SYMBOLGEN:  Macro variable VALUE resolves to 26
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  Ending execution.
+36         
+37         /*************************************
+38         FURTHER ANALYSIS
+39         
+40         module_graph runs the %review for jtw1990, over
+41         a wide
+42         **************************************/
+43         %let run_cutoff = 1 ;
+44         %let run_graph = 0;
+45         
+46         
+47         /*-----------------------------------------------------------
+48           Structure of this program
+49           - the macro %runall will do a bit of config, and run module macros
+50           - module macros are in the second part of the file
+51           - the actual calls are at the end
+52           - some macros that actually do stuff are in the &dirprog/macros directory
+53         -------------------------------------------------------------*/
+54         
+55         /* Overall Macro */
+56         
+57         * Modules;
+58         %macro runmod(val,modname);/*========================================*/
+59         %put module &modname.;
+60         
+61         %if (&val.=1) %then %do;
+62         x mkdir -p &logdir.;
+63         proc printto
+64             log="&logdir./module_&modname..log" new
+65             print="&logdir./module_&modname..lst" new;
+66         run;
+67         
+68         /* run the module */
+69         %&modname.;	
+70         	
+71         %end;
+72         %mend runmod; /*========================================*/
+73         
+74         
+75         /* individual modules */
+76         
+77         %macro m_cutoff;
+78         
+79             %cutoff(jtw1990,0.90,0.97,step=5 ) ;
+80         
+81             proc export data=OUTPUTS.cluster_cutoff_jtw1990
+82                     outfile = "&diroutputs./clusters_cutoff_jtw1990.dta" replace;
+83             run;
+84         
+85         
+86             proc export data=clusnum_cutoff
+87                     outfile = "&diroutputs./clusnum_cutoff.dta" replace;
+88             run;
+89         
+90             proc print data=clusnum_cutoff;
+91             run;
+92         %mend;
+93         
+94         %macro m_graph;
+95             %graph_cutoff(jtw1990,&cutoff_bottom.,&cutoff_top.,graphpath=&dirfig.);
+96         %mend;
+97         
+98         * run each module ;
+99         
+100        %runmod(&run_cutoff, m_cutoff );
+MLOGIC(RUNMOD):  Beginning execution.
+SYMBOLGEN:  Macro variable RUN_CUTOFF resolves to 1
+MLOGIC(RUNMOD):  Parameter VAL has value 1
+MLOGIC(RUNMOD):  Parameter MODNAME has value m_cutoff
+MLOGIC(RUNMOD):  %PUT module &modname.
+SYMBOLGEN:  Macro variable MODNAME resolves to m_cutoff
+module m_cutoff
+SYMBOLGEN:  Macro variable VAL resolves to 1
+MLOGIC(RUNMOD):  %IF condition (&val.=1) is TRUE
+SYMBOLGEN:  Macro variable LOGDIR resolves to /ssgprojects/project0002/MobZ.new/programs/logs
+SYMBOLGEN:  Macro variable LOGDIR resolves to /ssgprojects/project0002/MobZ.new/programs/logs
+SYMBOLGEN:  Macro variable MODNAME resolves to m_cutoff
+SYMBOLGEN:  Macro variable LOGDIR resolves to /ssgprojects/project0002/MobZ.new/programs/logs
+SYMBOLGEN:  Macro variable MODNAME resolves to m_cutoff
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           8:50.76
+      user cpu time       6:17.28
+      system cpu time     2:30.70
+      memory              396422.87k
+      OS Memory           398992.00k
+      Timestamp           05/26/2020 08:09:16 AM
+      Step Count                        51451  Switch Count  102915
+      Page Faults                       120
+      Page Reclaims                     14828006
+      Page Swaps                        0
+      Voluntary Context Switches        102338
+      Involuntary Context Switches      4755
+      Block Input Operations            1541800
+      Block Output Operations           166612768
+      
