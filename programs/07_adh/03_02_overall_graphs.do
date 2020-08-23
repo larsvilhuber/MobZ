@@ -42,7 +42,7 @@ twoway (hist beta_1990 if iteration!=0)
        twoway (hist beta_1990 if iteration!=0)
 	(kdensity beta_1990 if iteration!=0)
 	(scatteri 0 `true_est' 35 `true_est', recast(line) lcolor(red) lwidth(thick) lpattern(dash)),
-       saving("$graphdir/1990_distribution.gph", replace)
+       saving("$outgraphs/1990_distribution.gph", replace)
        xtitle("Estimated Coefficient")
        ytitle("Density")
        title("Estimated Effect from Autor, Dorn and Hanson (2013)"
