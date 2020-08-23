@@ -10,10 +10,10 @@ gen bottom = beta - 1.64*se ;
 
 twoway (rarea top bottom cutoff, color(gs13))
        (line beta cutoff),
-       saving("${outgraph}/cutoff_bartik.gph", replace)
+       saving("${outgraphs}/cutoff_bartik.gph", replace)
        ytitle("Effect")
        xtitle("Cluster Height Cutoff")
        legend(off) ;
 
 *graph export "$outgraph/cutoff_bartik.png", replace ; 
-graph export "$outgraph/cutoff_bartik.pdf", replace ; 
+graph export "$outgraphs/cutoff_bartik.pdf", replace ; 

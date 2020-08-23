@@ -43,16 +43,16 @@ twoway (hist beta if iteration!=0 )
 	(kdensity beta if iteration!=0)
 	(scatteri 0 `true_est' 2.2 `true_est', 
 			recast(line) lcolor(red) lwidth(thick) lpattern(dash)),
-	saving("$outgraph/beta_bartik_distribution.gph", replace) 
+	saving("$outgraphs/beta_bartik_distribution.gph", replace) 
 	xtitle("Estimated Coefficient")
 	ytitle("Density")
 	title("Estimated effect of labor demand on UI Receipt")
 	legend(off)
 	;
 	
-	*graph export "$outgraph/beta_bartik_distribution_moe_new.png", replace; 
-	graph export "$outgraph/beta_bartik_distribution.pdf", replace; 
-	*graph export "$outgraph/qcew_betadist.png", replace ; 
+	*graph export "$outgraphs/beta_bartik_distribution_moe_new.png", replace; 
+	graph export "$outgraphs/beta_bartik_distribution.pdf", replace; 
+	*graph export "$outgraphs/qcew_betadist.png", replace ; 
 /*************************************
 graphing t-statistics 
 *************************************/
@@ -61,7 +61,7 @@ twoway (hist tstat if iteration!=0)
 	(scatteri 0 `lower_bound' 1.5 `lower_bound', recast(line) lcolor(gs12) lwidth(thick) lpattern(dash))
 	(scatteri 0 `upper_bound' 1.5 `upper_bound', recast(line) lcolor(gs12) lwidth(thick) lpattern(dash))
 	(scatteri 0 `actual_tstat' 1.5 `actual_tstat', recast(line) lcolor(blue) lwidth(thick) lpattern(dash)),
-       saving("$graphdir/tdistribution_bartik.gph", replace)
+       saving("$outgraphs/tdistribution_bartik.gph", replace)
        xtitle("t-statistic")
        ytitle("Density")
       /* xline(`true_est',lstyle(foreground) lpattern(dash) lcolor(red))*/
@@ -69,8 +69,8 @@ twoway (hist tstat if iteration!=0)
        legend(off)
        ;
        
-       *graph export "$outgraph/tdistribution_bartik_moe_new.png", replace ;
-       graph export "$outgraph/tdistribution_bartik.pdf", replace ;
-       *graph export "$outgraph/qcew_tstatdist.png", replace;  
+       *graph export "$outgraphs/tdistribution_bartik_moe_new.png", replace ;
+       graph export "$outgraphs/tdistribution_bartik.pdf", replace ;
+       *graph export "$outgraphs/qcew_tstatdist.png", replace;  
 
 

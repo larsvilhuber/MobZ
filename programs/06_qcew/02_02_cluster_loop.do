@@ -16,9 +16,9 @@ It has three steps
 ***************************/
 include "../config.do"
 
-local czonedataset = "${interwrk}/clusters_cutoff_jtw1990.dta"
+local czonedataset = "${outputs}/clusters_cutoff_jtw1990.dta"
 global czone_iteration = "${interwrk}/czones_cutoff.dta"
-local ipw_regs "${interwrk}/cutoff_post.dta"
+local ipw_regs "${interwrk}/06_qcew_cutoff_post.dta"
 // local qcewdata = "$qcewdata/qcew_county.dta"
  global qcewfile = "$outputs/qcew_county.dta"
 
@@ -109,3 +109,4 @@ use `bartik_regs', clear ;
 sum beta se cutoff ;
 
 save "$interwrk/bartik_results_cutoff.dta", replace; 
+
