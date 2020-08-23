@@ -85,8 +85,6 @@ twoway (hist tstat_1990 if iteration!=0)
        
        graph export "$outgraphs/1990_tstat_distribution.pdf", replace ;
 
-end ;
-end
 twoway (hist beta_2000 if iteration!=0)
 (kdensity beta_2000 if iteration!=0),
        saving("$outgraphs/2000_distribution.gph", replace)
@@ -108,3 +106,4 @@ twoway (hist beta_all if iteration!=0)
        xline(`true_est');       
 
 graph export "$outgraphs/all_distribution.pdf", replace ;
+
