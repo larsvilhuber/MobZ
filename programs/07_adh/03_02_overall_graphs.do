@@ -37,7 +37,7 @@ twoway (hist beta_1990 if iteration!=0)
 	            , box place(ne) fcolor(white)  just(left) color(red) margin(small))
        ;
        
-       graph export "$outgraphs/1990_distribution_SOLE.png", replace ;
+       graph export "$outgraphs/1990_distribution_SOLE.pdf", replace ;
        
        twoway (hist beta_1990 if iteration!=0)
 	(kdensity beta_1990 if iteration!=0)
@@ -50,7 +50,7 @@ twoway (hist beta_1990 if iteration!=0)
        legend(off)              
        ;
        
-       graph export "$outgraphs/1990_distribution.png", replace ;
+       graph export "$outgraphs/1990_distribution.pdf", replace ;
 
 sum tstat_1990 beta_1990 if iteration!=0,d;
 
@@ -83,7 +83,7 @@ twoway (hist tstat_1990 if iteration!=0)
        legend(off)
        ;
        
-       graph export "$outgraphs/1990_tstat_distribution.png", replace ;
+       graph export "$outgraphs/1990_tstat_distribution.pdf", replace ;
 
 end ;
 end
@@ -96,7 +96,7 @@ twoway (hist beta_2000 if iteration!=0)
        legend(off)
        xline(`true_est');
 
-graph export "$outgraphs/2000_distribution.png", replace ;
+graph export "$outgraphs/2000_distribution.pdf", replace ;
        
 twoway (hist beta_all if iteration!=0)
 	(kdensity beta_all if iteration!=0),
@@ -107,4 +107,4 @@ twoway (hist beta_all if iteration!=0)
        legend(off)
        xline(`true_est');       
 
-graph export "$outgraphs/all_distribution.png", replace ;
+graph export "$outgraphs/all_distribution.pdf", replace ;
