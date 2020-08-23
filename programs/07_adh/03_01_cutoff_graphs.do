@@ -20,7 +20,7 @@ log using cutoff_graphs.log, replace
 
 local czonedataset = "${outputs}/clusters_cutoff_jtw1990.dta"
 global czone_iteration = "${interwrk}/czones_cutoff.dta"
-global ipw_regs "${interwrk}/cutoff_post.dta"
+global ipw_regs "${interwrk}/07_adh_cutoff_post.dta"
 
 #delimit ; 
 set more off ;

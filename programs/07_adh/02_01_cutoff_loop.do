@@ -23,7 +23,7 @@ log using cutoff_loop.log, replace
 local czonedataset = "${outputs}/clusters_cutoff_jtw1990.dta"
 global czone_iteration = "${interwrk}/czones_cutoff.dta"
 global dodir "${programs}/07_adh/"
-global ipw_regs "${interwrk}/cutoff_post.dta"
+global ipw_regs "${interwrk}/07_adh_cutoff_post.dta"
 
 include "$dodir/zz_aggregatedata.do"
 
