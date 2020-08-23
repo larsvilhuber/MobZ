@@ -120,7 +120,7 @@ sum beta_1990 beta_2000 beta_all, d;
 
 save "$interwrk/bootstrap_results.dta", replace ;
 
-erase `czoneresults' ;
+*erase `czoneresults' ;
 erase `ipw_regs' ;
 /* also create some graphs etc. (next dofile)*/
     
