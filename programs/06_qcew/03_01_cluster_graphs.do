@@ -58,9 +58,9 @@ graphing t-statistics
 *************************************/
 twoway (hist tstat if iteration!=0)
 	(kdensity tstat if iteration!=0)
-	(scatteri 0 `lower_bound' 1.5 `lower_bound', recast(line) lcolor(gs12) lwidth(thick) lpattern(dash))
-	(scatteri 0 `upper_bound' 1.5 `upper_bound', recast(line) lcolor(gs12) lwidth(thick) lpattern(dash))
-	(scatteri 0 `actual_tstat' 1.5 `actual_tstat', recast(line) lcolor(blue) lwidth(thick) lpattern(dash)),
+	(scatteri 0 `lower_bound' 0.75 `lower_bound', recast(line) lcolor(gs12) lwidth(thick) lpattern(dash))
+	(scatteri 0 `upper_bound' 0.75 `upper_bound', recast(line) lcolor(gs12) lwidth(thick) lpattern(dash))
+	(scatteri 0 `actual_tstat' 0.75 `actual_tstat', recast(line) lcolor(blue) lwidth(thick) lpattern(dash)),
        saving("$outgraphs/tdistribution_bartik.gph", replace)
        xtitle("t-statistic")
        ytitle("Density")
