@@ -68,7 +68,7 @@ foreach clus of varlist clus* { ;
 tempname czoneresults;
 tempfile bartik_regs;
 
-postfile `czoneresults' cutoff beta se  using `bartik_regs', replace;
+postfile `czoneresults' cutoff beta se mean_ui sd_ui mean_bartik sd_bartik using `bartik_regs', replace;
 
 
 foreach i in `values' { ;
@@ -89,9 +89,15 @@ foreach i in `values' { ;
 
          xtset czone year ;
 
-         areg log_uireceipt L.bartik_it i.year, absorb(czone) cluster(czone) ;
-
-         post `czoneresults' (`cutoff') (_b[L.bartik_it]) (_se[L.bartik_it]) ;
+         areg log_uireceipt L.bartik_it i.year ,absorb(czone)  cluster(czone) ;
+         sum log_uireceipt ;
+         local ui_mean = r(mean);
+         local ui_sd = r(sd) ;
+         sum L.bartik_it ; 
+         local bartik_mean = r(mean);
+         local bartik_sd = r(sd) ;
+         post `czoneresults' (`cutoff') (_b[L.bartik_it]) (_se[L.bartik_it]) 
+                            (`ui_mean') (`ui_sd') (`bartik_mean') (`bartik_sd');
 
           cap erase `bartik' ;
           cap erase `base_year' ;
@@ -109,4 +115,4 @@ use `bartik_regs', clear ;
 sum beta se cutoff ;
 
 save "$interwrk/bartik_results_cutoff.dta", replace; 
-
+list in 1/80 ;

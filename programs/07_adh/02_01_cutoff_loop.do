@@ -50,7 +50,7 @@ foreach clus of varlist clus* { ;
 } ;
 
 postfile `czoneresults' cutoff beta_1990 se_1990 F_90 beta_2000 se_2000 beta_all se_all
-                               iqr_1990 iqr_2000 iqr_all
+                               iqr_1990 iqr_2000 iqr_all mean_IPW mean_delL
 			using $ipw_regs, replace ;
 			
 /* 
@@ -59,7 +59,7 @@ aren't exactly the same
 */	
 	di "`values'" ;
 foreach i in `values'  { ; 
-	di "`i'" ;
+	di "CURRENT CUTOFF: `i'" ;
 	local cutoff = `i'/10000 ;
 	* step2 ;
 	use "`czonedataset'", clear;
@@ -74,10 +74,13 @@ foreach i in `values'  { ;
 	
 	qui sum IPW_uit if year == 1990, d; 
 		local iqr_1990 = r(p75) - r(p25) ;
+                local mean_IPW = r(mean) ;
 	qui sum IPW_uit if year == 2000, d; 
 		local iqr_2000 = r(p75) - r(p25) ;
 	qui sum IPW_uit if year>=1990 & year<=2000,d ; 
 		local iqr_all = r(p75) - r(p25) ;
+        qui sum del_L_mprime if year == 1990 ; 
+                local mean_delL = r(mean) ;
 	
 	*step4 ; 
 	ivregress 2sls del_L_mprime (IPW_uit = IPW_oit ) if year == 1990 [weight=share_czpop];
@@ -97,7 +100,8 @@ foreach i in `values'  { ;
                 local seall = _se[IPW_uit] ;
 
 	post `czoneresults' (`cutoff') (`beta90') (`se90') (`F_90') (`beta00') (`se00') (`betaall') (`seall')
-									(`iqr_1990') (`iqr_2000') (`iqr_all');
+									(`iqr_1990') (`iqr_2000') (`iqr_all')
+                                                                        (`mean_IPW') (`mean_delL') ;
 
 } ; 
 
