@@ -1,0 +1,161 @@
+.:
+total 847076
+-rwxrwx--- 1 lv39 lv39_0002      1874 Sep  5 09:57 01_get_data.sh
+-rw-rw---- 1 lv39 lv39_0002       675 Sep  5 09:57 02_convert.R
+-rwxrwx--- 1 lv39 lv39_0002       340 Sep  5 09:57 03_get_adh.sh
+-rw-rw---- 1 lv39 lv39_0002  22113720 Apr 20  2017 1990jtw_raw.txt
+-rw-rw---- 1 lv39 lv39_0002  11514679 Apr 20  2017 acs_2009_2013.xlsx
+drwxrws--- 3 lv39 lv39_0002        55 Jun 26 10:57 adh_data
+-rw-rw---- 1 lv39 lv39_0002   2862841 Oct 26  2018 Autor-Dorn-Hanson-ChinaSyndrome-FileArchive.zip
+lrwxrwxrwx 1 lv39 lv39_0002        54 Jun 19 17:53 bls_us_county.sas7bdat -> /data/clean/qcew/extra/bls_us_county_naicssec.sas7bdat
+-rw-rw---- 1 lv39 lv39_0002  37595357 Sep  5 09:57 CAINC30__ALL_AREAS_1969_2018.csv
+-rw-rw---- 1 lv39 lv39_0002  32231160 Sep  5 09:57 CAINC30.zip
+-rw-rw---- 1 lv39 lv39_0002     11352 Sep  5 09:57 cw_cty_czone.zip
+-rw-rw---- 1 lv39 lv39_0002    648704 Sep  5 09:57 czlma903.xls
+-rw-rw---- 1 lv39 lv39_0002     40849 May 21 22:04 czones.csv
+drwxrws--- 2 lv39 lv39_0002       103 Sep  5 09:57 ddorn
+-rw-rw---- 1 lv39 lv39_0002  21684500 Sep 27  2016 jtw2000_raw.txt
+-rw-rw---- 1 lv39 lv39_0002   2871260 Sep  5 09:57 jtw2009_2013.csv
+-rw-rw---- 1 lv39 lv39_0002 277737796 Sep  5 09:57 la.data.0.CurrentU_ALL
+-rw-rw---- 1 lv39 lv39_0002         0 Sep  5 09:58 ls-lR.raw
+drwxrws--- 2 lv39 lv39_0002      4096 Sep  5 09:57 nhgis
+-rw-rw---- 1 lv39 lv39_0002   1178089 Sep  5 09:57 popcounts.dta
+-rw-rw---- 1 lv39 lv39_0002      3187 Sep  5 09:57 README.md
+-rw-rw---- 1 lv39 lv39_0002   1352973 May 21 22:04 urates_counties.csv
+-rw-rw---- 1 lv39 lv39_0002 238431031 Sep  5 09:57 us.1990_2018.singleages.adjusted.txt.gz
+
+./adh_data:
+total 28
+-rw-r--r-- 1 lv39 lv39_0002 26078 Aug 30  2016 cw_cty_czone.dta
+drwxr-sr-x 8 lv39 lv39_0002    88 Mar 14  2013 Public Release Data
+
+./adh_data/Public Release Data:
+total 160
+drwxr-sr-x 2 lv39 lv39_0002   4096 Mar 14  2013 do
+drwxr-sr-x 2 lv39 lv39_0002   4096 Oct 25  2018 dta
+drwxr-sr-x 2 lv39 lv39_0002    101 Jan  9  2013 gph
+drwxr-sr-x 2 lv39 lv39_0002   4096 Mar 14  2013 log
+drwxr-sr-x 2 lv39 lv39_0002   4096 Feb 11  2013 other
+-rw-r--r-- 1 lv39 lv39_0002 143126 Jan  9  2013 Readme.pdf
+drwxr-sr-x 2 lv39 lv39_0002   4096 Mar 14  2013 tab-fig
+
+./adh_data/Public Release Data/do:
+total 64
+-rw-r--r-- 1 lv39 lv39_0002 46553 Jan  8  2013 czone_analysis_ipw_final.do
+-rw-r--r-- 1 lv39 lv39_0002  1894 Jan  8  2013 czone_analysis_preperiod_final.do
+-rw-r--r-- 1 lv39 lv39_0002  1591 Jan  7  2013 czone_plot_import_long_final.do
+-rw-r--r-- 1 lv39 lv39_0002   454 Jan  8  2013 figure1.do
+-rw-r--r-- 1 lv39 lv39_0002  1318 Jan  7  2013 import_stats_final.do
+
+./adh_data/Public Release Data/dta:
+total 2800
+-rw-r--r-- 1 lv39 lv39_0002    1334 Mar 14  2013 export_levels.dta
+-rw-r--r-- 1 lv39 lv39_0002    1206 Jan  7  2013 figure1_data.dta
+-rw-r--r-- 1 lv39 lv39_0002   13381 Mar 12  2013 import_levels.dta
+-rwxr-xr-x 1 lv39 lv39_0002 1449091 Aug 30  2013 sic87dd_trade_data.dta
+-rw-r--r-- 1 lv39 lv39_0002 1216254 Mar 14  2013 workfile_china.dta
+-rw-r--r-- 1 lv39 lv39_0002   33833 Jan  8  2013 workfile_china_long.dta
+-rw-r--r-- 1 lv39 lv39_0002  135376 Jan  7  2013 workfile_china_preperiod.dta
+
+./adh_data/Public Release Data/gph:
+total 64
+-rw-r--r-- 1 lv39 lv39_0002  7028 Jan  8  2013 figure1.gph
+-rw-r--r-- 1 lv39 lv39_0002 24765 Jan  8  2013 mfg_imppw_9007long_2sls1_av.gph
+-rw-r--r-- 1 lv39 lv39_0002 24710 Jan  8  2013 mfg_imppw_9007long_olsred_av.gph
+
+./adh_data/Public Release Data/log:
+total 632
+-rw-r--r-- 1 lv39 lv39_0002 521529 Mar 14  2013 czone_analysis_ipw_final.log
+-rw-r--r-- 1 lv39 lv39_0002   8332 Jan  8  2013 czone_analysis_preperiod.log
+-rw-r--r-- 1 lv39 lv39_0002   6254 Jan  8  2013 czone_plot_import_long_final.log
+-rw-r--r-- 1 lv39 lv39_0002   8759 Mar 14  2013 import_stats_final.log
+-rw-r--r-- 1 lv39 lv39_0002   2222 Mar 14  2013 tab_expoff_iv.scsv
+-rw-r--r-- 1 lv39 lv39_0002   2222 Mar 14  2013 tab_ifactor_net_io.scsv
+-rw-r--r-- 1 lv39 lv39_0002   2222 Mar 14  2013 tab_intermediates.scsv
+-rw-r--r-- 1 lv39 lv39_0002   6590 Mar 14  2013 tab_ipw_empl2.scsv
+-rw-r--r-- 1 lv39 lv39_0002   5966 Mar 14  2013 tab_ipw_empl.scsv
+-rw-r--r-- 1 lv39 lv39_0002   4094 Mar 14  2013 tab_ipw_hhinc_pw.scsv
+-rw-r--r-- 1 lv39 lv39_0002   2222 Mar 14  2013 tab_ipw_manuf_2.scsv
+-rw-r--r-- 1 lv39 lv39_0002   4618 Mar 14  2013 tab_ipw_manuf_exporters.scsv
+-rw-r--r-- 1 lv39 lv39_0002   1906 Mar 14  2013 tab_ipw_manuf_pre.scsv
+-rw-r--r-- 1 lv39 lv39_0002   1307 Jan  8  2013 tab_ipw_mfg_byperiod.scsv
+-rw-r--r-- 1 lv39 lv39_0002   4094 Mar 14  2013 tab_ipw_mfgnmfg.scsv
+-rw-r--r-- 1 lv39 lv39_0002   9926 Mar 14  2013 tab_ipw_pop.scsv
+-rw-r--r-- 1 lv39 lv39_0002   5966 Mar 14  2013 tab_ipw_trans.scsv
+-rw-r--r-- 1 lv39 lv39_0002   3158 Mar 14  2013 tab_ipw_wage.scsv
+-rw-r--r-- 1 lv39 lv39_0002   2222 Mar 14  2013 tab_nipw_grav.scsv
+-rw-r--r-- 1 lv39 lv39_0002   2222 Mar 14  2013 tab_nipw_iv.scsv
+
+./adh_data/Public Release Data/other:
+total 444
+-rw-r--r-- 1 lv39 lv39_0002  35502 May 16  2009 cbp1980_imputations.do
+-rw-r--r-- 1 lv39 lv39_0002   5915 Nov 24  2011 cbp1980_to_cz.do
+-rw-r--r-- 1 lv39 lv39_0002  35297 Sep 27  2010 cbp1990_imputations.do
+-rw-r--r-- 1 lv39 lv39_0002   3820 Sep 28  2010 cbp1990_to_cz.do
+-rw-r--r-- 1 lv39 lv39_0002  31072 Sep 29  2010 cbp2000_imputations.do
+-rw-r--r-- 1 lv39 lv39_0002   3704 Sep 28  2010 cbp2000_to_cz.do
+-rw-r--r-- 1 lv39 lv39_0002  33738 Feb 16  2010 cw_n97_s87.dta
+-rw-r--r-- 1 lv39 lv39_0002 279374 Dec  7  2012 Manufacturing_Industry_Codes.pdf
+-rw-r--r-- 1 lv39 lv39_0002   3216 Dec  7  2012 subfile_ind1990dd.do
+-rw-r--r-- 1 lv39 lv39_0002   5530 Dec  7  2012 subfile_sic87dd.do
+
+./adh_data/Public Release Data/tab-fig:
+total 952
+-rw-r--r-- 1 lv39 lv39_0002 702464 Jan  8  2013 ADH-ChinaSyndrome-AER-2011-1050-Figures.xls
+-rw-r--r-- 1 lv39 lv39_0002 269824 Mar 14  2013 ADH-ChinaSyndrome-AER-2011-1050-Tables.xls
+
+./ddorn:
+total 88004
+-rw-rw---- 1 lv39 lv39_0002 24686810 Sep  5 09:57 cty_industry1980.dta
+-rw-rw---- 1 lv39 lv39_0002 24702690 Sep  5 09:57 cty_industry1990.dta
+-rw-rw---- 1 lv39 lv39_0002 24694750 Sep  5 09:57 cty_industry2000.dta
+-rw-rw---- 1 lv39 lv39_0002      372 Sep  5 09:57 README.md
+
+./nhgis:
+total 75156
+-rw-rw---- 1 lv39 lv39_0002    30104 Jul 10 15:09 1970female.dta
+-rw-rw---- 1 lv39 lv39_0002    43308 Jul 10 15:09 1970manu.dta
+-rw-rw---- 1 lv39 lv39_0002    43295 Jul 10 15:09 1970pop.dta
+-rw-rw---- 1 lv39 lv39_0002    82820 Jun 30 18:12 1980manu.dta
+-rw-rw---- 1 lv39 lv39_0002    43256 Jun 30 18:12 1980pop.dta
+-rw-rw---- 1 lv39 lv39_0002    82920 Jun 30 18:12 1990emp.dta
+-rw-rw---- 1 lv39 lv39_0002    43308 Jun 30 18:12 1990pop.dta
+-rw-rw---- 1 lv39 lv39_0002    82920 Jun 30 18:12 2000emp.dta
+-rw-rw---- 1 lv39 lv39_0002    43308 Jul 10 14:51 2000pop.dta
+-rw-rw---- 1 lv39 lv39_0002    71396 Jun 30 18:12 2009emp.dta
+-rw-rw---- 1 lv39 lv39_0002    44348 Jun 30 18:12 2009pop.dta
+-rwxrwx--- 1 lv39 lv39_0002      171 Sep  5 09:57 main.sh
+-rw-rw---- 1 lv39 lv39_0002  5727360 Sep  5 09:57 nhgis0008_ds95_1970_county.dat
+-rw-rw---- 1 lv39 lv39_0002    22022 Sep  5 09:57 nhgis0008_ds95_1970_county.do
+-rw-rw---- 1 lv39 lv39_0002    24662 Jul 10 15:09 nhgis0008_ds95_1970_county.log
+-rw-rw---- 1 lv39 lv39_0002  1306656 Sep  5 09:57 nhgis0008_ds98_1970_county.dat
+-rw-rw---- 1 lv39 lv39_0002     4179 Sep  5 09:57 nhgis0008_ds98_1970_county.do
+-rw-rw---- 1 lv39 lv39_0002     5377 Jul 10 15:09 nhgis0008_ds98_1970_county.log
+-rw-rw---- 1 lv39 lv39_0002  1356912 Sep  5 09:57 nhgis0008_ds99_1970_county.dat
+-rw-rw---- 1 lv39 lv39_0002     5238 Sep  5 09:57 nhgis0008_ds99_1970_county.do
+-rw-rw---- 1 lv39 lv39_0002     6489 Jul 10 15:09 nhgis0008_ds99_1970_county.log
+-rw-rw---- 1 lv39 lv39_0002  6470460 Sep  5 09:57 nhgis0009_ds122_1990_county.dat
+-rw-rw---- 1 lv39 lv39_0002    22929 Sep  5 09:57 nhgis0009_ds122_1990_county.do
+-rw-rw---- 1 lv39 lv39_0002    25630 Jun 30 18:12 nhgis0009_ds122_1990_county.log
+-rw-rw---- 1 lv39 lv39_0002  1758960 Sep  5 09:57 nhgis0009_ds123_1990_county.dat
+-rw-rw---- 1 lv39 lv39_0002     7269 Sep  5 09:57 nhgis0009_ds123_1990_county.do
+-rw-rw---- 1 lv39 lv39_0002     8682 Jun 30 18:12 nhgis0009_ds123_1990_county.log
+-rw-rw---- 1 lv39 lv39_0002  2132739 Sep  5 09:57 nhgis0010_ds146_2000_county.dat
+-rw-rw---- 1 lv39 lv39_0002     7788 Sep  5 09:57 nhgis0010_ds146_2000_county.do
+-rw-rw---- 1 lv39 lv39_0002     9264 Jul 10 14:51 nhgis0010_ds146_2000_county.log
+-rw-rw---- 1 lv39 lv39_0002  2588184 Sep  5 09:57 nhgis0010_ds151_2000_county.dat
+-rw-rw---- 1 lv39 lv39_0002    10376 Sep  5 09:57 nhgis0010_ds151_2000_county.do
+-rw-rw---- 1 lv39 lv39_0002    12024 Jun 30 18:12 nhgis0010_ds151_2000_county.log
+-rw-rw---- 1 lv39 lv39_0002 10004426 Sep  5 09:57 nhgis0011_ds195_20095_2009_county.dat
+-rw-rw---- 1 lv39 lv39_0002    29844 Sep  5 09:57 nhgis0011_ds195_20095_2009_county.do
+-rw-rw---- 1 lv39 lv39_0002    32930 Jun 30 18:12 nhgis0011_ds195_20095_2009_county.log
+-rw-rw---- 1 lv39 lv39_0002 12320325 Sep  5 09:57 nhgis0011_ds196_20095_2009_county.dat
+-rw-rw---- 1 lv39 lv39_0002    39072 Sep  5 09:57 nhgis0011_ds196_20095_2009_county.do
+-rw-rw---- 1 lv39 lv39_0002    43230 Jun 30 18:12 nhgis0011_ds196_20095_2009_county.log
+-rw-rw---- 1 lv39 lv39_0002  6722591 Sep  5 09:57 nhgis0012_ds103_1980_county.dat
+-rw-rw---- 1 lv39 lv39_0002    21692 Sep  5 09:57 nhgis0012_ds103_1980_county.do
+-rw-rw---- 1 lv39 lv39_0002    24490 Jun 30 18:12 nhgis0012_ds103_1980_county.log
+-rw-rw---- 1 lv39 lv39_0002  1505760 Sep  5 09:57 nhgis0012_ds107_1980_county.dat
+-rw-rw---- 1 lv39 lv39_0002     5969 Sep  5 09:57 nhgis0012_ds107_1980_county.do
+-rw-rw---- 1 lv39 lv39_0002     7307 Jun 30 18:12 nhgis0012_ds107_1980_county.log
+-rw-rw---- 1 lv39 lv39_0002      326 Sep  5 09:57 README.nhgis.txt
