@@ -1,5 +1,12 @@
 # convert 2009-2013 commuting flows so SAS can read it...
 
+source(file.path(rprojroot::find_root(rprojroot::has_file("pathconfig.R")),"pathconfig.R"),echo=TRUE)
+source(file.path(aux,"config.R"),echo=TRUE)
+source(file.path(aux,"common-functions.R"),echo=TRUE)
+local.libraries <- c("readxl","tidyr","readr","dplyr")
+
+results <- sapply(as.list(local.libraries), pkgTest)
+
 library(readxl)
 library(tidyr)
 library(dplyr)
