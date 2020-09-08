@@ -22,7 +22,7 @@ graph export "$outgraphs/mismatch_jtw1990.pdf", replace;
 
 twoway (histogram mean_clussize)
        (kdensity mean_clussize)
-       (scatteri 0 3.88 15 3.88, recast(line) lcolor(red) lwidth(thick) lpattern(dash)),
+       (scatteri 0 4.16 15 4.16, recast(line) lcolor(red) lwidth(thick) lpattern(dash)),
        saving("$outgraphs/meanclussize_jtw1990.gph", replace)
        xtitle("Mean Cluster Size")
        ytitle("Density")
