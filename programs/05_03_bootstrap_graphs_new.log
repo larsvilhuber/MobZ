@@ -114,14 +114,14 @@ Machine type:  PC (64-bit x86-64)
 . cap mkdir "$logdir"
 
 . log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
-(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile__7_Sep_2020
-> -22_18_27.log not found)
+(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile__8_Sep_2020
+> -12_50_54.log not found)
 -------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile__7_Sep_202
-> 0-22_18_27.log
+       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile__8_Sep_202
+> 0-12_50_54.log
   log type:  text
- opened on:   7 Sep 2020, 22:18:27
+ opened on:   8 Sep 2020, 12:50:55
 
 . cap mkdir "$temp"
 
@@ -200,7 +200,7 @@ delimiter now ;
 
 .  twoway (histogram mean_clussize)
 >        (kdensity mean_clussize)
->        (scatteri 0 3.88 15 3.88, recast(line) lcolor(red) lwidth(thick) lpatt
+>        (scatteri 0 4.16 15 4.16, recast(line) lcolor(red) lwidth(thick) lpatt
 > ern(dash)),
 >        saving("$outgraphs/meanclussize_jtw1990.gph", replace)
 >        xtitle("Mean Cluster Size")
@@ -216,7 +216,7 @@ delimiter now ;
 
 . twoway (histogram numclusters)
 >        (kdensity numclusters)
->        (scatteri 0 810 .06 810, recast(line) lcolor(red) lwidth(thick) lpatte
+>        (scatteri 0 755 .07 755, recast(line) lcolor(red) lwidth(thick) lpatte
 > rn(dash)),
 >        saving("$outgraphs/numclusters_jtw1990.gph", replace)
 >        xtitle("Number of Clusters")
