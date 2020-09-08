@@ -92,16 +92,6 @@ run;
        cz1990 =  cz90;
        run; 
 
-/*
-    data OUTPUTS.cz1990 (keep = cty cz1990) ;
-    	length cty $5. ;
-    	infile "&root./raw/czones.csv" dsd  delimiter = ',' termstr=lf  ;
-    	input ctycode $ cz1990 $ ;
-    	if cz1990 ne "CZ90"; 
-    	cty = ctycode ; 
-    run ; 		
-*/
-    
     proc sort data = OUTPUTS.cz1990 ;
     	by cty ;
     run ;	
