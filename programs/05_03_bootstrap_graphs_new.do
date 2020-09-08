@@ -34,7 +34,7 @@ graph export "$outgraphs/meanclussize_jtw1990.pdf", replace;
 
 twoway (histogram numclusters)
        (kdensity numclusters)
-       (scatteri 0 810 .06 810, recast(line) lcolor(red) lwidth(thick) lpattern(dash)),
+       (scatteri 0 755 .07 755, recast(line) lcolor(red) lwidth(thick) lpattern(dash)),
        saving("$outgraphs/numclusters_jtw1990.gph", replace)
        xtitle("Number of Clusters")
        ytitle("Density")
