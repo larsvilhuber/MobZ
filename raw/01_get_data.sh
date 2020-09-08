@@ -1,12 +1,31 @@
 #!/bin/bash
 WGET_OPTS="--no-check-certificate"
 
+# CZ
+curl https://www.ers.usda.gov/webdocs/DataFiles/48457/czlma903.xls?v=6997.1 > czlma903.xls
+
+# JTW
 [[ -f 1990jtw_raw.txt ]] ||  wget $WGET_OPTS -O 1990jtw_raw.txt https://www2.census.gov/programs-surveys/commuting/datasets/1990/worker-flow/usresco.txt
 
 [[ -f jtw2000_raw.txt ]] || wget $WGET_OPTS -O jtw2000_raw.txt https://www2.census.gov/programs-surveys/decennial/tables/2000/county-to-county-worker-flow-files/2kresco_us.txt 
 
-#[[ -f acs_2009_2013.csv ]] || wget $WGET_OPTS -O acs_2009_2013.csv http://www.census.gov/hhes/commuting/files/2013/Table%201%20County%20to%20County%20Commuting%20Flows-%20ACS%202009-2013.xlsx
-[[ -f acs_2009_2013.xlsx ]] || wget $WGET_OPTS -O acs_2009_2013.xlsx https://www2.census.gov/programs-surveys/commuting/tables/time-series/commuting-flows/table1.xlsx
+## this has been moved to the next program
+## [[ -f acs_2009_2013.xlsx ]] || wget $WGET_OPTS -O acs_2009_2013.xlsx https://www2.census.gov/programs-surveys/commuting/tables/time-series/commuting-flows/table1.xlsx
+
+# BEA
+
+[[ -f CAINC30.zip ]] || wget $WGET_OPTS https://apps.bea.gov/regional/zip/CAINC30.zip
+if [[ -f CAINC30__ALL_AREAS_1969_2018.csv ]]
+then
+   echo "BEA present"
+else
+   if [[ -f CAINC30.zip ]]
+   then
+      unzip CAINC30.zip CAINC30__ALL_AREAS_1969_2018.csv
+      echo "Unzipped BEA file"
+   fi 
+fi  
+# LAUS
 
 function do_nothing {
 # these are actually not parsable by machine... easily anyway
@@ -42,9 +61,6 @@ else
   wget -O - $WGET_OPTS https://download.bls.gov/pub/time.series/la/la.data.0.CurrentU$arg | grep LAUCN >> $UFILE
  done
 fi
-
-# CZ
-curl https://www.ers.usda.gov/webdocs/DataFiles/48457/czlma903.xls?v=6997.1 > czlma903.xls
 
 # SEER data
 if [ ! -f  us.1990_2018.singleages.adjusted.txt.gz ]

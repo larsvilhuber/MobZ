@@ -8,7 +8,6 @@ include "../config.do"
 
 tempfile a
 ! head -n -3 "$raw/CAINC30__ALL_AREAS_1969_2018.csv" > `a'
-//insheet using "${raw}/jtw2009_2013.csv", names
 insheet using "`a'", names
 
 #delimit ; 
