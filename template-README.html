@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Andrew Foote, Mark Kutzbach, Lars Vilhuber" />
+
+<meta name="date" content="2020-09-07" />
+
+<title>README and Guidance</title>
+
+<script src="_aux/libs/header-attrs-2.3/header-attrs.js"></script>
+<script src="_aux/libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="_aux/libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="_aux/libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="_aux/libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="_aux/libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="_aux/libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="_aux/libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="_aux/libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="_aux/libs/navigation-1.1/tabsets.js"></script>
+<link href="_aux/libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="_aux/libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="_aux/libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="_aux/libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">README and Guidance</h1>
+<h4 class="author">Andrew Foote, Mark Kutzbach, Lars Vilhuber</h4>
+<h4 class="date">2020-09-07</h4>
+
+</div>
+
+
+<p>This README describes the data inputs and processing stream for our paper Recalculating … : How Uncertainty in Local Labor Market Definitions Affects Empirical Findings.</p>
+<div id="data-availability-and-provenance-statements" class="section level2">
+<h2>Data Availability and Provenance Statements</h2>
+<div id="commuting-zone-data" class="section level3">
+<h3>Commuting Zone Data</h3>
+<p><span class="citation">Economic Research Service (2012)</span></p>
+<ul>
+<li>Source <a href="https://www.ers.usda.gov/data-products/commuting-zones-and-labor-market-areas/" class="uri">https://www.ers.usda.gov/data-products/commuting-zones-and-labor-market-areas/</a></li>
+<li>Actual file: <a href="https://www.ers.usda.gov/webdocs/DataFiles/48457/czlma903.xls?v=6997.1" class="uri">https://www.ers.usda.gov/webdocs/DataFiles/48457/czlma903.xls?v=6997.1</a></li>
+<li>Provided as part of this replication package</li>
+</ul>
+<p>CZ data were produced by an agency of the US Government and are in the public domain.</p>
+</div>
+<div id="journey-to-work-jtw-data" class="section level3">
+<h3>Journey-to-Work (JTW) data</h3>
+<p>Most of the JTW data can be found at <a href="https://www.census.gov/topics/employment/commuting/guidance/flows.html" class="uri">https://www.census.gov/topics/employment/commuting/guidance/flows.html</a>. The data were produced by an agency of the US Government and are in the public domain.</p>
+<p>Because the US Census Bureau does not provide robust (permanent) URLs, we archived the data on openICPSR/DataLumos, or searched for permanent locations elsewhere on ICPSR. As of 2020-09-01, the source URLs were still functional, though. Our scripts pull the data from the source URL.</p>
+<div id="jtw" class="section level4">
+<h4>1990 JTW</h4>
+<p><span class="citation">U.S. Census Bureau (2017a)</span></p>
+<ul>
+<li>Source: <a href="https://www2.census.gov/programs-surveys/commuting/datasets/1990/worker-flow/usresco.txt" class="uri">https://www2.census.gov/programs-surveys/commuting/datasets/1990/worker-flow/usresco.txt</a></li>
+<li>Permanent source: <a href="http://doi.org/10.3886/E100617V1" class="uri">http://doi.org/10.3886/E100617V1</a></li>
+<li>Not provided</li>
+<li>Renamed to: <code>1990jtw_raw.txt</code></li>
+</ul>
+</div>
+<div id="jtw-1" class="section level4">
+<h4>2000 JTW</h4>
+<p><span class="citation">U.S. Census Bureau (2003)</span></p>
+<ul>
+<li>Source: <a href="https://www.census.gov/population/www/cen2000/commuting/files/2KRESCO_US.txt" class="uri">https://www.census.gov/population/www/cen2000/commuting/files/2KRESCO_US.txt</a></li>
+<li>Permanent source: <a href="http://doi.org/10.3886/ICPSR13405.v1" class="uri">http://doi.org/10.3886/ICPSR13405.v1</a></li>
+<li>Not provided</li>
+<li>Renamed to : <code>jtw2000_raw.txt</code></li>
+</ul>
+</div>
+<div id="acs-flows" class="section level4">
+<h4>2009-2013 ACS flows</h4>
+<p><span class="citation">U.S. Census Bureau (2017b)</span></p>
+<ul>
+<li>Source: <a href="https://www2.census.gov/programs-surveys/commuting/tables/time-series/commuting-flows/table1.xlsx" class="uri">https://www2.census.gov/programs-surveys/commuting/tables/time-series/commuting-flows/table1.xlsx</a></li>
+<li>Permanent source: <a href="http://doi.org/10.3886/E100616V1" class="uri">http://doi.org/10.3886/E100616V1</a></li>
+<li>Renamed to: <code>jtw2009_2013.csv</code></li>
+<li>Not provided</li>
+</ul>
+</div>
+<div id="bea-data" class="section level4">
+<h4>BEA data</h4>
+<p>Data on National Income and Product Accounts (NIPA).</p>
+<p><span class="citation">Bureau of Economic Analysis (2019)</span></p>
+<ul>
+<li>Note: Data can be downloaded from <a href="https://apps.bea.gov/regional/downloadzip.cfm" class="uri">https://apps.bea.gov/regional/downloadzip.cfm</a>, under “Personal Income (State and Local)”, select CAINC30: Economic Profile by County, then download. A direct download is also possible, see next line. The file is regularly updated.</li>
+<li>Source: <a href="https://apps.bea.gov/regional/zip/CAINC30.zip" class="uri">https://apps.bea.gov/regional/zip/CAINC30.zip</a>.</li>
+<li>Datafile: <code>CAINC30__ALL_AREAS_1969_2018.csv</code></li>
+<li>The datafile is provided as part of this package.</li>
+</ul>
+<p>The data were produced by an agency of the US Government and are in the public domain.</p>
+</div>
+</div>
+<div id="dataset-list" class="section level3">
+<h3>Dataset list</h3>
+<p>The following files are provided in <code>$raw</code> directory:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">filename</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">CAINC30__ALL_AREAS_1969_2018.csv</td>
+</tr>
+<tr class="even">
+<td align="left">jtw2009_2013.csv</td>
+</tr>
+<tr class="odd">
+<td align="left">popcounts.dta</td>
+</tr>
+<tr class="even">
+<td align="left">table1.xlsx</td>
+</tr>
+<tr class="odd">
+<td align="left">urates_counties.csv</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="software-requirements" class="section level2">
+<h2>Software Requirements</h2>
+<ul>
+<li>SAS 9.4 (TS1M0)
+<ul>
+<li>SAS/STAT 12.3 (maintenance)</li>
+</ul></li>
+<li>Stata 14.2</li>
+<li>R 4.0.2 (used only to automate cleaning of one data file)
+<ul>
+<li>readxl, tidyr, dplyr, readr for processing</li>
+<li>rprojroot, config for configuration</li>
+<li>all dependencies are installed upon first run</li>
+</ul></li>
+<li>Bash, Curl, wget as part of download (may require Linux, but can be replaced by manual downloading)</li>
+</ul>
+</div>
+<div id="memory-and-runtime-requirements" class="section level2">
+<h2>Memory and Runtime Requirements</h2>
+<p>These programs were last run as follows:</p>
+<ul>
+<li>OS: Linux CentOS release 6.3 (Final)</li>
+<li>8-core (though probably only 1 core was in use)</li>
+<li>147 GB RAM (unlikely to have been fully utilized)</li>
+<li>about 1.5GB disk space required</li>
+</ul>
+</div>
+<div id="description-of-programs" class="section level2">
+<h2>Description of programs</h2>
+<div id="setting-up-data" class="section level3">
+<h3>Setting up data</h3>
+<p>See the <a href="../raw/README.md">raw data README.md</a> for details in preparing the raw data files. They are not downloaded by the SAS and Stata programs in the <code>$programs</code> folder.</p>
+</div>
+<div id="main-program-files" class="section level3">
+<h3>Main program files</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="left">filename</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">01_dataprep.sas</td>
+</tr>
+<tr class="even">
+<td align="left">02_clusters.sas</td>
+</tr>
+<tr class="odd">
+<td align="left">03_prep_figures.sas</td>
+</tr>
+<tr class="even">
+<td align="left">04_figures2_3.do</td>
+</tr>
+<tr class="odd">
+<td align="left">05_01_flows.do</td>
+</tr>
+<tr class="even">
+<td align="left">05_02_bootstrap.sas</td>
+</tr>
+<tr class="odd">
+<td align="left">05_03_bootstrap_graphs_new.do</td>
+</tr>
+<tr class="even">
+<td align="left">config.do</td>
+</tr>
+<tr class="odd">
+<td align="left">config.sas</td>
+</tr>
+<tr class="even">
+<td align="left">statado</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="setting-up-programs" class="section level3">
+<h3>Setting up programs</h3>
+<ul>
+<li>modify <code>config.sas</code>:
+<ul>
+<li>change the line with root to correspond to your project directory</li>
+</ul></li>
+<li>modify <code>config.do</code>:
+<ul>
+<li>change the line with root to correspond to your project directory</li>
+</ul></li>
+</ul>
+</div>
+<div id="order-of-programs-to-run" class="section level3">
+<h3>Order of programs to run</h3>
+<p>To create the replicated commuting zones, run the following programs (parameters below):</p>
+<div id="reading-in-various-datasets" class="section level4">
+<h4>Reading in various datasets</h4>
+<pre><code>sas 01_dataprep.sas</code></pre>
+<p><em>(runtime: 2.81s)</em></p>
+</div>
+<div id="clustering-process" class="section level4">
+<h4>CLUSTERING PROCESS</h4>
+<pre><code>sas 02_cluster.sas</code></pre>
+<p><em>(runtime: 3:25.73 minutes)</em></p>
+<p>OUTPUT: $data/clusfin_jtw1990.sas7bdat</p>
+</div>
+<div id="cutoff-by-cluster-count-graph" class="section level4">
+<h4>CUTOFF by CLUSTER COUNT GRAPH</h4>
+<pre><code>sas 03_prep_figures.sas
+stata -b do 04_figures2_3.do</code></pre>
+<p>The first program took 8:50 minutes. The second one runs in seconds.</p>
+</div>
+</div>
+<div id="bootstrap" class="section level3">
+<h3>BOOTSTRAP</h3>
+<div id="run-the-bootstrap" class="section level4">
+<h4>Run the Bootstrap</h4>
+<p>Projects MOEs from 2009-2013 onto 1990 data, creates the 1000 realizations of commuting zones.</p>
+<pre><code>stata -b do 05_01_flows.do
+sas         05_02_bootstrap.sas</code></pre>
+<p>The first program runs in seconds, the second one takes 55 hours.</p>
+</div>
+<div id="figure-4" class="section level4">
+<h4>Figure 4</h4>
+<pre><code>stata -b do 05_03_bootstrap_graphs_new.do </code></pre>
+<p><em>(runtime: seconds)</em></p>
+</div>
+</div>
+<div id="replication-programs-for-analysis-in-section-4.1" class="section level3">
+<h3>Replication programs for analysis in Section 4.1</h3>
+<p>All programs are in <code>$programs/06_qcew/</code> subdirectory. Change working directory.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">filename</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">00_bea_readin.do</td>
+</tr>
+<tr class="even">
+<td align="left">00_describe_bootclusters.do</td>
+</tr>
+<tr class="odd">
+<td align="left">00_qcew_extraction.sas</td>
+</tr>
+<tr class="even">
+<td align="left">00_qcew_post_extraction.do</td>
+</tr>
+<tr class="odd">
+<td align="left">00_readin_czones.do</td>
+</tr>
+<tr class="even">
+<td align="left">01_regressions_table.do</td>
+</tr>
+<tr class="odd">
+<td align="left">02_01_cluster_loop.do</td>
+</tr>
+<tr class="even">
+<td align="left">02_02_cluster_loop.do</td>
+</tr>
+<tr class="odd">
+<td align="left">03_01_cluster_graphs.do</td>
+</tr>
+<tr class="even">
+<td align="left">03_02_cutoff_graphs.do</td>
+</tr>
+<tr class="odd">
+<td align="left">zz_bartik_merge.do</td>
+</tr>
+</tbody>
+</table>
+<p>(NOT ADJUSTED YET)</p>
+<p>Data prep programs:</p>
+<ul>
+<li>00.bea_readin.do</li>
+<li>00.qcew_extraction.sas</li>
+</ul>
+<p>Regression table:</p>
+<ul>
+<li>01_regressions_table.do</li>
+</ul>
+<p>Graphs:</p>
+<ul>
+<li>Figure 5:
+<ul>
+<li>02.01.cluster_loop.do</li>
+<li>03.01.cluster_graphs.do</li>
+</ul></li>
+<li>Figure 6:
+<ul>
+<li>02.02.cutoff_loop.do</li>
+<li>03.02.cutoff_graphs.do (creates figure 6)</li>
+</ul></li>
+</ul>
+<p>Programs called during processing: zz_bartik_merge.do</p>
+</div>
+<div id="replication-programs-for-section-4.2" class="section level3">
+<h3>Replication programs for Section 4.2</h3>
+<p>All programs in <code>$programs/adh/</code> subdirectory</p>
+<p>Data prep programs (in order):</p>
+<ul>
+<li>00.01.IPW_creation.do</li>
+<li>00.02.mergecounty.do</li>
+<li>00.03.cz_merge.do</li>
+<li>00.04.aggregatedata.do</li>
+</ul>
+<p>Table 3 is created by:</p>
+<ul>
+<li>01.table3.do</li>
+</ul>
+<p>Figures are created by:</p>
+<ul>
+<li>Figure 7:
+<ul>
+<li>02.02.overall_loop.do</li>
+<li>03.02.overall_graphs.do</li>
+</ul></li>
+<li>Figure 8
+<ul>
+<li>02.01.cutoff_loop.do</li>
+<li>03.01.cutoff_graphs.do</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="list-of-tables-and-programs" class="section level2">
+<h2>List of tables and programs</h2>
+<p>(needs to read in code-check.xlsx)</p>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references hanging-indent">
+<div id="ref-bea_table30_2019">
+<p>Bureau of Economic Analysis. 2019. “Table 30: Economic Profile by County, 1969-2018.” [Datafile]. U.S. Department of Commerce [producer].</p>
+</div>
+<div id="ref-usda_cz_ers">
+<p>Economic Research Service. 2012. “1980 and 1990 Commuting Zones and Labor Market Areas.” [Dataset]. United States Department of Agriculture.</p>
+</div>
+<div id="ref-u.s.censusbureau_census_2003">
+<p>U.S. Census Bureau. 2003. “Census of Population and Housing, 2000 [United States]: County-to-County Worker Flow Files: Version 1.” [Datafile]. U.S. Department of Commerce [producer].</p>
+</div>
+<div id="ref-u.s.censusbureau_1990_2017">
+<p>———. 2017a. “1990 County-to-County Worker Flow Files.” [Datafile]. U.S. Department of Commerce [producer].</p>
+</div>
+<div id="ref-u.s.censusbureau_20092013_2017">
+<p>———. 2017b. “2009-2013 5-Year American Community Survey: Commuting Flows.” [Datafile]. U.S. Department of Commerce [producer].</p>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

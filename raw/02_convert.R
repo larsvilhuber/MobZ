@@ -16,10 +16,10 @@ library(readr)
 acsjtw <- "https://www2.census.gov/programs-surveys/commuting/tables/time-series/commuting-flows/table1.xlsx"
 
 # download the file
-download.file(acsjtw,"table1.xlsx")
+download.file(acsjtw,file.path(raw,"table1.xlsx"))
 
 # read it in, keeping only the variables of interest
-table1 <- read_excel("table1.xlsx", 
+table1 <- read_excel(file.path(raw,"table1.xlsx"), 
                      sheet = "Table 1", skip = 5) %>%
   select(c(1,2,7,8,13,14))
 
@@ -27,6 +27,6 @@ table1 <- read_excel("table1.xlsx",
 names(table1) <- c("h_state_fips","h_county_fips","w_state_fips","w_county_fips","flow","moe")
 
 # write it out.
-write_csv(table1,"jtw2009_2013.csv")
+write_csv(table1,file.path(raw,"jtw2009_2013.csv"))
 
          
