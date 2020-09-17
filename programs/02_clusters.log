@@ -1,0 +1,363 @@
+1                                                          The SAS System                           15:11 Monday, September 14, 2020
+
+NOTE: Copyright (c) 2002-2012 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software 9.4 (TS1M0) 
+      Licensed to CORNELL UNIVERSITY-T&R, Site 70084770.
+NOTE: This session is executing on the Linux 2.6.32-696.18.7.el6.x86_64 (LIN X64) platform.
+
+
+
+NOTE: Updated analytical products:
+      
+      SAS/STAT 12.3 (maintenance)
+      SAS/ETS 12.3 (maintenance)
+      SAS/OR 12.3 (maintenance)
+      SAS/IML 12.3 (maintenance)
+      SAS/QC 12.3 (maintenance)
+
+NOTE: Additional host information:
+
+ Linux LIN X64 2.6.32-696.18.7.el6.x86_64 #1 SMP Thu Jan 4 17:31:22 UTC 2018 x86_64 CentOS release 6.3 (Final) 
+
+You are running SAS 9. Some SAS 8 files will be automatically converted 
+by the V9 engine; others are incompatible.  Please see 
+http://support.sas.com/rnd/migration/planning/platform/64bit.html
+
+PROC MIGRATE will preserve current SAS file attributes and is 
+recommended for converting all your SAS libraries from any 
+SAS 8 release to SAS 9.  For details and examples, please see
+http://support.sas.com/rnd/migration/index.html
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the file "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+
+NOTE: SAS initialization used:
+      real time           0.03 seconds
+      cpu time            0.02 seconds
+      
+1          * Mobility Zones (MobZ);
+2          * Execute control program to run selected modules;	
+3          options  mlogic symbolgen spool fullstimer;
+4          * Modules, set to 1 to run, otherwise 0;	
+5          
+6          %include "config.sas" ;
+SYMBOLGEN:  Macro variable ROOT resolves to /ssgprojects/project0002/MobZ.new
+SYMBOLGEN:  Macro variable ROOT resolves to /ssgprojects/project0002/MobZ.new
+SYMBOLGEN:  Macro variable ROOT resolves to /ssgprojects/project0002/MobZ.new
+SYMBOLGEN:  Macro variable ROOT resolves to /ssgprojects/project0002/MobZ.new
+SYMBOLGEN:  Macro variable ROOT resolves to /ssgprojects/project0002/MobZ.new
+SYMBOLGEN:  Macro variable DIRPROG resolves to /ssgprojects/project0002/MobZ.new/programs
+SYMBOLGEN:  Macro variable DIRPROG resolves to /ssgprojects/project0002/MobZ.new/programs
+SYMBOLGEN:  Macro variable DIROUTPUTS resolves to /ssgprojects/project0002/MobZ.new/data
+NOTE: Libref OUTPUTS was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /ssgprojects/project0002/MobZ.new/data
+2                                                          The SAS System                           15:11 Monday, September 14, 2020
+
+SYMBOLGEN:  Macro variable DIRINTERWRK resolves to /ssgprojects/project0002/MobZ.new/data/interwrk
+NOTE: Libref INTERWRK was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /ssgprojects/project0002/MobZ.new/data/interwrk
+SYMBOLGEN:  Macro variable DIROUTPUTS resolves to /ssgprojects/project0002/MobZ.new/data
+NOTE: Libref GEO refers to the same physical library as OUTPUTS.
+NOTE: Libref GEO was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /ssgprojects/project0002/MobZ.new/data
+SYMBOLGEN:  Macro variable RAW resolves to /ssgprojects/project0002/MobZ.new/raw
+NOTE: Libref INPUTS was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /ssgprojects/project0002/MobZ.new/raw
+SYMBOLGEN:  Macro variable DIRPROG resolves to /ssgprojects/project0002/MobZ.new/programs
+MLOGIC:  Beginning compilation of TRIM using the autocall file /opt/SAS_9.4/SASFoundation/9.4/sasautos/trim.sas.
+MLOGIC:  Ending compilation of TRIM.
+MLOGIC(TRIM):  Beginning execution.
+MLOGIC(TRIM):  This macro was compiled from the autocall file /opt/SAS_9.4/SASFoundation/9.4/sasautos/trim.sas
+SYMBOLGEN:  Macro variable T resolves to 22172
+MLOGIC(TRIM):  Parameter VALUE has value 2020
+MLOGIC(TRIM):  %LOCAL  I
+SYMBOLGEN:  Macro variable VALUE resolves to 2020
+MLOGIC(TRIM):  %DO loop beginning; index variable I; start value is 4; stop value is 1; by value is -1.  
+SYMBOLGEN:  Macro variable VALUE resolves to 2020
+SYMBOLGEN:  Macro variable I resolves to 4
+MLOGIC(TRIM):  %IF condition %qsubstr(&value,&i,1) ne   is TRUE
+MLOGIC(TRIM):  %GOTO TRIMMED (label resolves to TRIMMED).
+SYMBOLGEN:  Macro variable I resolves to 4
+MLOGIC(TRIM):  %IF condition &i>0 is TRUE
+SYMBOLGEN:  Macro variable VALUE resolves to 2020
+SYMBOLGEN:  Macro variable I resolves to 4
+MLOGIC(TRIM):  Ending execution.
+MLOGIC(TRIM):  Beginning execution.
+MLOGIC(TRIM):  This macro was compiled from the autocall file /opt/SAS_9.4/SASFoundation/9.4/sasautos/trim.sas
+SYMBOLGEN:  Macro variable T resolves to 22172
+MLOGIC(TRIM):  Parameter VALUE has value 09
+MLOGIC(TRIM):  %LOCAL  I
+SYMBOLGEN:  Macro variable VALUE resolves to 09
+MLOGIC(TRIM):  %DO loop beginning; index variable I; start value is 2; stop value is 1; by value is -1.  
+SYMBOLGEN:  Macro variable VALUE resolves to 09
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition %qsubstr(&value,&i,1) ne   is TRUE
+MLOGIC(TRIM):  %GOTO TRIMMED (label resolves to TRIMMED).
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition &i>0 is TRUE
+SYMBOLGEN:  Macro variable VALUE resolves to 09
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  Ending execution.
+MLOGIC(TRIM):  Beginning execution.
+MLOGIC(TRIM):  This macro was compiled from the autocall file /opt/SAS_9.4/SASFoundation/9.4/sasautos/trim.sas
+SYMBOLGEN:  Macro variable T resolves to 22172
+MLOGIC(TRIM):  Parameter VALUE has value 14
+MLOGIC(TRIM):  %LOCAL  I
+SYMBOLGEN:  Macro variable VALUE resolves to 14
+MLOGIC(TRIM):  %DO loop beginning; index variable I; start value is 2; stop value is 1; by value is -1.  
+SYMBOLGEN:  Macro variable VALUE resolves to 14
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition %qsubstr(&value,&i,1) ne   is TRUE
+MLOGIC(TRIM):  %GOTO TRIMMED (label resolves to TRIMMED).
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition &i>0 is TRUE
+SYMBOLGEN:  Macro variable VALUE resolves to 14
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  Ending execution.
+SYMBOLGEN:  Macro variable DSTAMP resolves to 20200914
+MLOGIC(TRIM):  Beginning execution.
+MLOGIC(TRIM):  This macro was compiled from the autocall file /opt/SAS_9.4/SASFoundation/9.4/sasautos/trim.sas
+SYMBOLGEN:  Macro variable TT resolves to 54666.4173099994
+MLOGIC(TRIM):  Parameter VALUE has value 15
+MLOGIC(TRIM):  %LOCAL  I
+SYMBOLGEN:  Macro variable VALUE resolves to 15
+MLOGIC(TRIM):  %DO loop beginning; index variable I; start value is 2; stop value is 1; by value is -1.  
+SYMBOLGEN:  Macro variable VALUE resolves to 15
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition %qsubstr(&value,&i,1) ne   is TRUE
+MLOGIC(TRIM):  %GOTO TRIMMED (label resolves to TRIMMED).
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition &i>0 is TRUE
+SYMBOLGEN:  Macro variable VALUE resolves to 15
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  Ending execution.
+MLOGIC(TRIM):  Beginning execution.
+MLOGIC(TRIM):  This macro was compiled from the autocall file /opt/SAS_9.4/SASFoundation/9.4/sasautos/trim.sas
+SYMBOLGEN:  Macro variable TT resolves to 54666.4173099994
+MLOGIC(TRIM):  Parameter VALUE has value 11
+MLOGIC(TRIM):  %LOCAL  I
+SYMBOLGEN:  Macro variable VALUE resolves to 11
+MLOGIC(TRIM):  %DO loop beginning; index variable I; start value is 2; stop value is 1; by value is -1.  
+SYMBOLGEN:  Macro variable VALUE resolves to 11
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition %qsubstr(&value,&i,1) ne   is TRUE
+MLOGIC(TRIM):  %GOTO TRIMMED (label resolves to TRIMMED).
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition &i>0 is TRUE
+SYMBOLGEN:  Macro variable VALUE resolves to 11
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  Ending execution.
+MLOGIC(TRIM):  Beginning execution.
+MLOGIC(TRIM):  This macro was compiled from the autocall file /opt/SAS_9.4/SASFoundation/9.4/sasautos/trim.sas
+SYMBOLGEN:  Macro variable TT resolves to 54666.4173099994
+MLOGIC(TRIM):  Parameter VALUE has value 06
+MLOGIC(TRIM):  %LOCAL  I
+SYMBOLGEN:  Macro variable VALUE resolves to 06
+MLOGIC(TRIM):  %DO loop beginning; index variable I; start value is 2; stop value is 1; by value is -1.  
+SYMBOLGEN:  Macro variable VALUE resolves to 06
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition %qsubstr(&value,&i,1) ne   is TRUE
+MLOGIC(TRIM):  %GOTO TRIMMED (label resolves to TRIMMED).
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition &i>0 is TRUE
+SYMBOLGEN:  Macro variable VALUE resolves to 06
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  Ending execution.
+SYMBOLGEN:  Macro variable DIRPROG resolves to /ssgprojects/project0002/MobZ.new/programs
+SYMBOLGEN:  Macro variable BOOTSTRAP_NUM resolves to 1000
+
+NOTE: The file "/ssgprojects/project0002/MobZ.new/programs/config-bootstrap.do" is:
+      Filename=/ssgprojects/project0002/MobZ.new/programs/config-bootstrap.do,
+      Owner Name=lv39,Group Name=lv39_0002,
+      Access Permission=-rw-rw----,
+      Last Modified=Mon Sep 14 15:11:06 2020
+
+NOTE: 3 records were written to the file "/ssgprojects/project0002/MobZ.new/programs/config-bootstrap.do".
+      The minimum record length was 25.
+      The maximum record length was 63.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              676.12k
+      OS Memory           5784.00k
+      Timestamp           09/14/2020 03:11:06 PM
+      Step Count                        1  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     496
+      Page Swaps                        0
+      Voluntary Context Switches        8
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+53         
+54         /******************************
+55           Runs the average-distance clustering
+56           algorithm
+57         
+58         Creates two files:
+59                     clustermatrix_&dset.
+60                     clustertree_&dset. (output from clustering clustermatrix)
+61         ********************************/
+62         
+63         %let run_clustjtw1990=1;
+64         %let run_clustjtw2009=0;
+65         
+66         /*****************************
+67              Takes the &cutoff, and clustertree_&dset.,
+68              and outputs the clusters
+69              (as clusfin_&dset.)
+70         ******************************/
+71         
+72         %let run_reviewjtw1990=1;
+73         %let run_reviewjtw2009=0;
+74         
+75         * Cluster threshold;
+76         %let cutoff=0.9418 ; /*national cutoff for their way*/
+77         *%let cutoff=0.98 ;
+78         
+79         /*Eventually, do a cutoff specific to each year*/
+80         %let cutoff_jtw1990 =0.9418 ;
+81         %let cutoff_jtw2000 = 0.98 ;
+82         %let cutoff_jtw2009 = 0.96 ;
+83         
+84         
+85         /*-----------------------------------------------------------
+86           Structure of this program
+87           - the macro %runall will do a bit of config, and run module macros
+88           - module macros are in the second part of the file
+89           - the actual calls are at the end
+90           - some macros that actually do stuff are in the &dirprog/macros directory
+91         -------------------------------------------------------------*/
+92         
+93         /* Overall Macro */
+94         
+95         * Modules;
+96         %macro runmod(val,modname);/*========================================*/
+97         %put module &modname.;
+98         %let logdir=&dirprog./logs;
+99         
+100        %if (&val.=1) %then %do;
+101        x mkdir -p &logdir.;
+102        proc printto
+103            log="&logdir./module_&modname..log" new
+104            print="&logdir./module_&modname..lst" new;
+105        run;
+106        
+107        /* run the module */
+108        %&modname.;	
+109        	
+110        %end;
+111        %mend runmod; /*========================================*/
+112        
+113        
+114        /* individual modules */
+115        
+116        %macro reviewjtw1990;
+117        
+118            /* this creates and writes out clusfin_jtw1990 */
+119            %review(jtw1990, 0.9385,inlib=OUTPUTS,outlib=OUTPUTS) ;
+120        
+121            *proc print data= OUTPUTS.clusfin_jtw1990 ;
+122            *run;
+123        
+124            data cz1990 (rename=(cty = county cz1990 = cluster )) ;
+125                set OUTPUTS.cz1990 ;
+126            run;
+127        
+128            data reslf ;
+129                set OUTPUTS.reslf_jtw1990 ;
+130            run;
+131        
+132            %cluster_naming(cz1990,cz1990_named,reslf_jtw1990,inlib=WORK,outlib=WORK,otherlib=OUTPUTS) ;
+133        
+134            %cluster_naming(clusfin_jtw1990,clusnamed_jtw1990,reslf_jtw1990,inlib=OUTPUTS,outlib=WORK,otherlib=OUTPUTS) ;
+135        
+136            %cluster_compare(clusnamed_jtw1990,cz1990_named,reslf,inlib=WORK,outlib=WORK,noprint=NO,mlib=WORK)
+137        
+138            %clustermap(clusfin_jtw1990,mapyear=1990,
+139                                        inlib=OUTPUTS,
+140                                        name=none,
+141                                        mapfile=1990_replicationmap,
+142                                        mappath=&dirfig.,imgformat=png) ;
+143        
+144            %cluster_statistics(clusfin_jtw1990,inlib=OUTPUTS,worklib=WORK,matching=YES) ;
+145        
+146            proc print data=statistics ;
+147                title 'statistics replication' ;
+148            run;
+149        
+150            %commutingflows(clusfin_jtw1990,1990,inlib=OUTPUTS,outlib=WORK);
+151        
+152            proc print data=objectivefn ;
+153            run;
+154        
+155            %cluster_statistics(cz1990,inlib=WORK,worklib=WORK,matching=YES) ;
+156        
+157            proc print data=statistics ;
+158               title 'statistics - ts1990' ;
+159            run;
+160        
+161            %commutingflows(cz1990,1990,inlib=WORK,outlib=WORK);
+162        
+163            proc print data=objectivefn ;
+164            run;
+165        
+166            proc freq data=OUTPUTS.clusfin_jtw1990 ;
+167                title 'clusters tabulation' ;
+168                tables cluster;
+169            run;
+170        
+171        %mend;
+172        
+173        * run each module ;
+174        
+175        %runmod(&run_clustjtw1990, cluster );  /* defaults to jtw1990 */
+MLOGIC(RUNMOD):  Beginning execution.
+SYMBOLGEN:  Macro variable RUN_CLUSTJTW1990 resolves to 1
+MLOGIC(RUNMOD):  Parameter VAL has value 1
+MLOGIC(RUNMOD):  Parameter MODNAME has value cluster
+MLOGIC(RUNMOD):  %PUT module &modname.
+SYMBOLGEN:  Macro variable MODNAME resolves to cluster
+module cluster
+MLOGIC(RUNMOD):  %LET (variable name is LOGDIR)
+SYMBOLGEN:  Macro variable DIRPROG resolves to /ssgprojects/project0002/MobZ.new/programs
+SYMBOLGEN:  Macro variable VAL resolves to 1
+MLOGIC(RUNMOD):  %IF condition (&val.=1) is TRUE
+SYMBOLGEN:  Macro variable LOGDIR resolves to /ssgprojects/project0002/MobZ.new/programs/logs
+SYMBOLGEN:  Macro variable LOGDIR resolves to /ssgprojects/project0002/MobZ.new/programs/logs
+SYMBOLGEN:  Macro variable MODNAME resolves to cluster
+SYMBOLGEN:  Macro variable LOGDIR resolves to /ssgprojects/project0002/MobZ.new/programs/logs
+SYMBOLGEN:  Macro variable MODNAME resolves to cluster
+
+ERROR: Errors printed on page 7.
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           3:17.27
+      user cpu time       3:13.59
+      system cpu time     2.94 seconds
+      memory              396235.81k
+      OS Memory           397456.00k
+      Timestamp           09/14/2020 03:14:23 PM
+      Step Count                        212  Switch Count  442
+      Page Faults                       1
+      Page Reclaims                     312156
+      Page Swaps                        0
+      Voluntary Context Switches        7938
+      Involuntary Context Switches      1309
+      Block Input Operations            1008560
+      Block Output Operations           2983672
+      
