@@ -63,9 +63,7 @@ proc gmap map = counties_proj data = clusters ;
 	*title "Mobility zones from &dset. and &mapyear. ";
 	id state county ;
 	choro cluster	/ discrete nolegend coutline=gray;
-run ; 	
-
-%macro skip ; 
+run ; 	 
 
 /*====================== MAPPING THEIR COMMUTING ZONES ==================*/
 
@@ -90,9 +88,7 @@ proc gmap map = counties_proj data = cz1990 ;
 	id state county ;
 	choro cz	/ discrete nolegend;
 run ; 
-
-
-%mend skip ; 
+ 
 
 
 

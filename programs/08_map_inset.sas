@@ -1,3 +1,6 @@
+/* Author: Andrew Foote */
+/* Purpose: create maps of California for the paper */
+
 %include "config.sas" ;
 %macro inset ; 
 

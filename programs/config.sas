@@ -5,7 +5,7 @@
 %let diroutputs=&root./data;
 %let dirinterwrk=&root./data/interwrk;
 %let logdir=&dirprog./logs;
-%Let mappath=&dirprog./figures ;
+%Let mappath=&root./figures ;
 
 
 libname OUTPUTS "&diroutputs.";

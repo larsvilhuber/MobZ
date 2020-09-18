@@ -1,4 +1,4 @@
-%macro clustermap(indset,mapyear=x,inlib=OUTPUTS,name=none,mapfile=,mappath=./maps,imgformat=pdf); 
+%macro clustermap(indset,mapyear=x,inlib=OUTPUTS,name=none,mapfile=,mappath=./maps,imgformat=pdf,CZ=YES); 
 
 data clusters (keep = state county cluster )  ;
 	set &inlib..&indset. (rename = (county = cty));
@@ -85,7 +85,7 @@ proc gmap map = counties_proj data = clusters ;
 	choro cluster	/ discrete nolegend coutline=gray;
 run ; 	
 
-%macro skip ; 
+%if "&CZ."="YES" %then %do; 
 
 /*====================== MAPPING TS1996 COMMUTING ZONES ==================*/
 
@@ -111,8 +111,7 @@ proc gmap map = counties_proj data = cz1990 ;
 	choro cz	/ discrete nolegend coutline=gray;
 run ; 
 
-
-%mend skip ; 
+%end;
 
 
 
