@@ -1,0 +1,357 @@
+1                                                          The SAS System                           15:52 Sunday, September 20, 2020
+
+NOTE: Copyright (c) 2002-2012 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software 9.4 (TS1M0) 
+      Licensed to CORNELL UNIVERSITY-T&R, Site 70084770.
+NOTE: This session is executing on the Linux 2.6.32-696.18.7.el6.x86_64 (LIN X64) platform.
+
+
+
+NOTE: Updated analytical products:
+      
+      SAS/STAT 12.3 (maintenance)
+      SAS/ETS 12.3 (maintenance)
+      SAS/OR 12.3 (maintenance)
+      SAS/IML 12.3 (maintenance)
+      SAS/QC 12.3 (maintenance)
+
+NOTE: Additional host information:
+
+ Linux LIN X64 2.6.32-696.18.7.el6.x86_64 #1 SMP Thu Jan 4 17:31:22 UTC 2018 x86_64 CentOS release 6.3 (Final) 
+
+You are running SAS 9. Some SAS 8 files will be automatically converted 
+by the V9 engine; others are incompatible.  Please see 
+http://support.sas.com/rnd/migration/planning/platform/64bit.html
+
+PROC MIGRATE will preserve current SAS file attributes and is 
+recommended for converting all your SAS libraries from any 
+SAS 8 release to SAS 9.  For details and examples, please see
+http://support.sas.com/rnd/migration/index.html
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the file "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+
+NOTE: SAS initialization used:
+      real time           0.05 seconds
+      cpu time            0.02 seconds
+      
+
+NOTE: AUTOEXEC processing beginning; file is /home/fs01/lv39/autoexec.sas.
+
+NOTE: Libref OPMQA was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/lv39/Desktop/opm-qa
+NOTE: Libref HERE was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /ssgprojects/project0002/MobZ.new/programs
+=========== running on ecco.vrdc.cornell.edu ============
+
+NOTE: AUTOEXEC processing completed.
+
+1          * Mobility Zones (MobZ);
+2          * Export data to other formats;
+3          options  mlogic symbolgen spool fullstimer;
+4          
+2 The SAS System                                                                                    15:52 Sunday, September 20, 2020
+
+5          %include "config.sas" ;
+SYMBOLGEN:  Macro variable ROOT resolves to /ssgprojects/project0002/MobZ.new
+SYMBOLGEN:  Macro variable ROOT resolves to /ssgprojects/project0002/MobZ.new
+SYMBOLGEN:  Macro variable ROOT resolves to /ssgprojects/project0002/MobZ.new
+SYMBOLGEN:  Macro variable ROOT resolves to /ssgprojects/project0002/MobZ.new
+SYMBOLGEN:  Macro variable ROOT resolves to /ssgprojects/project0002/MobZ.new
+SYMBOLGEN:  Macro variable DIRPROG resolves to /ssgprojects/project0002/MobZ.new/programs
+SYMBOLGEN:  Macro variable ROOT resolves to /ssgprojects/project0002/MobZ.new
+SYMBOLGEN:  Macro variable DIROUTPUTS resolves to /ssgprojects/project0002/MobZ.new/data
+NOTE: Libref OUTPUTS was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /ssgprojects/project0002/MobZ.new/data
+SYMBOLGEN:  Macro variable DIRINTERWRK resolves to /ssgprojects/project0002/MobZ.new/data/interwrk
+NOTE: Libref INTERWRK was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /ssgprojects/project0002/MobZ.new/data/interwrk
+SYMBOLGEN:  Macro variable DIROUTPUTS resolves to /ssgprojects/project0002/MobZ.new/data
+NOTE: Libref GEO refers to the same physical library as OUTPUTS.
+NOTE: Libref GEO was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /ssgprojects/project0002/MobZ.new/data
+SYMBOLGEN:  Macro variable RAW resolves to /ssgprojects/project0002/MobZ.new/raw
+NOTE: Libref INPUTS was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /ssgprojects/project0002/MobZ.new/raw
+SYMBOLGEN:  Macro variable DIRPROG resolves to /ssgprojects/project0002/MobZ.new/programs
+MLOGIC:  Beginning compilation of TRIM using the autocall file /opt/SAS_9.4/SASFoundation/9.4/sasautos/trim.sas.
+MLOGIC:  Ending compilation of TRIM.
+MLOGIC(TRIM):  Beginning execution.
+MLOGIC(TRIM):  This macro was compiled from the autocall file /opt/SAS_9.4/SASFoundation/9.4/sasautos/trim.sas
+SYMBOLGEN:  Macro variable T resolves to 22178
+MLOGIC(TRIM):  Parameter VALUE has value 2020
+MLOGIC(TRIM):  %LOCAL  I
+SYMBOLGEN:  Macro variable VALUE resolves to 2020
+MLOGIC(TRIM):  %DO loop beginning; index variable I; start value is 4; stop value is 1; by value is -1.  
+SYMBOLGEN:  Macro variable VALUE resolves to 2020
+SYMBOLGEN:  Macro variable I resolves to 4
+MLOGIC(TRIM):  %IF condition %qsubstr(&value,&i,1) ne   is TRUE
+MLOGIC(TRIM):  %GOTO TRIMMED (label resolves to TRIMMED).
+SYMBOLGEN:  Macro variable I resolves to 4
+MLOGIC(TRIM):  %IF condition &i>0 is TRUE
+SYMBOLGEN:  Macro variable VALUE resolves to 2020
+SYMBOLGEN:  Macro variable I resolves to 4
+MLOGIC(TRIM):  Ending execution.
+MLOGIC(TRIM):  Beginning execution.
+MLOGIC(TRIM):  This macro was compiled from the autocall file /opt/SAS_9.4/SASFoundation/9.4/sasautos/trim.sas
+SYMBOLGEN:  Macro variable T resolves to 22178
+MLOGIC(TRIM):  Parameter VALUE has value 09
+MLOGIC(TRIM):  %LOCAL  I
+SYMBOLGEN:  Macro variable VALUE resolves to 09
+MLOGIC(TRIM):  %DO loop beginning; index variable I; start value is 2; stop value is 1; by value is -1.  
+SYMBOLGEN:  Macro variable VALUE resolves to 09
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition %qsubstr(&value,&i,1) ne   is TRUE
+MLOGIC(TRIM):  %GOTO TRIMMED (label resolves to TRIMMED).
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition &i>0 is TRUE
+SYMBOLGEN:  Macro variable VALUE resolves to 09
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  Ending execution.
+MLOGIC(TRIM):  Beginning execution.
+MLOGIC(TRIM):  This macro was compiled from the autocall file /opt/SAS_9.4/SASFoundation/9.4/sasautos/trim.sas
+SYMBOLGEN:  Macro variable T resolves to 22178
+MLOGIC(TRIM):  Parameter VALUE has value 20
+MLOGIC(TRIM):  %LOCAL  I
+SYMBOLGEN:  Macro variable VALUE resolves to 20
+MLOGIC(TRIM):  %DO loop beginning; index variable I; start value is 2; stop value is 1; by value is -1.  
+SYMBOLGEN:  Macro variable VALUE resolves to 20
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition %qsubstr(&value,&i,1) ne   is TRUE
+MLOGIC(TRIM):  %GOTO TRIMMED (label resolves to TRIMMED).
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition &i>0 is TRUE
+SYMBOLGEN:  Macro variable VALUE resolves to 20
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  Ending execution.
+SYMBOLGEN:  Macro variable DSTAMP resolves to 20200920
+MLOGIC(TRIM):  Beginning execution.
+MLOGIC(TRIM):  This macro was compiled from the autocall file /opt/SAS_9.4/SASFoundation/9.4/sasautos/trim.sas
+SYMBOLGEN:  Macro variable TT resolves to 57178.1994099617
+MLOGIC(TRIM):  Parameter VALUE has value 15
+MLOGIC(TRIM):  %LOCAL  I
+SYMBOLGEN:  Macro variable VALUE resolves to 15
+MLOGIC(TRIM):  %DO loop beginning; index variable I; start value is 2; stop value is 1; by value is -1.  
+SYMBOLGEN:  Macro variable VALUE resolves to 15
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition %qsubstr(&value,&i,1) ne   is TRUE
+MLOGIC(TRIM):  %GOTO TRIMMED (label resolves to TRIMMED).
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition &i>0 is TRUE
+SYMBOLGEN:  Macro variable VALUE resolves to 15
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  Ending execution.
+MLOGIC(TRIM):  Beginning execution.
+MLOGIC(TRIM):  This macro was compiled from the autocall file /opt/SAS_9.4/SASFoundation/9.4/sasautos/trim.sas
+SYMBOLGEN:  Macro variable TT resolves to 57178.1994099617
+MLOGIC(TRIM):  Parameter VALUE has value 52
+MLOGIC(TRIM):  %LOCAL  I
+SYMBOLGEN:  Macro variable VALUE resolves to 52
+MLOGIC(TRIM):  %DO loop beginning; index variable I; start value is 2; stop value is 1; by value is -1.  
+SYMBOLGEN:  Macro variable VALUE resolves to 52
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition %qsubstr(&value,&i,1) ne   is TRUE
+MLOGIC(TRIM):  %GOTO TRIMMED (label resolves to TRIMMED).
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition &i>0 is TRUE
+SYMBOLGEN:  Macro variable VALUE resolves to 52
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  Ending execution.
+MLOGIC(TRIM):  Beginning execution.
+MLOGIC(TRIM):  This macro was compiled from the autocall file /opt/SAS_9.4/SASFoundation/9.4/sasautos/trim.sas
+SYMBOLGEN:  Macro variable TT resolves to 57178.1994099617
+MLOGIC(TRIM):  Parameter VALUE has value 58
+MLOGIC(TRIM):  %LOCAL  I
+SYMBOLGEN:  Macro variable VALUE resolves to 58
+MLOGIC(TRIM):  %DO loop beginning; index variable I; start value is 2; stop value is 1; by value is -1.  
+SYMBOLGEN:  Macro variable VALUE resolves to 58
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition %qsubstr(&value,&i,1) ne   is TRUE
+MLOGIC(TRIM):  %GOTO TRIMMED (label resolves to TRIMMED).
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  %IF condition &i>0 is TRUE
+SYMBOLGEN:  Macro variable VALUE resolves to 58
+SYMBOLGEN:  Macro variable I resolves to 2
+MLOGIC(TRIM):  Ending execution.
+SYMBOLGEN:  Macro variable DIRPROG resolves to /ssgprojects/project0002/MobZ.new/programs
+SYMBOLGEN:  Macro variable BOOTSTRAP_NUM resolves to 1000
+
+NOTE: The file "/ssgprojects/project0002/MobZ.new/programs/config-bootstrap.do" is:
+      Filename=/ssgprojects/project0002/MobZ.new/programs/config-bootstrap.do,
+      Owner Name=lv39,Group Name=lv39_0002,
+      Access Permission=-rw-rw----,
+      Last Modified=Sun Sep 20 15:52:58 2020
+
+NOTE: 3 records were written to the file "/ssgprojects/project0002/MobZ.new/programs/config-bootstrap.do".
+      The minimum record length was 25.
+      The maximum record length was 63.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              677.15k
+      OS Memory           5784.00k
+      Timestamp           09/20/2020 03:52:58 PM
+      Step Count                        1  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     498
+      Page Swaps                        0
+      Voluntary Context Switches        8
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+52         
+53         
+54         
+55             proc export data=OUTPUTS.clusfin_jtw1990
+56                     outfile = "&diroutputs./clusfin_jtw1990.dta" replace;
+SYMBOLGEN:  Macro variable DIROUTPUTS resolves to /ssgprojects/project0002/MobZ.new/data
+57             run;
+
+NOTE: The export data set has 3140 observations and 4 variables.
+NOTE: "/ssgprojects/project0002/MobZ.new/data/clusfin_jtw1990.dta" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.01 seconds
+      memory              377.68k
+      OS Memory           6040.00k
+      Timestamp           09/20/2020 03:52:58 PM
+      Step Count                        2  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     255
+      Page Swaps                        0
+      Voluntary Context Switches        27
+      Involuntary Context Switches      3
+      Block Input Operations            416
+      Block Output Operations           272
+      
+
+58         
+59             proc export data=OUTPUTS.clusfin_jtw1990
+60                     outfile = "&diroutputs./clusfin_jtw1990.csv" replace;
+SYMBOLGEN:  Macro variable DIROUTPUTS resolves to /ssgprojects/project0002/MobZ.new/data
+61             run;
+
+62          /**********************************************************************
+63          *   PRODUCT:   SAS
+64          *   VERSION:   9.4
+65          *   CREATOR:   External File Interface
+66          *   DATE:      20SEP20
+67          *   DESC:      Generated SAS Datastep Code
+68          *   TEMPLATE SOURCE:  (None Specified.)
+69          ***********************************************************************/
+70             data _null_;
+71             %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+72             %let _EFIREC_ = 0;     /* clear export record count macro variable */
+73             file '/ssgprojects/project0002/MobZ.new/data/clusfin_jtw1990.csv' delimiter=',' DSD DROPOVER lrecl=32767;
+74             if _n_ = 1 then        /* write column names or labels */
+75              do;
+76                put
+77                   "_PARENT_"
+78                ','
+79                   "_NAME_"
+80                ','
+81                   "county"
+82                ','
+83                   "cluster"
+84                ;
+85              end;
+86            set  OUTPUTS.CLUSFIN_JTW1990   end=EFIEOD;
+87                format _PARENT_ $15. ;
+88                format _NAME_ $10. ;
+89                format county $10. ;
+90                format cluster best12. ;
+91              do;
+92                EFIOUT + 1;
+93                put _PARENT_ $ @;
+94                put _NAME_ $ @;
+95                put county $ @;
+96                put cluster ;
+97                ;
+98              end;
+99             if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+100            if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+101            run;
+
+NOTE: The file '/ssgprojects/project0002/MobZ.new/data/clusfin_jtw1990.csv' is:
+      Filename=/ssgprojects/project0002/MobZ.new/data/clusfin_jtw1990.csv,
+      Owner Name=lv39,Group Name=lv39_0002,
+      Access Permission=-rw-rw----,
+      Last Modified=Sun Sep 20 15:52:59 2020
+
+NOTE: 3141 records were written to the file '/ssgprojects/project0002/MobZ.new/data/clusfin_jtw1990.csv'.
+      The minimum record length was 24.
+      The maximum record length was 32.
+NOTE: There were 3140 observations read from the data set OUTPUTS.CLUSFIN_JTW1990.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              8485.75k
+      OS Memory           14008.00k
+      Timestamp           09/20/2020 03:52:59 PM
+      Step Count                        3  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     172
+      Page Swaps                        0
+      Voluntary Context Switches        22
+      Involuntary Context Switches      3
+      Block Input Operations            416
+      Block Output Operations           160
+      
+
+3140 records created in /ssgprojects/project0002/MobZ.new/data/clusfin_jtw1990.csv from OUTPUTS.CLUSFIN_JTW1990.
+  
+  
+NOTE: "/ssgprojects/project0002/MobZ.new/data/clusfin_jtw1990.csv" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           1.27 seconds
+      user cpu time       0.04 seconds
+      system cpu time     0.01 seconds
+      memory              8485.75k
+      OS Memory           14008.00k
+      Timestamp           09/20/2020 03:52:59 PM
+      Step Count                        3  Switch Count  7
+      Page Faults                       73
+      Page Reclaims                     2917
+      Page Swaps                        0
+      Voluntary Context Switches        299
+      Involuntary Context Switches      13
+      Block Input Operations            24736
+      Block Output Operations           216
+      
+
+102        
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           1.35 seconds
+      user cpu time       0.06 seconds
+      system cpu time     0.03 seconds
+      memory              12854.56k
+      OS Memory           14008.00k
+      Timestamp           09/20/2020 03:52:59 PM
+      Step Count                        3  Switch Count  30
+      Page Faults                       73
+      Page Reclaims                     8284
+      Page Swaps                        0
+      Voluntary Context Switches        421
+      Involuntary Context Switches      21
+      Block Input Operations            25168
+      Block Output Operations           624
+      
