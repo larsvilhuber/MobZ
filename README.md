@@ -1,7 +1,7 @@
 ---
 title: "README and Guidance"
 author: "Andrew Foote, Mark Kutzbach, Lars Vilhuber"
-date: "2020-09-20"
+date: "2020-09-21"
 output:
   pdf_document:
     toc: yes
@@ -138,16 +138,6 @@ Before using this data, ask David Dorn for permission. Posted here with permissi
   - Note: the files are also archived at @Autor_ReplChina_2013.
 - The datafiles are NOT provided as part of this package.
 - Datafiles: `$raw/adh_data/Public Release Data/dta/sic87dd_trade_data.dta` and `$raw/adh_data/Public Release Data/dta/workfile_china.dta`
-
-### BLS data
-
-Data on local unemployment rates. Used in replications.
-
-- Source: @BLS_LAUS_2020
-- Source URL: https://download.bls.gov/pub/time.series/la/la.data.0.CurrentU$arg `for arg in 90-94 95-99 00-04 05-09 10-14 15-19`
-- Alternate Source URL: https://www.bls.gov/lau/laucnty15.txt (and other files, back to 1990, with similar year suffix)
-- Renamed to: urates_counties.csv
-- Not used?
 
 ### Dataset list
 
