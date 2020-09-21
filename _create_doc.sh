@@ -1,9 +1,7 @@
 #!/bin/bash
 
 # create the output doc
-Rscript -e "rmarkdown::render('template-README.Rmd',  encoding = 'UTF-8');"
+Rscript -e "rmarkdown::render('README.Rmd', output_format = 'all', encoding = 'UTF-8');"
 # create a PDF, for now externally
-
-
-export QT_STYLE_OVERRIDE=fusion 
-wkhtmltopdf template-README.html  template-README.pdf
+#export QT_STYLE_OVERRIDE=fusion 
+#wkhtmltopdf README.html  README.pdf

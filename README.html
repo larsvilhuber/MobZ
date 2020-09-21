@@ -579,10 +579,10 @@ div.tocify {
 <p>Filename: <strong><code>clusfin_jtw1990.{csv,dta,sas7bdat}</code></strong></p>
 <p>Variables:</p>
 <ul>
-<li><code>_PARENT_</code> : Character cluster number (CL + NNNN)</li>
+<li><code>_PARENT_</code> : Character cluster number (CL + NNNNN)</li>
 <li><code>_NAME_</code>: Character county FIPS code (cty + NNNNN)</li>
 <li><code>county</code>: county FIPS code (numeric part, NNNNN)</li>
-<li><code>cluster</code>: numeric cluster number (numeric part, NNNN)</li>
+<li><code>cluster</code>: numeric cluster number (numeric part, NNNNN)</li>
 </ul>
 <p>Sample observations:</p>
 <table>
@@ -636,13 +636,13 @@ div.tocify {
 </div>
 <div id="bootstrap-cluster-assignments" class="section level3">
 <h3>Bootstrap cluster assignments</h3>
-<p>This dataset is the result from sampling as described in the article, and generating a new cluster (commuting zone) assignment. It can be used as an alternate look-up table.</p>
+<p>This dataset contains the 1000 realizations of the commuting zones from our paper. It can be used to crosswalk county fips codes to commuting zone realizations. The naming convention for the commuting zones in our data is CL + (fips of largest county by residence labor force), but otherwise are arbitrary.</p>
 <p>Filename: <strong><code>bootclusters_jtw1990_moe.{csv,sas7bdat}</code></strong> (for technical reasons, the <code>dta</code> file has a <code>_new</code> suffix)</p>
 <p>Variables:</p>
 <ul>
 <li><code>fips</code> : county FIPS code (numeric part, NNNNN)</li>
-<li><code>clustername</code>: character cluster number (CL + NNNN)</li>
-<li><code>clustername_Z</code>: character cluster number for <em>Z-th</em> draw (CL + NNNN)</li>
+<li><code>clustername</code>: character cluster number (CL + NNNNN)</li>
+<li><code>clustername_Z</code>: character cluster number for <em>Z-th</em> draw (CL + NNNNN)</li>
 </ul>
 </div>
 </div>
@@ -772,22 +772,28 @@ div.tocify {
 <td align="left">01_dataprep.sas</td>
 </tr>
 <tr class="even">
-<td align="left">02_clusters.sas</td>
+<td align="left">02_01_clusters.sas</td>
 </tr>
 <tr class="odd">
+<td align="left">02_02_export_data.sas</td>
+</tr>
+<tr class="even">
 <td align="left">03_prep_figures.sas</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">04_figures2_3.do</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">05_01_flows.do</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">05_02_bootstrap.sas</td>
 </tr>
+<tr class="even">
+<td align="left">05_03_export_bootstraps.sas</td>
+</tr>
 <tr class="odd">
-<td align="left">05_03_bootstrap_graphs_new.do</td>
+<td align="left">05_04_bootstrap_graphs_new.do</td>
 </tr>
 <tr class="even">
 <td align="left">08_map_inset.sas</td>
