@@ -163,7 +163,6 @@ The following files are provided in `$raw` directory:
 |CAINC30__ALL_AREAS_1969_2018.csv            |
 |czlma903.xls                                |
 |popcounts.dta                               |
-|table1.xlsx                                 |
 
 
 ## Data Created by this Archive
@@ -201,10 +200,12 @@ Filename: **`clusfin_jtw1990.{csv,dta,sas7bdat}`**
 
 Variables:
 
-- `_PARENT_` : Character cluster number (CL + NNNNN)
+- `_PARENT_` : Character cluster number (CL + NNNNN or CL + "10" + NNNNN)
 - `_NAME_`: Character county FIPS code (cty + NNNNN)
 - `county`: county FIPS code (numeric part, NNNNN)
-- `cluster`: numeric cluster number (numeric part, NNNNN)
+- `cluster`: numeric cluster number (numeric part, NNNNN or "10" + NNNNN)
+
+The naming convention for the commuting zones is CL + (fips of largest county by residence labor force). For singletons, the commuting zone is named CL + "10" + fips, to distinguish it from clusters in other realizations in which that county is the largest unit. 
 
 Sample observations:
 
@@ -220,8 +221,7 @@ CL625      cty08099   08099         625
 
 ### Bootstrap cluster assignments
 
-This dataset contains the 1000 realizations of the commuting zones from our paper. It can be used to crosswalk county fips codes to commuting zone realizations. The naming convention for the commuting zones in our data is CL + (fips of largest county by residence labor force), but otherwise are arbitrary. 
-
+This dataset contains the 1000 realizations of the commuting zones from our paper. It can be used to crosswalk county fips codes to commuting zone realizations.
 
 Filename: **`bootclusters_jtw1990_moe.{csv,sas7bdat}`** (for technical reasons, the `dta` file has a `_new` suffix)
 
@@ -399,27 +399,16 @@ Required data are commuting zones, BEA-collected receipt of UI benefits [@bea_ta
 Programs prefixed with `00` prepare the data:
 
 
-|filename                            |
-|:-----------------------------------|
-|06_qcew/00_bea_readin.do            |
-|06_qcew/00_describe_bootclusters.do |
-|06_qcew/00_qcew_extraction.sas      |
-|06_qcew/00_qcew_post_extraction.do  |
-|06_qcew/00_readin_czones.do         |
+|filename |
+|:--------|
 
 #### Analysis programs
 
 The remaining programs generate the analysis described in the manuscript, and output tables and figures as per [the list below](#lot). Programs with non-numeric prefixes are called by other programs, and should not be run separately. Scripts (`*.sh`) are for convenience, and are not necessary - simply execute all programs in numerical order.
 
 
-|filename                        |
-|:-------------------------------|
-|06_qcew/01_regressions_table.do |
-|06_qcew/02_01_cluster_loop.do   |
-|06_qcew/02_02_cluster_loop.do   |
-|06_qcew/03_01_cluster_graphs.do |
-|06_qcew/03_02_cutoff_graphs.do  |
-|06_qcew/zz_bartik_merge.do      |
+|filename |
+|:--------|
 
 The complete sequence of programs ran in about 36 hours.
 
@@ -436,30 +425,16 @@ Required data are commuting zones, and various ADH-related data listed earlier.
 Programs prefixed with `00` prepare the data:
 
 
-|filename                             |
-|:------------------------------------|
-|07_adh/00_01_census_creation.do      |
-|07_adh/00_02_ctyindustry_creation.do |
-|07_adh/00_03_IPW_creation.do         |
-|07_adh/00_04_cbp_readin.do           |
-|07_adh/00_05_subset_qcewdata.do      |
-|07_adh/00_06_mergecounty.do          |
-|07_adh/00_07_cz_merge.do             |
+|filename |
+|:--------|
 
 #### Analysis programs
 
 The remaining programs generate the analysis described in the manuscript, and output tables and figures as per [the list below](#lot). Programs with non-numeric prefixes are called by other programs, and should not be run separately. Scripts (`*.sh`) are for convenience, and are not necessary - simply execute all programs in numerical order.
 
 
-|filename                       |
-|:------------------------------|
-|07_adh/01_table3.do            |
-|07_adh/02_01_cutoff_loop.do    |
-|07_adh/02_02_overall_loop.do   |
-|07_adh/03_01_cutoff_graphs.do  |
-|07_adh/03_02_overall_graphs.do |
-|07_adh/zz_aggregatedata.do     |
-|07_adh/zz_ctymerge.do          |
+|filename |
+|:--------|
 
 The complete sequence of programs ran in about 36 hours.
 

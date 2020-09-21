@@ -207,10 +207,12 @@ Filename: **`clusfin_jtw1990.{csv,dta,sas7bdat}`**
 
 Variables:
 
-- `_PARENT_` : Character cluster number (CL + NNNNN)
+- `_PARENT_` : Character cluster number (CL + NNNNN or CL + "10" + NNNNN)
 - `_NAME_`: Character county FIPS code (cty + NNNNN)
 - `county`: county FIPS code (numeric part, NNNNN)
-- `cluster`: numeric cluster number (numeric part, NNNNN)
+- `cluster`: numeric cluster number (numeric part, NNNNN or "10" + NNNNN)
+
+The naming convention for the commuting zones is CL + (fips of largest county by residence labor force). For singletons, the commuting zone is named CL + "10" + fips, to distinguish it from clusters in other realizations in which that county is the largest unit. 
 
 Sample observations:
 
@@ -224,8 +226,7 @@ head(clusfin_jtw1990) %>% kable()
 
 ### Bootstrap cluster assignments
 
-This dataset contains the 1000 realizations of the commuting zones from our paper. It can be used to crosswalk county fips codes to commuting zone realizations. The naming convention for the commuting zones in our data is CL + (fips of largest county by residence labor force), but otherwise are arbitrary. 
-
+This dataset contains the 1000 realizations of the commuting zones from our paper. It can be used to crosswalk county fips codes to commuting zone realizations.
 
 Filename: **`bootclusters_jtw1990_moe.{csv,sas7bdat}`** (for technical reasons, the `dta` file has a `_new` suffix)
 

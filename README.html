@@ -462,9 +462,6 @@ div.tocify {
 <tr class="odd">
 <td align="left">popcounts.dta</td>
 </tr>
-<tr class="even">
-<td align="left">table1.xlsx</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -568,11 +565,12 @@ div.tocify {
 <p>Filename: <strong><code>clusfin_jtw1990.{csv,dta,sas7bdat}</code></strong></p>
 <p>Variables:</p>
 <ul>
-<li><code>_PARENT_</code> : Character cluster number (CL + NNNNN)</li>
+<li><code>_PARENT_</code> : Character cluster number (CL + NNNNN or CL + “10” + NNNNN)</li>
 <li><code>_NAME_</code>: Character county FIPS code (cty + NNNNN)</li>
 <li><code>county</code>: county FIPS code (numeric part, NNNNN)</li>
-<li><code>cluster</code>: numeric cluster number (numeric part, NNNNN)</li>
+<li><code>cluster</code>: numeric cluster number (numeric part, NNNNN or “10” + NNNNN)</li>
 </ul>
+<p>The naming convention for the commuting zones is CL + (fips of largest county by residence labor force). For singletons, the commuting zone is named CL + “10” + fips, to distinguish it from clusters in other realizations in which that county is the largest unit.</p>
 <p>Sample observations:</p>
 <table>
 <thead>
@@ -625,7 +623,7 @@ div.tocify {
 </div>
 <div id="bootstrap-cluster-assignments" class="section level3">
 <h3>Bootstrap cluster assignments</h3>
-<p>This dataset contains the 1000 realizations of the commuting zones from our paper. It can be used to crosswalk county fips codes to commuting zone realizations. The naming convention for the commuting zones in our data is CL + (fips of largest county by residence labor force), but otherwise are arbitrary.</p>
+<p>This dataset contains the 1000 realizations of the commuting zones from our paper. It can be used to crosswalk county fips codes to commuting zone realizations.</p>
 <p>Filename: <strong><code>bootclusters_jtw1990_moe.{csv,sas7bdat}</code></strong> (for technical reasons, the <code>dta</code> file has a <code>_new</code> suffix)</p>
 <p>Variables:</p>
 <ul>
@@ -849,21 +847,6 @@ sas         05_02_bootstrap.sas</code></pre>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">06_qcew/00_bea_readin.do</td>
-</tr>
-<tr class="even">
-<td align="left">06_qcew/00_describe_bootclusters.do</td>
-</tr>
-<tr class="odd">
-<td align="left">06_qcew/00_qcew_extraction.sas</td>
-</tr>
-<tr class="even">
-<td align="left">06_qcew/00_qcew_post_extraction.do</td>
-</tr>
-<tr class="odd">
-<td align="left">06_qcew/00_readin_czones.do</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -877,24 +860,6 @@ sas         05_02_bootstrap.sas</code></pre>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">06_qcew/01_regressions_table.do</td>
-</tr>
-<tr class="even">
-<td align="left">06_qcew/02_01_cluster_loop.do</td>
-</tr>
-<tr class="odd">
-<td align="left">06_qcew/02_02_cluster_loop.do</td>
-</tr>
-<tr class="even">
-<td align="left">06_qcew/03_01_cluster_graphs.do</td>
-</tr>
-<tr class="odd">
-<td align="left">06_qcew/03_02_cutoff_graphs.do</td>
-</tr>
-<tr class="even">
-<td align="left">06_qcew/zz_bartik_merge.do</td>
-</tr>
 </tbody>
 </table>
 <p>The complete sequence of programs ran in about 36 hours.</p>
@@ -914,27 +879,6 @@ sas         05_02_bootstrap.sas</code></pre>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">07_adh/00_01_census_creation.do</td>
-</tr>
-<tr class="even">
-<td align="left">07_adh/00_02_ctyindustry_creation.do</td>
-</tr>
-<tr class="odd">
-<td align="left">07_adh/00_03_IPW_creation.do</td>
-</tr>
-<tr class="even">
-<td align="left">07_adh/00_04_cbp_readin.do</td>
-</tr>
-<tr class="odd">
-<td align="left">07_adh/00_05_subset_qcewdata.do</td>
-</tr>
-<tr class="even">
-<td align="left">07_adh/00_06_mergecounty.do</td>
-</tr>
-<tr class="odd">
-<td align="left">07_adh/00_07_cz_merge.do</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -948,27 +892,6 @@ sas         05_02_bootstrap.sas</code></pre>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">07_adh/01_table3.do</td>
-</tr>
-<tr class="even">
-<td align="left">07_adh/02_01_cutoff_loop.do</td>
-</tr>
-<tr class="odd">
-<td align="left">07_adh/02_02_overall_loop.do</td>
-</tr>
-<tr class="even">
-<td align="left">07_adh/03_01_cutoff_graphs.do</td>
-</tr>
-<tr class="odd">
-<td align="left">07_adh/03_02_overall_graphs.do</td>
-</tr>
-<tr class="even">
-<td align="left">07_adh/zz_aggregatedata.do</td>
-</tr>
-<tr class="odd">
-<td align="left">07_adh/zz_ctymerge.do</td>
-</tr>
 </tbody>
 </table>
 <p>The complete sequence of programs ran in about 36 hours.</p>
