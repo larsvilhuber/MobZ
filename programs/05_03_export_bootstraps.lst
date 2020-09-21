@@ -1,0 +1,50 @@
+MOE Ratio, all flows                                                                            20:32 Sunday, September 20, 2020   1
+
+The MEANS Procedure
+
+               Analysis Variable : moe_ratio 
+ 
+        Mean       25th Pctl       50th Pctl       75th Pctl
+------------------------------------------------------------
+   1.2363706       0.8450704       1.3703704       1.6000000
+------------------------------------------------------------
+MOE Ratio, flows<100                                                                            20:32 Sunday, September 20, 2020   2
+
+The MEANS Procedure
+
+               Analysis Variable : moe_ratio 
+ 
+        Mean       25th Pctl       50th Pctl       75th Pctl
+------------------------------------------------------------
+   1.4316974       1.1481481       1.5000000       1.6363636
+------------------------------------------------------------
+MOE Ratio, flows 100-1000                                                                       20:32 Sunday, September 20, 2020   3
+
+The MEANS Procedure
+
+               Analysis Variable : moe_ratio 
+ 
+        Mean       25th Pctl       50th Pctl       75th Pctl
+------------------------------------------------------------
+   0.4436640       0.3006719       0.4137931       0.5486111
+------------------------------------------------------------
+MOE Ratio, flows 1000-10000                                                                     20:32 Sunday, September 20, 2020   4
+
+The MEANS Procedure
+
+               Analysis Variable : moe_ratio 
+ 
+        Mean       25th Pctl       50th Pctl       75th Pctl
+------------------------------------------------------------
+   0.1308877       0.0868510       0.1243134       0.1690141
+------------------------------------------------------------
+MOE Ratio, flows 10000+                                                                         20:32 Sunday, September 20, 2020   5
+
+The MEANS Procedure
+
+               Analysis Variable : moe_ratio 
+ 
+        Mean       25th Pctl       50th Pctl       75th Pctl
+------------------------------------------------------------
+   0.0371346       0.0243427       0.0359442       0.0487280
+------------------------------------------------------------

@@ -1,0 +1,4563 @@
+1                                                          The SAS System                           20:32 Sunday, September 20, 2020
+
+NOTE: Copyright (c) 2002-2012 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software 9.4 (TS1M0) 
+      Licensed to CORNELL UNIVERSITY-T&R, Site 70084770.
+NOTE: This session is executing on the Linux 2.6.32-696.18.7.el6.x86_64 (LIN X64) platform.
+
+
+
+NOTE: Updated analytical products:
+      
+      SAS/STAT 12.3 (maintenance)
+      SAS/ETS 12.3 (maintenance)
+      SAS/OR 12.3 (maintenance)
+      SAS/IML 12.3 (maintenance)
+      SAS/QC 12.3 (maintenance)
+
+NOTE: Additional host information:
+
+ Linux LIN X64 2.6.32-696.18.7.el6.x86_64 #1 SMP Thu Jan 4 17:31:22 UTC 2018 x86_64 CentOS release 6.3 (Final) 
+
+You are running SAS 9. Some SAS 8 files will be automatically converted 
+by the V9 engine; others are incompatible.  Please see 
+http://support.sas.com/rnd/migration/planning/platform/64bit.html
+
+PROC MIGRATE will preserve current SAS file attributes and is 
+recommended for converting all your SAS libraries from any 
+SAS 8 release to SAS 9.  For details and examples, please see
+http://support.sas.com/rnd/migration/index.html
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the file "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+
+NOTE: SAS initialization used:
+      real time           0.05 seconds
+      cpu time            0.02 seconds
+      
+
+NOTE: AUTOEXEC processing beginning; file is /home/fs01/lv39/autoexec.sas.
+
+NOTE: Libref OPMQA was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/lv39/Desktop/opm-qa
+NOTE: Libref HERE was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /ssgprojects/project0002/MobZ.new/programs
+=========== running on ecco.vrdc.cornell.edu ============
+
+NOTE: AUTOEXEC processing completed.
+
+1          /***************
+2          This outputs files for downstream use and publication, and creates
+3          some statistics.
+4          ****************/
+2 The SAS System                                                                                    20:32 Sunday, September 20, 2020
+
+5          
+6          %include "config.sas"/source2;
+NOTE: %INCLUDE (level 1) file config.sas is file /ssgprojects/project0002/MobZ.new/programs/config.sas.
+7         +%let root = /ssgprojects/project0002/MobZ.new ;
+8         +%let raw=&root./raw ;
+9         +%let dirprog=&root/programs;
+10        +%let dirfig=&root/figures;
+11        +%let diroutputs=&root./data;
+12        +%let dirinterwrk=&root./data/interwrk;
+13        +%let logdir=&dirprog./logs;
+14        +%Let mappath=&root./figures ;
+15        +
+16        +
+17        +libname OUTPUTS "&diroutputs.";
+NOTE: Libref OUTPUTS was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /ssgprojects/project0002/MobZ.new/data
+18        +libname INTERWRK "&dirinterwrk.";
+NOTE: Libref INTERWRK was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /ssgprojects/project0002/MobZ.new/data/interwrk
+19        +libname GEO "&diroutputs." ;
+NOTE: Libref GEO refers to the same physical library as OUTPUTS.
+NOTE: Libref GEO was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /ssgprojects/project0002/MobZ.new/data
+20        +libname INPUTS "&raw" ;
+NOTE: Libref INPUTS was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /ssgprojects/project0002/MobZ.new/raw
+21        +options sasautos=(SASAUTOS, "&dirprog./macros") mautosource nocenter ps=1000;
+22        +
+23        +
+24        +%global tstamp;
+25        +%let t=%sysfunc(today());
+26        +%let tt=%sysfunc(time());
+27        +%let dstamp=%trim(%sysfunc(year(&t.),z4.))%trim(%sysfunc(month(&t.),z2.))%trim(%sysfunc(day(&t.),z2.));
+28        +%let tstamp=&dstamp._%trim(%sysfunc(hour(&tt.),z2.))%trim(%sysfunc(minute(&tt.),z2.))%trim(%sysfunc(second(&tt.),z2.));
+29        +
+30        +
+31        +* Cluster threshold;
+32        +%let cutoff=0.9385 ; /*national cutoff for their way*/
+33        +
+34        +* Cutoffs ;
+35        +    %let cutoff_bottom = 0.8 ;
+36        +    %let cutoff_top = 1.0 ;
+37        +    %let ci90 = 1.645 ;
+38        +
+39        +* Bootstrap draws ;
+40        +*  - paper: 1000;
+41        +*  - testing: 3;
+42        +
+43        +%let bootstrap_num = 1000;
+44        +
+45        +/* write this out for Stata */
+46        +data _null_;
+47        +   file "&dirprog./config-bootstrap.do";
+48        +   put "/* Configuration written out by SAS -- config.sas            */";
+49        +   put "/* -- any edits will be overwritten next time SAS is run! -- */";
+50        +   put "global bootstrap_num &bootstrap_num.";
+51        +run;
+
+NOTE: The file "/ssgprojects/project0002/MobZ.new/programs/config-bootstrap.do" is:
+      Filename=/ssgprojects/project0002/MobZ.new/programs/config-bootstrap.do,
+      Owner Name=lv39,Group Name=lv39_0002,
+      Access Permission=-rw-rw----,
+      Last Modified=Sun Sep 20 20:32:50 2020
+
+NOTE: 3 records were written to the file "/ssgprojects/project0002/MobZ.new/programs/config-bootstrap.do".
+      The minimum record length was 25.
+      The maximum record length was 63.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              677.15k
+      OS Memory           5784.00k
+      Timestamp           09/20/2020 08:32:50 PM
+      Step Count                        1  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     495
+      Page Swaps                        0
+      Voluntary Context Switches        10
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+52        +
+NOTE: %INCLUDE (level 1) ending.
+53         
+54         proc export data=OUTPUTS.flows_jtw1990_moe
+55             outfile = "&diroutputs./flows_jtw1990_moe.csv" replace;
+56         run;
+
+57          /**********************************************************************
+58          *   PRODUCT:   SAS
+59          *   VERSION:   9.4
+60          *   CREATOR:   External File Interface
+61          *   DATE:      20SEP20
+62          *   DESC:      Generated SAS Datastep Code
+63          *   TEMPLATE SOURCE:  (None Specified.)
+64          ***********************************************************************/
+65             data _null_;
+66             %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+67             %let _EFIREC_ = 0;     /* clear export record count macro variable */
+68             file '/ssgprojects/project0002/MobZ.new/data/flows_jtw1990_moe.csv' delimiter=',' DSD DROPOVER lrecl=32767;
+69             if _n_ = 1 then        /* write column names or labels */
+70              do;
+71                put
+72                   "work_cty"
+73                ','
+74                   "jobsflow"
+75                ','
+76                   "home_cty"
+77                ','
+78                   "flowsize"
+79                ','
+80                   "sd_ratio"
+81                ','
+82                   "mean_ratio"
+83                ','
+84                   "draw"
+85                ','
+86                   "moe"
+87                ;
+88              end;
+89            set  OUTPUTS.FLOWS_JTW1990_MOE   end=EFIEOD;
+90                format work_cty $5. ;
+91                format jobsflow best12. ;
+92                format home_cty $5. ;
+93                format flowsize best12. ;
+94                format sd_ratio best12. ;
+95                format mean_ratio best12. ;
+96                format draw best12. ;
+97                format moe best12. ;
+98              do;
+99                EFIOUT + 1;
+100               put work_cty $ @;
+101               put jobsflow @;
+102               put home_cty $ @;
+103               put flowsize @;
+104               put sd_ratio @;
+105               put mean_ratio @;
+106               put draw @;
+107               put moe ;
+108               ;
+109             end;
+110            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+111            if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+112            run;
+
+NOTE: The file '/ssgprojects/project0002/MobZ.new/data/flows_jtw1990_moe.csv' is:
+      Filename=/ssgprojects/project0002/MobZ.new/data/flows_jtw1990_moe.csv,
+      Owner Name=lv39,Group Name=lv39_0002,
+      Access Permission=-rw-rw----,
+      Last Modified=Sun Sep 20 20:32:50 2020
+
+NOTE: 216659 records were written to the file '/ssgprojects/project0002/MobZ.new/data/flows_jtw1990_moe.csv'.
+      The minimum record length was 39.
+      The maximum record length was 64.
+NOTE: There were 216658 observations read from the data set OUTPUTS.FLOWS_JTW1990_MOE.
+NOTE: DATA statement used (Total process time):
+      real time           0.44 seconds
+      user cpu time       0.33 seconds
+      system cpu time     0.02 seconds
+      memory              8532.25k
+      OS Memory           14008.00k
+      Timestamp           09/20/2020 08:32:50 PM
+      Step Count                        2  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     185
+      Page Swaps                        0
+      Voluntary Context Switches        230
+      Involuntary Context Switches      37
+      Block Input Operations            27296
+      Block Output Operations           20784
+      
+
+216658 records created in /ssgprojects/project0002/MobZ.new/data/flows_jtw1990_moe.csv from OUTPUTS.FLOWS_JTW1990_MOE.
+  
+  
+NOTE: "/ssgprojects/project0002/MobZ.new/data/flows_jtw1990_moe.csv" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.51 seconds
+      user cpu time       0.36 seconds
+      system cpu time     0.04 seconds
+      memory              8532.25k
+      OS Memory           14008.00k
+      Timestamp           09/20/2020 08:32:50 PM
+      Step Count                        2  Switch Count  7
+      Page Faults                       0
+      Page Reclaims                     3188
+      Page Swaps                        0
+      Voluntary Context Switches        271
+      Involuntary Context Switches      43
+      Block Input Operations            27776
+      Block Output Operations           20840
+      
+
+113        
+114        
+115        proc export data=OUTPUTS.bootclusters_jtw1990_moe
+116                    outfile = "&diroutputs./bootclusters_jtw1990_moe_new.dta"
+117        replace ;
+118        run;
+
+NOTE: The export data set has 3140 observations and 1003 variables.
+NOTE: "/ssgprojects/project0002/MobZ.new/data/bootclusters_jtw1990_moe_new.dta" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.34 seconds
+      user cpu time       0.12 seconds
+      system cpu time     0.11 seconds
+      memory              2232.96k
+      OS Memory           9888.00k
+      Timestamp           09/20/2020 08:32:51 PM
+      Step Count                        3  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     166
+      Page Swaps                        0
+      Voluntary Context Switches        847
+      Involuntary Context Switches      113
+      Block Input Operations            75872
+      Block Output Operations           74096
+      
+
+119        
+120        proc export data=OUTPUTS.bootclusters_jtw1990_moe
+121                    outfile = "&diroutputs./bootclusters_jtw1990_moe.csv"
+122        replace ;
+123        run;
+
+124         /**********************************************************************
+125         *   PRODUCT:   SAS
+126         *   VERSION:   9.4
+127         *   CREATOR:   External File Interface
+128         *   DATE:      20SEP20
+129         *   DESC:      Generated SAS Datastep Code
+130         *   TEMPLATE SOURCE:  (None Specified.)
+131         ***********************************************************************/
+132            data _null_;
+133            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+134            %let _EFIREC_ = 0;     /* clear export record count macro variable */
+135            file '/ssgprojects/project0002/MobZ.new/data/bootclusters_jtw1990_moe.csv' delimiter=',' DSD DROPOVER lrecl=32767;
+136            if _n_ = 1 then        /* write column names or labels */
+137             do;
+138               put
+139                  "fips"
+140               ','
+141                  "clustername"
+142               ','
+143                  "clustername_1"
+144               ','
+145                  "clustername_2"
+146               ','
+147                  "clustername_3"
+148               ','
+149                  "clustername_4"
+150               ','
+151                  "clustername_5"
+152               ','
+153                  "clustername_6"
+154               ','
+155                  "clustername_7"
+156               ','
+157                  "clustername_8"
+158               ','
+159                  "clustername_9"
+160               ','
+161                  "clustername_10"
+162               ','
+163                  "clustername_11"
+164               ','
+165                  "clustername_12"
+166               ','
+167                  "clustername_13"
+168               ','
+169                  "clustername_14"
+170               ','
+171                  "clustername_15"
+172               ','
+173                  "clustername_16"
+174               ','
+175                  "clustername_17"
+176               ','
+177                  "clustername_18"
+178               ','
+179                  "clustername_19"
+180               ','
+181                  "clustername_20"
+182               ','
+183                  "clustername_21"
+184               ','
+185                  "clustername_22"
+186               ','
+187                  "clustername_23"
+188               ','
+189                  "clustername_24"
+190               ','
+191                  "clustername_25"
+192               ','
+193                  "clustername_26"
+194               ','
+195                  "clustername_27"
+196               ','
+197                  "clustername_28"
+198               ','
+199                  "clustername_29"
+200               ','
+201                  "clustername_30"
+202               ','
+203                  "clustername_31"
+204               ','
+205                  "clustername_32"
+206               ','
+207                  "clustername_33"
+208               ','
+209                  "clustername_34"
+210               ','
+211                  "clustername_35"
+212               ','
+213                  "clustername_36"
+214               ','
+215                  "clustername_37"
+216               ','
+217                  "clustername_38"
+218               ','
+219                  "clustername_39"
+220               ','
+221                  "clustername_40"
+222               ','
+223                  "clustername_41"
+224               ','
+225                  "clustername_42"
+226               ','
+227                  "clustername_43"
+228               ','
+229                  "clustername_44"
+230               ','
+231                  "clustername_45"
+232               ','
+233                  "clustername_46"
+234               ','
+235                  "clustername_47"
+236               ','
+237                  "clustername_48"
+238               ','
+239                  "clustername_49"
+240               ','
+241                  "clustername_50"
+242               ','
+243                  "clustername_51"
+244               ','
+245                  "clustername_52"
+246               ','
+247                  "clustername_53"
+248               ','
+249                  "clustername_54"
+250               ','
+251                  "clustername_55"
+252               ','
+253                  "clustername_56"
+254               ','
+255                  "clustername_57"
+256               ','
+257                  "clustername_58"
+258               ','
+259                  "clustername_59"
+260               ','
+261                  "clustername_60"
+262               ','
+263                  "clustername_61"
+264               ','
+265                  "clustername_62"
+266               ','
+267                  "clustername_63"
+268               ','
+269                  "clustername_64"
+270               ','
+271                  "clustername_65"
+272               ','
+273                  "clustername_66"
+274               ','
+275                  "clustername_67"
+276               ','
+277                  "clustername_68"
+278               ','
+279                  "clustername_69"
+280               ','
+281                  "clustername_70"
+282               ','
+283                  "clustername_71"
+284               ','
+285                  "clustername_72"
+286               ','
+287                  "clustername_73"
+288               ','
+289                  "clustername_74"
+290               ','
+291                  "clustername_75"
+292               ','
+293                  "clustername_76"
+294               ','
+295                  "clustername_77"
+296               ','
+297                  "clustername_78"
+298               ','
+299                  "clustername_79"
+300               ','
+301                  "clustername_80"
+302               ','
+303                  "clustername_81"
+304               ','
+305                  "clustername_82"
+306               ','
+307                  "clustername_83"
+308               ','
+309                  "clustername_84"
+310               ','
+311                  "clustername_85"
+312               ','
+313                  "clustername_86"
+314               ','
+315                  "clustername_87"
+316               ','
+317                  "clustername_88"
+318               ','
+319                  "clustername_89"
+320               ','
+321                  "clustername_90"
+322               ','
+323                  "clustername_91"
+324               ','
+325                  "clustername_92"
+326               ','
+327                  "clustername_93"
+328               ','
+329                  "clustername_94"
+330               ','
+331                  "clustername_95"
+332               ','
+333                  "clustername_96"
+334               ','
+335                  "clustername_97"
+336               ','
+337                  "clustername_98"
+338               ','
+339                  "clustername_99"
+340               ','
+341                  "clustername_100"
+342               ','
+343                  "clustername_101"
+344               ','
+345                  "clustername_102"
+346               ','
+347                  "clustername_103"
+348               ','
+349                  "clustername_104"
+350               ','
+351                  "clustername_105"
+352               ','
+353                  "clustername_106"
+354               ','
+355                  "clustername_107"
+356               ','
+357                  "clustername_108"
+358               ','
+359                  "clustername_109"
+360               ','
+361                  "clustername_110"
+362               ','
+363                  "clustername_111"
+364               ','
+365                  "clustername_112"
+366               ','
+367                  "clustername_113"
+368               ','
+369                  "clustername_114"
+370               ','
+371                  "clustername_115"
+372               ','
+373                  "clustername_116"
+374               ','
+375                  "clustername_117"
+376               ','
+377                  "clustername_118"
+378               ','
+379                  "clustername_119"
+380               ','
+381                  "clustername_120"
+382               ','
+383                  "clustername_121"
+384               ','
+385                  "clustername_122"
+386               ','
+387                  "clustername_123"
+388               ','
+389                  "clustername_124"
+390               ','
+391                  "clustername_125"
+392               ','
+393                  "clustername_126"
+394               ','
+395                  "clustername_127"
+396               ','
+397                  "clustername_128"
+398               ','
+399                  "clustername_129"
+400               ','
+401                  "clustername_130"
+402               ','
+403                  "clustername_131"
+404               ','
+405                  "clustername_132"
+406               ','
+407                  "clustername_133"
+408               ','
+409                  "clustername_134"
+410               ','
+411                  "clustername_135"
+412               ','
+413                  "clustername_136"
+414               ','
+415                  "clustername_137"
+416               ','
+417                  "clustername_138"
+418               ','
+419                  "clustername_139"
+420               ','
+421                  "clustername_140"
+422               ','
+423                  "clustername_141"
+424               ','
+425                  "clustername_142"
+426               ','
+427                  "clustername_143"
+428               ','
+429                  "clustername_144"
+430               ','
+431                  "clustername_145"
+432               ','
+433                  "clustername_146"
+434               ','
+435                  "clustername_147"
+436               ','
+437                  "clustername_148"
+438               ','
+439                  "clustername_149"
+440               ','
+441                  "clustername_150"
+442               ','
+443                  "clustername_151"
+444               ','
+445                  "clustername_152"
+446               ','
+447                  "clustername_153"
+448               ','
+449                  "clustername_154"
+450               ','
+451                  "clustername_155"
+452               ','
+453                  "clustername_156"
+454               ','
+455                  "clustername_157"
+456               ','
+457                  "clustername_158"
+458               ','
+459                  "clustername_159"
+460               ','
+461                  "clustername_160"
+462               ','
+463                  "clustername_161"
+464               ','
+465                  "clustername_162"
+466               ','
+467                  "clustername_163"
+468               ','
+469                  "clustername_164"
+470               ','
+471                  "clustername_165"
+472               ','
+473                  "clustername_166"
+474               ','
+475                  "clustername_167"
+476               ','
+477                  "clustername_168"
+478               ','
+479                  "clustername_169"
+480               ','
+481                  "clustername_170"
+482               ','
+483                  "clustername_171"
+484               ','
+485                  "clustername_172"
+486               ','
+487                  "clustername_173"
+488               ','
+489                  "clustername_174"
+490               ','
+491                  "clustername_175"
+492               ','
+493                  "clustername_176"
+494               ','
+495                  "clustername_177"
+496               ','
+497                  "clustername_178"
+498               ','
+499                  "clustername_179"
+500               ','
+501                  "clustername_180"
+502               ','
+503                  "clustername_181"
+504               ','
+505                  "clustername_182"
+506               ','
+507                  "clustername_183"
+508               ','
+509                  "clustername_184"
+510               ','
+511                  "clustername_185"
+512               ','
+513                  "clustername_186"
+514               ','
+515                  "clustername_187"
+516               ','
+517                  "clustername_188"
+518               ','
+519                  "clustername_189"
+520               ','
+521                  "clustername_190"
+522               ','
+523                  "clustername_191"
+524               ','
+525                  "clustername_192"
+526               ','
+527                  "clustername_193"
+528               ','
+529                  "clustername_194"
+530               ','
+531                  "clustername_195"
+532               ','
+533                  "clustername_196"
+534               ','
+535                  "clustername_197"
+536               ','
+537                  "clustername_198"
+538               ','
+539                  "clustername_199"
+540               ','
+541                  "clustername_200"
+542               ','
+543                  "clustername_201"
+544               ','
+545                  "clustername_202"
+546               ','
+547                  "clustername_203"
+548               ','
+549                  "clustername_204"
+550               ','
+551                  "clustername_205"
+552               ','
+553                  "clustername_206"
+554               ','
+555                  "clustername_207"
+556               ','
+557                  "clustername_208"
+558               ','
+559                  "clustername_209"
+560               ','
+561                  "clustername_210"
+562               ','
+563                  "clustername_211"
+564               ','
+565                  "clustername_212"
+566               ','
+567                  "clustername_213"
+568               ','
+569                  "clustername_214"
+570               ','
+571                  "clustername_215"
+572               ','
+573                  "clustername_216"
+574               ','
+575                  "clustername_217"
+576               ','
+577                  "clustername_218"
+578               ','
+579                  "clustername_219"
+580               ','
+581                  "clustername_220"
+582               ','
+583                  "clustername_221"
+584               ','
+585                  "clustername_222"
+586               ','
+587                  "clustername_223"
+588               ','
+589                  "clustername_224"
+590               ','
+591                  "clustername_225"
+592               ','
+593                  "clustername_226"
+594               ','
+595                  "clustername_227"
+596               ','
+597                  "clustername_228"
+598               ','
+599                  "clustername_229"
+600               ','
+601                  "clustername_230"
+602               ','
+603                  "clustername_231"
+604               ','
+605                  "clustername_232"
+606               ','
+607                  "clustername_233"
+608               ','
+609                  "clustername_234"
+610               ','
+611                  "clustername_235"
+612               ','
+613                  "clustername_236"
+614               ','
+615                  "clustername_237"
+616               ','
+617                  "clustername_238"
+618               ','
+619                  "clustername_239"
+620               ','
+621                  "clustername_240"
+622               ','
+623                  "clustername_241"
+624               ','
+625                  "clustername_242"
+626               ','
+627                  "clustername_243"
+628               ','
+629                  "clustername_244"
+630               ','
+631                  "clustername_245"
+632               ','
+633                  "clustername_246"
+634               ','
+635                  "clustername_247"
+636               ','
+637                  "clustername_248"
+638               ','
+639                  "clustername_249"
+640               ','
+641                  "clustername_250"
+642               ','
+643                  "clustername_251"
+644               ','
+645                  "clustername_252"
+646               ','
+647                  "clustername_253"
+648               ','
+649                  "clustername_254"
+650               ','
+651                  "clustername_255"
+652               ','
+653                  "clustername_256"
+654               ','
+655                  "clustername_257"
+656               ','
+657                  "clustername_258"
+658               ','
+659                  "clustername_259"
+660               ','
+661                  "clustername_260"
+662               ','
+663                  "clustername_261"
+664               ','
+665                  "clustername_262"
+666               ','
+667                  "clustername_263"
+668               ','
+669                  "clustername_264"
+670               ','
+671                  "clustername_265"
+672               ','
+673                  "clustername_266"
+674               ','
+675                  "clustername_267"
+676               ','
+677                  "clustername_268"
+678               ','
+679                  "clustername_269"
+680               ','
+681                  "clustername_270"
+682               ','
+683                  "clustername_271"
+684               ','
+685                  "clustername_272"
+686               ','
+687                  "clustername_273"
+688               ','
+689                  "clustername_274"
+690               ','
+691                  "clustername_275"
+692               ','
+693                  "clustername_276"
+694               ','
+695                  "clustername_277"
+696               ','
+697                  "clustername_278"
+698               ','
+699                  "clustername_279"
+700               ','
+701                  "clustername_280"
+702               ','
+703                  "clustername_281"
+704               ','
+705                  "clustername_282"
+706               ','
+707                  "clustername_283"
+708               ','
+709                  "clustername_284"
+710               ','
+711                  "clustername_285"
+712               ','
+713                  "clustername_286"
+714               ','
+715                  "clustername_287"
+716               ','
+717                  "clustername_288"
+718               ','
+719                  "clustername_289"
+720               ','
+721                  "clustername_290"
+722               ','
+723                  "clustername_291"
+724               ','
+725                  "clustername_292"
+726               ','
+727                  "clustername_293"
+728               ','
+729                  "clustername_294"
+730               ','
+731                  "clustername_295"
+732               ','
+733                  "clustername_296"
+734               ','
+735                  "clustername_297"
+736               ','
+737                  "clustername_298"
+738               ','
+739                  "clustername_299"
+740               ','
+741                  "clustername_300"
+742               ','
+743                  "clustername_301"
+744               ','
+745                  "clustername_302"
+746               ','
+747                  "clustername_303"
+748               ','
+749                  "clustername_304"
+750               ','
+751                  "clustername_305"
+752               ','
+753                  "clustername_306"
+754               ','
+755                  "clustername_307"
+756               ','
+757                  "clustername_308"
+758               ','
+759                  "clustername_309"
+760               ','
+761                  "clustername_310"
+762               ','
+763                  "clustername_311"
+764               ','
+765                  "clustername_312"
+766               ','
+767                  "clustername_313"
+768               ','
+769                  "clustername_314"
+770               ','
+771                  "clustername_315"
+772               ','
+773                  "clustername_316"
+774               ','
+775                  "clustername_317"
+776               ','
+777                  "clustername_318"
+778               ','
+779                  "clustername_319"
+780               ','
+781                  "clustername_320"
+782               ','
+783                  "clustername_321"
+784               ','
+785                  "clustername_322"
+786               ','
+787                  "clustername_323"
+788               ','
+789                  "clustername_324"
+790               ','
+791                  "clustername_325"
+792               ','
+793                  "clustername_326"
+794               ','
+795                  "clustername_327"
+796               ','
+797                  "clustername_328"
+798               ','
+799                  "clustername_329"
+800               ','
+801                  "clustername_330"
+802               ','
+803                  "clustername_331"
+804               ','
+805                  "clustername_332"
+806               ','
+807                  "clustername_333"
+808               ','
+809                  "clustername_334"
+810               ','
+811                  "clustername_335"
+812               ','
+813                  "clustername_336"
+814               ','
+815                  "clustername_337"
+816               ','
+817                  "clustername_338"
+818               ','
+819                  "clustername_339"
+820               ','
+821                  "clustername_340"
+822               ','
+823                  "clustername_341"
+824               ','
+825                  "clustername_342"
+826               ','
+827                  "clustername_343"
+828               ','
+829                  "clustername_344"
+830               ','
+831                  "clustername_345"
+832               ','
+833                  "clustername_346"
+834               ','
+835                  "clustername_347"
+836               ','
+837                  "clustername_348"
+838               ','
+839                  "clustername_349"
+840               ','
+841                  "clustername_350"
+842               ','
+843                  "clustername_351"
+844               ','
+845                  "clustername_352"
+846               ','
+847                  "clustername_353"
+848               ','
+849                  "clustername_354"
+850               ','
+851                  "clustername_355"
+852               ','
+853                  "clustername_356"
+854               ','
+855                  "clustername_357"
+856               ','
+857                  "clustername_358"
+858               ','
+859                  "clustername_359"
+860               ','
+861                  "clustername_360"
+862               ','
+863                  "clustername_361"
+864               ','
+865                  "clustername_362"
+866               ','
+867                  "clustername_363"
+868               ','
+869                  "clustername_364"
+870               ','
+871                  "clustername_365"
+872               ','
+873                  "clustername_366"
+874               ','
+875                  "clustername_367"
+876               ','
+877                  "clustername_368"
+878               ','
+879                  "clustername_369"
+880               ','
+881                  "clustername_370"
+882               ','
+883                  "clustername_371"
+884               ','
+885                  "clustername_372"
+886               ','
+887                  "clustername_373"
+888               ','
+889                  "clustername_374"
+3 The SAS System                                                                                    20:32 Sunday, September 20, 2020
+
+890               ','
+891                  "clustername_375"
+892               ','
+893                  "clustername_376"
+894               ','
+895                  "clustername_377"
+896               ','
+897                  "clustername_378"
+898               ','
+899                  "clustername_379"
+900               ','
+901                  "clustername_380"
+902               ','
+903                  "clustername_381"
+904               ','
+905                  "clustername_382"
+906               ','
+907                  "clustername_383"
+908               ','
+909                  "clustername_384"
+910               ','
+911                  "clustername_385"
+912               ','
+913                  "clustername_386"
+914               ','
+915                  "clustername_387"
+916               ','
+917                  "clustername_388"
+918               ','
+919                  "clustername_389"
+920               ','
+921                  "clustername_390"
+922               ','
+923                  "clustername_391"
+924               ','
+925                  "clustername_392"
+926               ','
+927                  "clustername_393"
+928               ','
+929                  "clustername_394"
+930               ','
+931                  "clustername_395"
+932               ','
+933                  "clustername_396"
+934               ','
+935                  "clustername_397"
+936               ','
+937                  "clustername_398"
+938               ','
+939                  "clustername_399"
+940               ','
+941                  "clustername_400"
+942               ','
+943                  "clustername_401"
+944               ','
+945                  "clustername_402"
+946               ','
+947                  "clustername_403"
+948               ','
+949                  "clustername_404"
+950               ','
+951                  "clustername_405"
+952               ','
+953                  "clustername_406"
+954               ','
+955                  "clustername_407"
+956               ','
+957                  "clustername_408"
+958               ','
+959                  "clustername_409"
+960               ','
+961                  "clustername_410"
+962               ','
+963                  "clustername_411"
+964               ','
+965                  "clustername_412"
+966               ','
+967                  "clustername_413"
+968               ','
+969                  "clustername_414"
+970               ','
+971                  "clustername_415"
+972               ','
+973                  "clustername_416"
+974               ','
+975                  "clustername_417"
+976               ','
+977                  "clustername_418"
+978               ','
+979                  "clustername_419"
+980               ','
+981                  "clustername_420"
+982               ','
+983                  "clustername_421"
+984               ','
+985                  "clustername_422"
+986               ','
+987                  "clustername_423"
+988               ','
+989                  "clustername_424"
+990               ','
+991                  "clustername_425"
+992               ','
+993                  "clustername_426"
+994               ','
+995                  "clustername_427"
+996               ','
+997                  "clustername_428"
+998               ','
+999                  "clustername_429"
+1000              ','
+1001                 "clustername_430"
+1002              ','
+1003                 "clustername_431"
+1004              ','
+1005                 "clustername_432"
+1006              ','
+1007                 "clustername_433"
+1008              ','
+1009                 "clustername_434"
+1010              ','
+1011                 "clustername_435"
+1012              ','
+1013                 "clustername_436"
+1014              ','
+1015                 "clustername_437"
+1016              ','
+1017                 "clustername_438"
+1018              ','
+1019                 "clustername_439"
+1020              ','
+1021                 "clustername_440"
+1022              ','
+1023                 "clustername_441"
+1024              ','
+1025                 "clustername_442"
+1026              ','
+1027                 "clustername_443"
+1028              ','
+1029                 "clustername_444"
+1030              ','
+1031                 "clustername_445"
+1032              ','
+1033                 "clustername_446"
+1034              ','
+1035                 "clustername_447"
+1036              ','
+1037                 "clustername_448"
+1038              ','
+1039                 "clustername_449"
+1040              ','
+1041                 "clustername_450"
+1042              ','
+1043                 "clustername_451"
+1044              ','
+1045                 "clustername_452"
+1046              ','
+1047                 "clustername_453"
+1048              ','
+1049                 "clustername_454"
+1050              ','
+1051                 "clustername_455"
+1052              ','
+1053                 "clustername_456"
+1054              ','
+1055                 "clustername_457"
+1056              ','
+1057                 "clustername_458"
+1058              ','
+1059                 "clustername_459"
+1060              ','
+1061                 "clustername_460"
+1062              ','
+1063                 "clustername_461"
+1064              ','
+1065                 "clustername_462"
+1066              ','
+1067                 "clustername_463"
+1068              ','
+1069                 "clustername_464"
+1070              ','
+1071                 "clustername_465"
+1072              ','
+1073                 "clustername_466"
+1074              ','
+1075                 "clustername_467"
+1076              ','
+1077                 "clustername_468"
+1078              ','
+1079                 "clustername_469"
+1080              ','
+1081                 "clustername_470"
+1082              ','
+1083                 "clustername_471"
+1084              ','
+1085                 "clustername_472"
+1086              ','
+1087                 "clustername_473"
+1088              ','
+1089                 "clustername_474"
+1090              ','
+1091                 "clustername_475"
+1092              ','
+1093                 "clustername_476"
+1094              ','
+1095                 "clustername_477"
+1096              ','
+1097                 "clustername_478"
+1098              ','
+1099                 "clustername_479"
+1100              ','
+1101                 "clustername_480"
+1102              ','
+1103                 "clustername_481"
+1104              ','
+1105                 "clustername_482"
+1106              ','
+1107                 "clustername_483"
+1108              ','
+1109                 "clustername_484"
+1110              ','
+1111                 "clustername_485"
+1112              ','
+1113                 "clustername_486"
+1114              ','
+1115                 "clustername_487"
+1116              ','
+1117                 "clustername_488"
+1118              ','
+1119                 "clustername_489"
+1120              ','
+1121                 "clustername_490"
+1122              ','
+1123                 "clustername_491"
+1124              ','
+1125                 "clustername_492"
+1126              ','
+1127                 "clustername_493"
+1128              ','
+1129                 "clustername_494"
+1130              ','
+1131                 "clustername_495"
+1132              ','
+1133                 "clustername_496"
+1134              ','
+1135                 "clustername_497"
+1136              ','
+1137                 "clustername_498"
+1138              ','
+1139                 "clustername_499"
+1140              ','
+1141                 "clustername_500"
+1142              ','
+1143                 "clustername_501"
+1144              ','
+1145                 "clustername_502"
+1146              ','
+1147                 "clustername_503"
+1148              ','
+1149                 "clustername_504"
+1150              ','
+1151                 "clustername_505"
+1152              ','
+1153                 "clustername_506"
+1154              ','
+1155                 "clustername_507"
+1156              ','
+1157                 "clustername_508"
+1158              ','
+1159                 "clustername_509"
+1160              ','
+1161                 "clustername_510"
+1162              ','
+1163                 "clustername_511"
+1164              ','
+1165                 "clustername_512"
+1166              ','
+1167                 "clustername_513"
+1168              ','
+1169                 "clustername_514"
+1170              ','
+1171                 "clustername_515"
+1172              ','
+1173                 "clustername_516"
+1174              ','
+1175                 "clustername_517"
+1176              ','
+1177                 "clustername_518"
+1178              ','
+1179                 "clustername_519"
+1180              ','
+1181                 "clustername_520"
+1182              ','
+1183                 "clustername_521"
+1184              ','
+1185                 "clustername_522"
+1186              ','
+1187                 "clustername_523"
+1188              ','
+1189                 "clustername_524"
+1190              ','
+1191                 "clustername_525"
+1192              ','
+1193                 "clustername_526"
+1194              ','
+1195                 "clustername_527"
+1196              ','
+1197                 "clustername_528"
+1198              ','
+1199                 "clustername_529"
+1200              ','
+1201                 "clustername_530"
+1202              ','
+1203                 "clustername_531"
+1204              ','
+1205                 "clustername_532"
+1206              ','
+1207                 "clustername_533"
+1208              ','
+1209                 "clustername_534"
+1210              ','
+1211                 "clustername_535"
+1212              ','
+1213                 "clustername_536"
+1214              ','
+1215                 "clustername_537"
+1216              ','
+1217                 "clustername_538"
+1218              ','
+1219                 "clustername_539"
+1220              ','
+1221                 "clustername_540"
+1222              ','
+1223                 "clustername_541"
+1224              ','
+1225                 "clustername_542"
+1226              ','
+1227                 "clustername_543"
+1228              ','
+1229                 "clustername_544"
+1230              ','
+1231                 "clustername_545"
+1232              ','
+1233                 "clustername_546"
+1234              ','
+1235                 "clustername_547"
+1236              ','
+1237                 "clustername_548"
+1238              ','
+1239                 "clustername_549"
+1240              ','
+1241                 "clustername_550"
+1242              ','
+1243                 "clustername_551"
+1244              ','
+1245                 "clustername_552"
+1246              ','
+1247                 "clustername_553"
+1248              ','
+1249                 "clustername_554"
+1250              ','
+1251                 "clustername_555"
+1252              ','
+1253                 "clustername_556"
+1254              ','
+1255                 "clustername_557"
+1256              ','
+1257                 "clustername_558"
+1258              ','
+1259                 "clustername_559"
+1260              ','
+1261                 "clustername_560"
+1262              ','
+1263                 "clustername_561"
+1264              ','
+1265                 "clustername_562"
+1266              ','
+1267                 "clustername_563"
+1268              ','
+1269                 "clustername_564"
+1270              ','
+1271                 "clustername_565"
+1272              ','
+1273                 "clustername_566"
+1274              ','
+1275                 "clustername_567"
+1276              ','
+1277                 "clustername_568"
+1278              ','
+1279                 "clustername_569"
+1280              ','
+1281                 "clustername_570"
+1282              ','
+1283                 "clustername_571"
+1284              ','
+1285                 "clustername_572"
+1286              ','
+1287                 "clustername_573"
+1288              ','
+1289                 "clustername_574"
+1290              ','
+1291                 "clustername_575"
+1292              ','
+1293                 "clustername_576"
+1294              ','
+1295                 "clustername_577"
+1296              ','
+1297                 "clustername_578"
+1298              ','
+1299                 "clustername_579"
+1300              ','
+1301                 "clustername_580"
+1302              ','
+1303                 "clustername_581"
+1304              ','
+1305                 "clustername_582"
+1306              ','
+1307                 "clustername_583"
+1308              ','
+1309                 "clustername_584"
+1310              ','
+1311                 "clustername_585"
+1312              ','
+1313                 "clustername_586"
+1314              ','
+1315                 "clustername_587"
+1316              ','
+1317                 "clustername_588"
+1318              ','
+1319                 "clustername_589"
+1320              ','
+1321                 "clustername_590"
+1322              ','
+1323                 "clustername_591"
+1324              ','
+1325                 "clustername_592"
+1326              ','
+1327                 "clustername_593"
+1328              ','
+1329                 "clustername_594"
+1330              ','
+1331                 "clustername_595"
+1332              ','
+1333                 "clustername_596"
+1334              ','
+1335                 "clustername_597"
+1336              ','
+1337                 "clustername_598"
+1338              ','
+1339                 "clustername_599"
+1340              ','
+1341                 "clustername_600"
+1342              ','
+1343                 "clustername_601"
+1344              ','
+1345                 "clustername_602"
+1346              ','
+1347                 "clustername_603"
+1348              ','
+1349                 "clustername_604"
+1350              ','
+1351                 "clustername_605"
+1352              ','
+1353                 "clustername_606"
+1354              ','
+1355                 "clustername_607"
+1356              ','
+1357                 "clustername_608"
+1358              ','
+1359                 "clustername_609"
+1360              ','
+1361                 "clustername_610"
+1362              ','
+1363                 "clustername_611"
+1364              ','
+1365                 "clustername_612"
+1366              ','
+1367                 "clustername_613"
+1368              ','
+1369                 "clustername_614"
+1370              ','
+1371                 "clustername_615"
+1372              ','
+1373                 "clustername_616"
+1374              ','
+1375                 "clustername_617"
+1376              ','
+1377                 "clustername_618"
+1378              ','
+1379                 "clustername_619"
+1380              ','
+1381                 "clustername_620"
+1382              ','
+1383                 "clustername_621"
+1384              ','
+1385                 "clustername_622"
+1386              ','
+1387                 "clustername_623"
+1388              ','
+1389                 "clustername_624"
+1390              ','
+1391                 "clustername_625"
+1392              ','
+1393                 "clustername_626"
+1394              ','
+1395                 "clustername_627"
+1396              ','
+1397                 "clustername_628"
+1398              ','
+1399                 "clustername_629"
+1400              ','
+1401                 "clustername_630"
+1402              ','
+1403                 "clustername_631"
+1404              ','
+1405                 "clustername_632"
+1406              ','
+1407                 "clustername_633"
+1408              ','
+1409                 "clustername_634"
+1410              ','
+1411                 "clustername_635"
+1412              ','
+1413                 "clustername_636"
+1414              ','
+1415                 "clustername_637"
+1416              ','
+1417                 "clustername_638"
+1418              ','
+1419                 "clustername_639"
+1420              ','
+1421                 "clustername_640"
+1422              ','
+1423                 "clustername_641"
+1424              ','
+1425                 "clustername_642"
+1426              ','
+1427                 "clustername_643"
+1428              ','
+1429                 "clustername_644"
+1430              ','
+1431                 "clustername_645"
+1432              ','
+1433                 "clustername_646"
+1434              ','
+1435                 "clustername_647"
+1436              ','
+1437                 "clustername_648"
+1438              ','
+1439                 "clustername_649"
+1440              ','
+1441                 "clustername_650"
+1442              ','
+1443                 "clustername_651"
+1444              ','
+1445                 "clustername_652"
+1446              ','
+1447                 "clustername_653"
+1448              ','
+1449                 "clustername_654"
+1450              ','
+1451                 "clustername_655"
+1452              ','
+1453                 "clustername_656"
+1454              ','
+1455                 "clustername_657"
+1456              ','
+1457                 "clustername_658"
+1458              ','
+1459                 "clustername_659"
+1460              ','
+1461                 "clustername_660"
+1462              ','
+1463                 "clustername_661"
+1464              ','
+1465                 "clustername_662"
+1466              ','
+1467                 "clustername_663"
+1468              ','
+1469                 "clustername_664"
+1470              ','
+1471                 "clustername_665"
+1472              ','
+1473                 "clustername_666"
+1474              ','
+1475                 "clustername_667"
+1476              ','
+1477                 "clustername_668"
+1478              ','
+1479                 "clustername_669"
+1480              ','
+1481                 "clustername_670"
+1482              ','
+1483                 "clustername_671"
+1484              ','
+1485                 "clustername_672"
+1486              ','
+1487                 "clustername_673"
+1488              ','
+1489                 "clustername_674"
+1490              ','
+1491                 "clustername_675"
+1492              ','
+1493                 "clustername_676"
+1494              ','
+1495                 "clustername_677"
+1496              ','
+1497                 "clustername_678"
+1498              ','
+1499                 "clustername_679"
+1500              ','
+1501                 "clustername_680"
+1502              ','
+1503                 "clustername_681"
+1504              ','
+1505                 "clustername_682"
+1506              ','
+1507                 "clustername_683"
+1508              ','
+1509                 "clustername_684"
+1510              ','
+1511                 "clustername_685"
+1512              ','
+1513                 "clustername_686"
+1514              ','
+1515                 "clustername_687"
+1516              ','
+1517                 "clustername_688"
+1518              ','
+1519                 "clustername_689"
+1520              ','
+1521                 "clustername_690"
+1522              ','
+1523                 "clustername_691"
+1524              ','
+1525                 "clustername_692"
+1526              ','
+1527                 "clustername_693"
+1528              ','
+1529                 "clustername_694"
+1530              ','
+1531                 "clustername_695"
+1532              ','
+1533                 "clustername_696"
+1534              ','
+1535                 "clustername_697"
+1536              ','
+1537                 "clustername_698"
+1538              ','
+1539                 "clustername_699"
+1540              ','
+1541                 "clustername_700"
+1542              ','
+1543                 "clustername_701"
+1544              ','
+1545                 "clustername_702"
+1546              ','
+1547                 "clustername_703"
+1548              ','
+1549                 "clustername_704"
+1550              ','
+1551                 "clustername_705"
+1552              ','
+1553                 "clustername_706"
+1554              ','
+1555                 "clustername_707"
+1556              ','
+1557                 "clustername_708"
+1558              ','
+1559                 "clustername_709"
+1560              ','
+1561                 "clustername_710"
+1562              ','
+1563                 "clustername_711"
+1564              ','
+1565                 "clustername_712"
+1566              ','
+1567                 "clustername_713"
+1568              ','
+1569                 "clustername_714"
+1570              ','
+1571                 "clustername_715"
+1572              ','
+1573                 "clustername_716"
+1574              ','
+1575                 "clustername_717"
+1576              ','
+1577                 "clustername_718"
+1578              ','
+1579                 "clustername_719"
+1580              ','
+1581                 "clustername_720"
+1582              ','
+1583                 "clustername_721"
+1584              ','
+1585                 "clustername_722"
+1586              ','
+1587                 "clustername_723"
+1588              ','
+1589                 "clustername_724"
+1590              ','
+1591                 "clustername_725"
+1592              ','
+1593                 "clustername_726"
+1594              ','
+1595                 "clustername_727"
+1596              ','
+1597                 "clustername_728"
+1598              ','
+1599                 "clustername_729"
+1600              ','
+1601                 "clustername_730"
+1602              ','
+1603                 "clustername_731"
+1604              ','
+1605                 "clustername_732"
+1606              ','
+1607                 "clustername_733"
+1608              ','
+1609                 "clustername_734"
+1610              ','
+1611                 "clustername_735"
+1612              ','
+1613                 "clustername_736"
+1614              ','
+1615                 "clustername_737"
+1616              ','
+1617                 "clustername_738"
+1618              ','
+1619                 "clustername_739"
+1620              ','
+1621                 "clustername_740"
+1622              ','
+1623                 "clustername_741"
+1624              ','
+1625                 "clustername_742"
+1626              ','
+1627                 "clustername_743"
+1628              ','
+1629                 "clustername_744"
+1630              ','
+1631                 "clustername_745"
+1632              ','
+1633                 "clustername_746"
+1634              ','
+1635                 "clustername_747"
+1636              ','
+1637                 "clustername_748"
+1638              ','
+1639                 "clustername_749"
+1640              ','
+1641                 "clustername_750"
+1642              ','
+1643                 "clustername_751"
+1644              ','
+1645                 "clustername_752"
+1646              ','
+1647                 "clustername_753"
+1648              ','
+1649                 "clustername_754"
+1650              ','
+1651                 "clustername_755"
+1652              ','
+1653                 "clustername_756"
+1654              ','
+1655                 "clustername_757"
+1656              ','
+1657                 "clustername_758"
+1658              ','
+1659                 "clustername_759"
+1660              ','
+1661                 "clustername_760"
+1662              ','
+1663                 "clustername_761"
+1664              ','
+1665                 "clustername_762"
+1666              ','
+1667                 "clustername_763"
+1668              ','
+1669                 "clustername_764"
+1670              ','
+1671                 "clustername_765"
+1672              ','
+1673                 "clustername_766"
+1674              ','
+1675                 "clustername_767"
+1676              ','
+1677                 "clustername_768"
+1678              ','
+1679                 "clustername_769"
+1680              ','
+1681                 "clustername_770"
+1682              ','
+1683                 "clustername_771"
+1684              ','
+1685                 "clustername_772"
+1686              ','
+1687                 "clustername_773"
+1688              ','
+1689                 "clustername_774"
+1690              ','
+1691                 "clustername_775"
+1692              ','
+1693                 "clustername_776"
+1694              ','
+1695                 "clustername_777"
+1696              ','
+1697                 "clustername_778"
+1698              ','
+1699                 "clustername_779"
+1700              ','
+1701                 "clustername_780"
+1702              ','
+1703                 "clustername_781"
+1704              ','
+1705                 "clustername_782"
+1706              ','
+1707                 "clustername_783"
+1708              ','
+1709                 "clustername_784"
+1710              ','
+1711                 "clustername_785"
+1712              ','
+1713                 "clustername_786"
+1714              ','
+1715                 "clustername_787"
+1716              ','
+1717                 "clustername_788"
+1718              ','
+1719                 "clustername_789"
+1720              ','
+1721                 "clustername_790"
+1722              ','
+1723                 "clustername_791"
+1724              ','
+1725                 "clustername_792"
+1726              ','
+1727                 "clustername_793"
+1728              ','
+1729                 "clustername_794"
+1730              ','
+1731                 "clustername_795"
+1732              ','
+1733                 "clustername_796"
+1734              ','
+1735                 "clustername_797"
+1736              ','
+1737                 "clustername_798"
+1738              ','
+1739                 "clustername_799"
+1740              ','
+1741                 "clustername_800"
+1742              ','
+1743                 "clustername_801"
+1744              ','
+1745                 "clustername_802"
+1746              ','
+1747                 "clustername_803"
+1748              ','
+1749                 "clustername_804"
+1750              ','
+1751                 "clustername_805"
+1752              ','
+1753                 "clustername_806"
+1754              ','
+1755                 "clustername_807"
+1756              ','
+1757                 "clustername_808"
+1758              ','
+1759                 "clustername_809"
+1760              ','
+1761                 "clustername_810"
+1762              ','
+1763                 "clustername_811"
+1764              ','
+1765                 "clustername_812"
+1766              ','
+1767                 "clustername_813"
+1768              ','
+1769                 "clustername_814"
+1770              ','
+1771                 "clustername_815"
+1772              ','
+1773                 "clustername_816"
+1774              ','
+1775                 "clustername_817"
+1776              ','
+1777                 "clustername_818"
+1778              ','
+1779                 "clustername_819"
+1780              ','
+1781                 "clustername_820"
+1782              ','
+1783                 "clustername_821"
+1784              ','
+1785                 "clustername_822"
+1786              ','
+1787                 "clustername_823"
+1788              ','
+1789                 "clustername_824"
+1790              ','
+1791                 "clustername_825"
+1792              ','
+1793                 "clustername_826"
+1794              ','
+1795                 "clustername_827"
+1796              ','
+1797                 "clustername_828"
+1798              ','
+1799                 "clustername_829"
+1800              ','
+1801                 "clustername_830"
+1802              ','
+1803                 "clustername_831"
+1804              ','
+1805                 "clustername_832"
+1806              ','
+1807                 "clustername_833"
+1808              ','
+1809                 "clustername_834"
+1810              ','
+1811                 "clustername_835"
+1812              ','
+1813                 "clustername_836"
+1814              ','
+1815                 "clustername_837"
+1816              ','
+1817                 "clustername_838"
+1818              ','
+1819                 "clustername_839"
+1820              ','
+1821                 "clustername_840"
+1822              ','
+1823                 "clustername_841"
+1824              ','
+1825                 "clustername_842"
+1826              ','
+1827                 "clustername_843"
+1828              ','
+1829                 "clustername_844"
+1830              ','
+1831                 "clustername_845"
+1832              ','
+1833                 "clustername_846"
+1834              ','
+1835                 "clustername_847"
+1836              ','
+1837                 "clustername_848"
+1838              ','
+1839                 "clustername_849"
+1840              ','
+1841                 "clustername_850"
+1842              ','
+1843                 "clustername_851"
+1844              ','
+1845                 "clustername_852"
+1846              ','
+1847                 "clustername_853"
+1848              ','
+1849                 "clustername_854"
+1850              ','
+1851                 "clustername_855"
+1852              ','
+1853                 "clustername_856"
+1854              ','
+1855                 "clustername_857"
+1856              ','
+1857                 "clustername_858"
+1858              ','
+1859                 "clustername_859"
+1860              ','
+1861                 "clustername_860"
+1862              ','
+1863                 "clustername_861"
+1864              ','
+1865                 "clustername_862"
+1866              ','
+1867                 "clustername_863"
+1868              ','
+1869                 "clustername_864"
+1870              ','
+1871                 "clustername_865"
+1872              ','
+1873                 "clustername_866"
+1874              ','
+1875                 "clustername_867"
+1876              ','
+1877                 "clustername_868"
+1878              ','
+1879                 "clustername_869"
+1880              ','
+1881                 "clustername_870"
+1882              ','
+1883                 "clustername_871"
+1884              ','
+1885                 "clustername_872"
+1886              ','
+1887                 "clustername_873"
+4 The SAS System                                                                                    20:32 Sunday, September 20, 2020
+
+1888              ','
+1889                 "clustername_874"
+1890              ','
+1891                 "clustername_875"
+1892              ','
+1893                 "clustername_876"
+1894              ','
+1895                 "clustername_877"
+1896              ','
+1897                 "clustername_878"
+1898              ','
+1899                 "clustername_879"
+1900              ','
+1901                 "clustername_880"
+1902              ','
+1903                 "clustername_881"
+1904              ','
+1905                 "clustername_882"
+1906              ','
+1907                 "clustername_883"
+1908              ','
+1909                 "clustername_884"
+1910              ','
+1911                 "clustername_885"
+1912              ','
+1913                 "clustername_886"
+1914              ','
+1915                 "clustername_887"
+1916              ','
+1917                 "clustername_888"
+1918              ','
+1919                 "clustername_889"
+1920              ','
+1921                 "clustername_890"
+1922              ','
+1923                 "clustername_891"
+1924              ','
+1925                 "clustername_892"
+1926              ','
+1927                 "clustername_893"
+1928              ','
+1929                 "clustername_894"
+1930              ','
+1931                 "clustername_895"
+1932              ','
+1933                 "clustername_896"
+1934              ','
+1935                 "clustername_897"
+1936              ','
+1937                 "clustername_898"
+1938              ','
+1939                 "clustername_899"
+1940              ','
+1941                 "clustername_900"
+1942              ','
+1943                 "clustername_901"
+1944              ','
+1945                 "clustername_902"
+1946              ','
+1947                 "clustername_903"
+1948              ','
+1949                 "clustername_904"
+1950              ','
+1951                 "clustername_905"
+1952              ','
+1953                 "clustername_906"
+1954              ','
+1955                 "clustername_907"
+1956              ','
+1957                 "clustername_908"
+1958              ','
+1959                 "clustername_909"
+1960              ','
+1961                 "clustername_910"
+1962              ','
+1963                 "clustername_911"
+1964              ','
+1965                 "clustername_912"
+1966              ','
+1967                 "clustername_913"
+1968              ','
+1969                 "clustername_914"
+1970              ','
+1971                 "clustername_915"
+1972              ','
+1973                 "clustername_916"
+1974              ','
+1975                 "clustername_917"
+1976              ','
+1977                 "clustername_918"
+1978              ','
+1979                 "clustername_919"
+1980              ','
+1981                 "clustername_920"
+1982              ','
+1983                 "clustername_921"
+1984              ','
+1985                 "clustername_922"
+1986              ','
+1987                 "clustername_923"
+1988              ','
+1989                 "clustername_924"
+1990              ','
+1991                 "clustername_925"
+1992              ','
+1993                 "clustername_926"
+1994              ','
+1995                 "clustername_927"
+1996              ','
+1997                 "clustername_928"
+1998              ','
+1999                 "clustername_929"
+2000              ','
+2001                 "clustername_930"
+2002              ','
+2003                 "clustername_931"
+2004              ','
+2005                 "clustername_932"
+2006              ','
+2007                 "clustername_933"
+2008              ','
+2009                 "clustername_934"
+2010              ','
+2011                 "clustername_935"
+2012              ','
+2013                 "clustername_936"
+2014              ','
+2015                 "clustername_937"
+2016              ','
+2017                 "clustername_938"
+2018              ','
+2019                 "clustername_939"
+2020              ','
+2021                 "clustername_940"
+2022              ','
+2023                 "clustername_941"
+2024              ','
+2025                 "clustername_942"
+2026              ','
+2027                 "clustername_943"
+2028              ','
+2029                 "clustername_944"
+2030              ','
+2031                 "clustername_945"
+2032              ','
+2033                 "clustername_946"
+2034              ','
+2035                 "clustername_947"
+2036              ','
+2037                 "clustername_948"
+2038              ','
+2039                 "clustername_949"
+2040              ','
+2041                 "clustername_950"
+2042              ','
+2043                 "clustername_951"
+2044              ','
+2045                 "clustername_952"
+2046              ','
+2047                 "clustername_953"
+2048              ','
+2049                 "clustername_954"
+2050              ','
+2051                 "clustername_955"
+2052              ','
+2053                 "clustername_956"
+2054              ','
+2055                 "clustername_957"
+2056              ','
+2057                 "clustername_958"
+2058              ','
+2059                 "clustername_959"
+2060              ','
+2061                 "clustername_960"
+2062              ','
+2063                 "clustername_961"
+2064              ','
+2065                 "clustername_962"
+2066              ','
+2067                 "clustername_963"
+2068              ','
+2069                 "clustername_964"
+2070              ','
+2071                 "clustername_965"
+2072              ','
+2073                 "clustername_966"
+2074              ','
+2075                 "clustername_967"
+2076              ','
+2077                 "clustername_968"
+2078              ','
+2079                 "clustername_969"
+2080              ','
+2081                 "clustername_970"
+2082              ','
+2083                 "clustername_971"
+2084              ','
+2085                 "clustername_972"
+2086              ','
+2087                 "clustername_973"
+2088              ','
+2089                 "clustername_974"
+2090              ','
+2091                 "clustername_975"
+2092              ','
+2093                 "clustername_976"
+2094              ','
+2095                 "clustername_977"
+2096              ','
+2097                 "clustername_978"
+2098              ','
+2099                 "clustername_979"
+2100              ','
+2101                 "clustername_980"
+2102              ','
+2103                 "clustername_981"
+2104              ','
+2105                 "clustername_982"
+2106              ','
+2107                 "clustername_983"
+2108              ','
+2109                 "clustername_984"
+2110              ','
+2111                 "clustername_985"
+2112              ','
+2113                 "clustername_986"
+2114              ','
+2115                 "clustername_987"
+2116              ','
+2117                 "clustername_988"
+2118              ','
+2119                 "clustername_989"
+2120              ','
+2121                 "clustername_990"
+2122              ','
+2123                 "clustername_991"
+2124              ','
+2125                 "clustername_992"
+2126              ','
+2127                 "clustername_993"
+2128              ','
+2129                 "clustername_994"
+2130              ','
+2131                 "clustername_995"
+2132              ','
+2133                 "clustername_996"
+2134              ','
+2135                 "clustername_997"
+2136              ','
+2137                 "clustername_998"
+2138              ','
+2139                 "clustername_999"
+2140              ','
+2141                 "clustername_1000"
+2142              ','
+2143                 "clus_switched"
+2144              ;
+2145            end;
+2146          set  OUTPUTS.BOOTCLUSTERS_JTW1990_MOE   end=EFIEOD;
+2147              format fips $10. ;
+2148              format clustername $12. ;
+2149              format clustername_1 $12. ;
+2150              format clustername_2 $12. ;
+2151              format clustername_3 $12. ;
+2152              format clustername_4 $12. ;
+2153              format clustername_5 $12. ;
+2154              format clustername_6 $12. ;
+2155              format clustername_7 $12. ;
+2156              format clustername_8 $12. ;
+2157              format clustername_9 $12. ;
+2158              format clustername_10 $12. ;
+2159              format clustername_11 $12. ;
+2160              format clustername_12 $12. ;
+2161              format clustername_13 $12. ;
+2162              format clustername_14 $12. ;
+2163              format clustername_15 $12. ;
+2164              format clustername_16 $12. ;
+2165              format clustername_17 $12. ;
+2166              format clustername_18 $12. ;
+2167              format clustername_19 $12. ;
+2168              format clustername_20 $12. ;
+2169              format clustername_21 $12. ;
+2170              format clustername_22 $12. ;
+2171              format clustername_23 $12. ;
+2172              format clustername_24 $12. ;
+2173              format clustername_25 $12. ;
+2174              format clustername_26 $12. ;
+2175              format clustername_27 $12. ;
+2176              format clustername_28 $12. ;
+2177              format clustername_29 $12. ;
+2178              format clustername_30 $12. ;
+2179              format clustername_31 $12. ;
+2180              format clustername_32 $12. ;
+2181              format clustername_33 $12. ;
+2182              format clustername_34 $12. ;
+2183              format clustername_35 $12. ;
+2184              format clustername_36 $12. ;
+2185              format clustername_37 $12. ;
+2186              format clustername_38 $12. ;
+2187              format clustername_39 $12. ;
+2188              format clustername_40 $12. ;
+2189              format clustername_41 $12. ;
+2190              format clustername_42 $12. ;
+2191              format clustername_43 $12. ;
+2192              format clustername_44 $12. ;
+2193              format clustername_45 $12. ;
+2194              format clustername_46 $12. ;
+2195              format clustername_47 $12. ;
+2196              format clustername_48 $12. ;
+2197              format clustername_49 $12. ;
+2198              format clustername_50 $12. ;
+2199              format clustername_51 $12. ;
+2200              format clustername_52 $12. ;
+2201              format clustername_53 $12. ;
+2202              format clustername_54 $12. ;
+2203              format clustername_55 $12. ;
+2204              format clustername_56 $12. ;
+2205              format clustername_57 $12. ;
+2206              format clustername_58 $12. ;
+2207              format clustername_59 $12. ;
+2208              format clustername_60 $12. ;
+2209              format clustername_61 $12. ;
+2210              format clustername_62 $12. ;
+2211              format clustername_63 $12. ;
+2212              format clustername_64 $12. ;
+2213              format clustername_65 $12. ;
+2214              format clustername_66 $12. ;
+2215              format clustername_67 $12. ;
+2216              format clustername_68 $12. ;
+2217              format clustername_69 $12. ;
+2218              format clustername_70 $12. ;
+2219              format clustername_71 $12. ;
+2220              format clustername_72 $12. ;
+2221              format clustername_73 $12. ;
+2222              format clustername_74 $12. ;
+2223              format clustername_75 $12. ;
+2224              format clustername_76 $12. ;
+2225              format clustername_77 $12. ;
+2226              format clustername_78 $12. ;
+2227              format clustername_79 $12. ;
+2228              format clustername_80 $12. ;
+2229              format clustername_81 $12. ;
+2230              format clustername_82 $12. ;
+2231              format clustername_83 $12. ;
+2232              format clustername_84 $12. ;
+2233              format clustername_85 $12. ;
+2234              format clustername_86 $12. ;
+2235              format clustername_87 $12. ;
+2236              format clustername_88 $12. ;
+2237              format clustername_89 $12. ;
+2238              format clustername_90 $12. ;
+2239              format clustername_91 $12. ;
+2240              format clustername_92 $12. ;
+2241              format clustername_93 $12. ;
+2242              format clustername_94 $12. ;
+2243              format clustername_95 $12. ;
+2244              format clustername_96 $12. ;
+2245              format clustername_97 $12. ;
+2246              format clustername_98 $12. ;
+2247              format clustername_99 $12. ;
+2248              format clustername_100 $12. ;
+2249              format clustername_101 $12. ;
+2250              format clustername_102 $12. ;
+2251              format clustername_103 $12. ;
+2252              format clustername_104 $12. ;
+2253              format clustername_105 $12. ;
+2254              format clustername_106 $12. ;
+2255              format clustername_107 $12. ;
+2256              format clustername_108 $12. ;
+2257              format clustername_109 $12. ;
+2258              format clustername_110 $12. ;
+2259              format clustername_111 $12. ;
+2260              format clustername_112 $12. ;
+2261              format clustername_113 $12. ;
+2262              format clustername_114 $12. ;
+2263              format clustername_115 $12. ;
+2264              format clustername_116 $12. ;
+2265              format clustername_117 $12. ;
+2266              format clustername_118 $12. ;
+2267              format clustername_119 $12. ;
+2268              format clustername_120 $12. ;
+2269              format clustername_121 $12. ;
+2270              format clustername_122 $12. ;
+2271              format clustername_123 $12. ;
+2272              format clustername_124 $12. ;
+2273              format clustername_125 $12. ;
+2274              format clustername_126 $12. ;
+2275              format clustername_127 $12. ;
+2276              format clustername_128 $12. ;
+2277              format clustername_129 $12. ;
+2278              format clustername_130 $12. ;
+2279              format clustername_131 $12. ;
+2280              format clustername_132 $12. ;
+2281              format clustername_133 $12. ;
+2282              format clustername_134 $12. ;
+2283              format clustername_135 $12. ;
+2284              format clustername_136 $12. ;
+2285              format clustername_137 $12. ;
+2286              format clustername_138 $12. ;
+2287              format clustername_139 $12. ;
+2288              format clustername_140 $12. ;
+2289              format clustername_141 $12. ;
+2290              format clustername_142 $12. ;
+2291              format clustername_143 $12. ;
+2292              format clustername_144 $12. ;
+2293              format clustername_145 $12. ;
+2294              format clustername_146 $12. ;
+2295              format clustername_147 $12. ;
+2296              format clustername_148 $12. ;
+2297              format clustername_149 $12. ;
+2298              format clustername_150 $12. ;
+2299              format clustername_151 $12. ;
+2300              format clustername_152 $12. ;
+2301              format clustername_153 $12. ;
+2302              format clustername_154 $12. ;
+2303              format clustername_155 $12. ;
+2304              format clustername_156 $12. ;
+2305              format clustername_157 $12. ;
+2306              format clustername_158 $12. ;
+2307              format clustername_159 $12. ;
+2308              format clustername_160 $12. ;
+2309              format clustername_161 $12. ;
+2310              format clustername_162 $12. ;
+2311              format clustername_163 $12. ;
+2312              format clustername_164 $12. ;
+2313              format clustername_165 $12. ;
+2314              format clustername_166 $12. ;
+2315              format clustername_167 $12. ;
+2316              format clustername_168 $12. ;
+2317              format clustername_169 $12. ;
+2318              format clustername_170 $12. ;
+2319              format clustername_171 $12. ;
+2320              format clustername_172 $12. ;
+2321              format clustername_173 $12. ;
+2322              format clustername_174 $12. ;
+2323              format clustername_175 $12. ;
+2324              format clustername_176 $12. ;
+2325              format clustername_177 $12. ;
+2326              format clustername_178 $12. ;
+2327              format clustername_179 $12. ;
+2328              format clustername_180 $12. ;
+2329              format clustername_181 $12. ;
+2330              format clustername_182 $12. ;
+2331              format clustername_183 $12. ;
+2332              format clustername_184 $12. ;
+2333              format clustername_185 $12. ;
+2334              format clustername_186 $12. ;
+2335              format clustername_187 $12. ;
+2336              format clustername_188 $12. ;
+2337              format clustername_189 $12. ;
+2338              format clustername_190 $12. ;
+2339              format clustername_191 $12. ;
+2340              format clustername_192 $12. ;
+2341              format clustername_193 $12. ;
+2342              format clustername_194 $12. ;
+2343              format clustername_195 $12. ;
+2344              format clustername_196 $12. ;
+2345              format clustername_197 $12. ;
+2346              format clustername_198 $12. ;
+2347              format clustername_199 $12. ;
+2348              format clustername_200 $12. ;
+2349              format clustername_201 $12. ;
+2350              format clustername_202 $12. ;
+2351              format clustername_203 $12. ;
+2352              format clustername_204 $12. ;
+2353              format clustername_205 $12. ;
+2354              format clustername_206 $12. ;
+2355              format clustername_207 $12. ;
+2356              format clustername_208 $12. ;
+2357              format clustername_209 $12. ;
+2358              format clustername_210 $12. ;
+2359              format clustername_211 $12. ;
+2360              format clustername_212 $12. ;
+2361              format clustername_213 $12. ;
+2362              format clustername_214 $12. ;
+2363              format clustername_215 $12. ;
+2364              format clustername_216 $12. ;
+2365              format clustername_217 $12. ;
+2366              format clustername_218 $12. ;
+2367              format clustername_219 $12. ;
+2368              format clustername_220 $12. ;
+2369              format clustername_221 $12. ;
+2370              format clustername_222 $12. ;
+2371              format clustername_223 $12. ;
+2372              format clustername_224 $12. ;
+2373              format clustername_225 $12. ;
+2374              format clustername_226 $12. ;
+2375              format clustername_227 $12. ;
+2376              format clustername_228 $12. ;
+2377              format clustername_229 $12. ;
+2378              format clustername_230 $12. ;
+2379              format clustername_231 $12. ;
+2380              format clustername_232 $12. ;
+2381              format clustername_233 $12. ;
+2382              format clustername_234 $12. ;
+2383              format clustername_235 $12. ;
+2384              format clustername_236 $12. ;
+2385              format clustername_237 $12. ;
+2386              format clustername_238 $12. ;
+2387              format clustername_239 $12. ;
+2388              format clustername_240 $12. ;
+2389              format clustername_241 $12. ;
+2390              format clustername_242 $12. ;
+2391              format clustername_243 $12. ;
+2392              format clustername_244 $12. ;
+2393              format clustername_245 $12. ;
+2394              format clustername_246 $12. ;
+2395              format clustername_247 $12. ;
+2396              format clustername_248 $12. ;
+2397              format clustername_249 $12. ;
+2398              format clustername_250 $12. ;
+2399              format clustername_251 $12. ;
+2400              format clustername_252 $12. ;
+2401              format clustername_253 $12. ;
+2402              format clustername_254 $12. ;
+2403              format clustername_255 $12. ;
+2404              format clustername_256 $12. ;
+2405              format clustername_257 $12. ;
+2406              format clustername_258 $12. ;
+2407              format clustername_259 $12. ;
+2408              format clustername_260 $12. ;
+2409              format clustername_261 $12. ;
+2410              format clustername_262 $12. ;
+2411              format clustername_263 $12. ;
+2412              format clustername_264 $12. ;
+2413              format clustername_265 $12. ;
+2414              format clustername_266 $12. ;
+2415              format clustername_267 $12. ;
+2416              format clustername_268 $12. ;
+2417              format clustername_269 $12. ;
+2418              format clustername_270 $12. ;
+2419              format clustername_271 $12. ;
+2420              format clustername_272 $12. ;
+2421              format clustername_273 $12. ;
+2422              format clustername_274 $12. ;
+2423              format clustername_275 $12. ;
+2424              format clustername_276 $12. ;
+2425              format clustername_277 $12. ;
+2426              format clustername_278 $12. ;
+2427              format clustername_279 $12. ;
+2428              format clustername_280 $12. ;
+2429              format clustername_281 $12. ;
+2430              format clustername_282 $12. ;
+2431              format clustername_283 $12. ;
+2432              format clustername_284 $12. ;
+2433              format clustername_285 $12. ;
+2434              format clustername_286 $12. ;
+2435              format clustername_287 $12. ;
+2436              format clustername_288 $12. ;
+2437              format clustername_289 $12. ;
+2438              format clustername_290 $12. ;
+2439              format clustername_291 $12. ;
+2440              format clustername_292 $12. ;
+2441              format clustername_293 $12. ;
+2442              format clustername_294 $12. ;
+2443              format clustername_295 $12. ;
+2444              format clustername_296 $12. ;
+2445              format clustername_297 $12. ;
+2446              format clustername_298 $12. ;
+2447              format clustername_299 $12. ;
+2448              format clustername_300 $12. ;
+2449              format clustername_301 $12. ;
+2450              format clustername_302 $12. ;
+2451              format clustername_303 $12. ;
+2452              format clustername_304 $12. ;
+2453              format clustername_305 $12. ;
+2454              format clustername_306 $12. ;
+2455              format clustername_307 $12. ;
+2456              format clustername_308 $12. ;
+2457              format clustername_309 $12. ;
+2458              format clustername_310 $12. ;
+2459              format clustername_311 $12. ;
+2460              format clustername_312 $12. ;
+2461              format clustername_313 $12. ;
+2462              format clustername_314 $12. ;
+2463              format clustername_315 $12. ;
+2464              format clustername_316 $12. ;
+2465              format clustername_317 $12. ;
+2466              format clustername_318 $12. ;
+2467              format clustername_319 $12. ;
+2468              format clustername_320 $12. ;
+2469              format clustername_321 $12. ;
+2470              format clustername_322 $12. ;
+2471              format clustername_323 $12. ;
+2472              format clustername_324 $12. ;
+2473              format clustername_325 $12. ;
+2474              format clustername_326 $12. ;
+2475              format clustername_327 $12. ;
+2476              format clustername_328 $12. ;
+2477              format clustername_329 $12. ;
+2478              format clustername_330 $12. ;
+2479              format clustername_331 $12. ;
+2480              format clustername_332 $12. ;
+2481              format clustername_333 $12. ;
+2482              format clustername_334 $12. ;
+2483              format clustername_335 $12. ;
+2484              format clustername_336 $12. ;
+2485              format clustername_337 $12. ;
+2486              format clustername_338 $12. ;
+2487              format clustername_339 $12. ;
+2488              format clustername_340 $12. ;
+2489              format clustername_341 $12. ;
+2490              format clustername_342 $12. ;
+2491              format clustername_343 $12. ;
+2492              format clustername_344 $12. ;
+2493              format clustername_345 $12. ;
+2494              format clustername_346 $12. ;
+2495              format clustername_347 $12. ;
+2496              format clustername_348 $12. ;
+2497              format clustername_349 $12. ;
+2498              format clustername_350 $12. ;
+2499              format clustername_351 $12. ;
+2500              format clustername_352 $12. ;
+2501              format clustername_353 $12. ;
+2502              format clustername_354 $12. ;
+2503              format clustername_355 $12. ;
+2504              format clustername_356 $12. ;
+2505              format clustername_357 $12. ;
+2506              format clustername_358 $12. ;
+2507              format clustername_359 $12. ;
+2508              format clustername_360 $12. ;
+2509              format clustername_361 $12. ;
+2510              format clustername_362 $12. ;
+2511              format clustername_363 $12. ;
+2512              format clustername_364 $12. ;
+2513              format clustername_365 $12. ;
+2514              format clustername_366 $12. ;
+2515              format clustername_367 $12. ;
+2516              format clustername_368 $12. ;
+2517              format clustername_369 $12. ;
+2518              format clustername_370 $12. ;
+2519              format clustername_371 $12. ;
+2520              format clustername_372 $12. ;
+2521              format clustername_373 $12. ;
+2522              format clustername_374 $12. ;
+2523              format clustername_375 $12. ;
+2524              format clustername_376 $12. ;
+2525              format clustername_377 $12. ;
+2526              format clustername_378 $12. ;
+2527              format clustername_379 $12. ;
+2528              format clustername_380 $12. ;
+2529              format clustername_381 $12. ;
+2530              format clustername_382 $12. ;
+2531              format clustername_383 $12. ;
+2532              format clustername_384 $12. ;
+2533              format clustername_385 $12. ;
+2534              format clustername_386 $12. ;
+2535              format clustername_387 $12. ;
+2536              format clustername_388 $12. ;
+2537              format clustername_389 $12. ;
+2538              format clustername_390 $12. ;
+2539              format clustername_391 $12. ;
+2540              format clustername_392 $12. ;
+2541              format clustername_393 $12. ;
+2542              format clustername_394 $12. ;
+2543              format clustername_395 $12. ;
+2544              format clustername_396 $12. ;
+2545              format clustername_397 $12. ;
+2546              format clustername_398 $12. ;
+2547              format clustername_399 $12. ;
+2548              format clustername_400 $12. ;
+2549              format clustername_401 $12. ;
+2550              format clustername_402 $12. ;
+2551              format clustername_403 $12. ;
+2552              format clustername_404 $12. ;
+2553              format clustername_405 $12. ;
+2554              format clustername_406 $12. ;
+2555              format clustername_407 $12. ;
+2556              format clustername_408 $12. ;
+2557              format clustername_409 $12. ;
+2558              format clustername_410 $12. ;
+2559              format clustername_411 $12. ;
+2560              format clustername_412 $12. ;
+2561              format clustername_413 $12. ;
+2562              format clustername_414 $12. ;
+2563              format clustername_415 $12. ;
+2564              format clustername_416 $12. ;
+2565              format clustername_417 $12. ;
+2566              format clustername_418 $12. ;
+2567              format clustername_419 $12. ;
+2568              format clustername_420 $12. ;
+2569              format clustername_421 $12. ;
+2570              format clustername_422 $12. ;
+2571              format clustername_423 $12. ;
+2572              format clustername_424 $12. ;
+2573              format clustername_425 $12. ;
+2574              format clustername_426 $12. ;
+2575              format clustername_427 $12. ;
+2576              format clustername_428 $12. ;
+2577              format clustername_429 $12. ;
+2578              format clustername_430 $12. ;
+2579              format clustername_431 $12. ;
+2580              format clustername_432 $12. ;
+2581              format clustername_433 $12. ;
+2582              format clustername_434 $12. ;
+2583              format clustername_435 $12. ;
+2584              format clustername_436 $12. ;
+2585              format clustername_437 $12. ;
+2586              format clustername_438 $12. ;
+2587              format clustername_439 $12. ;
+2588              format clustername_440 $12. ;
+2589              format clustername_441 $12. ;
+2590              format clustername_442 $12. ;
+2591              format clustername_443 $12. ;
+2592              format clustername_444 $12. ;
+2593              format clustername_445 $12. ;
+2594              format clustername_446 $12. ;
+2595              format clustername_447 $12. ;
+2596              format clustername_448 $12. ;
+2597              format clustername_449 $12. ;
+2598              format clustername_450 $12. ;
+2599              format clustername_451 $12. ;
+2600              format clustername_452 $12. ;
+2601              format clustername_453 $12. ;
+2602              format clustername_454 $12. ;
+2603              format clustername_455 $12. ;
+2604              format clustername_456 $12. ;
+2605              format clustername_457 $12. ;
+2606              format clustername_458 $12. ;
+2607              format clustername_459 $12. ;
+2608              format clustername_460 $12. ;
+2609              format clustername_461 $12. ;
+2610              format clustername_462 $12. ;
+2611              format clustername_463 $12. ;
+2612              format clustername_464 $12. ;
+2613              format clustername_465 $12. ;
+2614              format clustername_466 $12. ;
+2615              format clustername_467 $12. ;
+2616              format clustername_468 $12. ;
+2617              format clustername_469 $12. ;
+2618              format clustername_470 $12. ;
+2619              format clustername_471 $12. ;
+2620              format clustername_472 $12. ;
+2621              format clustername_473 $12. ;
+2622              format clustername_474 $12. ;
+2623              format clustername_475 $12. ;
+2624              format clustername_476 $12. ;
+2625              format clustername_477 $12. ;
+2626              format clustername_478 $12. ;
+2627              format clustername_479 $12. ;
+2628              format clustername_480 $12. ;
+2629              format clustername_481 $12. ;
+2630              format clustername_482 $12. ;
+2631              format clustername_483 $12. ;
+2632              format clustername_484 $12. ;
+2633              format clustername_485 $12. ;
+2634              format clustername_486 $12. ;
+2635              format clustername_487 $12. ;
+2636              format clustername_488 $12. ;
+2637              format clustername_489 $12. ;
+2638              format clustername_490 $12. ;
+2639              format clustername_491 $12. ;
+2640              format clustername_492 $12. ;
+2641              format clustername_493 $12. ;
+2642              format clustername_494 $12. ;
+2643              format clustername_495 $12. ;
+2644              format clustername_496 $12. ;
+2645              format clustername_497 $12. ;
+2646              format clustername_498 $12. ;
+2647              format clustername_499 $12. ;
+2648              format clustername_500 $12. ;
+2649              format clustername_501 $12. ;
+2650              format clustername_502 $12. ;
+2651              format clustername_503 $12. ;
+2652              format clustername_504 $12. ;
+2653              format clustername_505 $12. ;
+2654              format clustername_506 $12. ;
+2655              format clustername_507 $12. ;
+2656              format clustername_508 $12. ;
+2657              format clustername_509 $12. ;
+2658              format clustername_510 $12. ;
+2659              format clustername_511 $12. ;
+2660              format clustername_512 $12. ;
+2661              format clustername_513 $12. ;
+2662              format clustername_514 $12. ;
+2663              format clustername_515 $12. ;
+2664              format clustername_516 $12. ;
+2665              format clustername_517 $12. ;
+2666              format clustername_518 $12. ;
+2667              format clustername_519 $12. ;
+2668              format clustername_520 $12. ;
+2669              format clustername_521 $12. ;
+2670              format clustername_522 $12. ;
+2671              format clustername_523 $12. ;
+2672              format clustername_524 $12. ;
+2673              format clustername_525 $12. ;
+2674              format clustername_526 $12. ;
+2675              format clustername_527 $12. ;
+2676              format clustername_528 $12. ;
+2677              format clustername_529 $12. ;
+2678              format clustername_530 $12. ;
+2679              format clustername_531 $12. ;
+2680              format clustername_532 $12. ;
+2681              format clustername_533 $12. ;
+2682              format clustername_534 $12. ;
+2683              format clustername_535 $12. ;
+2684              format clustername_536 $12. ;
+2685              format clustername_537 $12. ;
+2686              format clustername_538 $12. ;
+2687              format clustername_539 $12. ;
+2688              format clustername_540 $12. ;
+2689              format clustername_541 $12. ;
+2690              format clustername_542 $12. ;
+2691              format clustername_543 $12. ;
+2692              format clustername_544 $12. ;
+2693              format clustername_545 $12. ;
+2694              format clustername_546 $12. ;
+2695              format clustername_547 $12. ;
+2696              format clustername_548 $12. ;
+2697              format clustername_549 $12. ;
+2698              format clustername_550 $12. ;
+2699              format clustername_551 $12. ;
+2700              format clustername_552 $12. ;
+2701              format clustername_553 $12. ;
+2702              format clustername_554 $12. ;
+2703              format clustername_555 $12. ;
+2704              format clustername_556 $12. ;
+2705              format clustername_557 $12. ;
+2706              format clustername_558 $12. ;
+2707              format clustername_559 $12. ;
+2708              format clustername_560 $12. ;
+2709              format clustername_561 $12. ;
+2710              format clustername_562 $12. ;
+2711              format clustername_563 $12. ;
+2712              format clustername_564 $12. ;
+2713              format clustername_565 $12. ;
+2714              format clustername_566 $12. ;
+2715              format clustername_567 $12. ;
+2716              format clustername_568 $12. ;
+2717              format clustername_569 $12. ;
+2718              format clustername_570 $12. ;
+2719              format clustername_571 $12. ;
+2720              format clustername_572 $12. ;
+2721              format clustername_573 $12. ;
+2722              format clustername_574 $12. ;
+2723              format clustername_575 $12. ;
+2724              format clustername_576 $12. ;
+2725              format clustername_577 $12. ;
+2726              format clustername_578 $12. ;
+2727              format clustername_579 $12. ;
+2728              format clustername_580 $12. ;
+2729              format clustername_581 $12. ;
+2730              format clustername_582 $12. ;
+2731              format clustername_583 $12. ;
+2732              format clustername_584 $12. ;
+2733              format clustername_585 $12. ;
+2734              format clustername_586 $12. ;
+2735              format clustername_587 $12. ;
+2736              format clustername_588 $12. ;
+2737              format clustername_589 $12. ;
+2738              format clustername_590 $12. ;
+2739              format clustername_591 $12. ;
+2740              format clustername_592 $12. ;
+2741              format clustername_593 $12. ;
+2742              format clustername_594 $12. ;
+2743              format clustername_595 $12. ;
+2744              format clustername_596 $12. ;
+2745              format clustername_597 $12. ;
+2746              format clustername_598 $12. ;
+2747              format clustername_599 $12. ;
+2748              format clustername_600 $12. ;
+2749              format clustername_601 $12. ;
+2750              format clustername_602 $12. ;
+2751              format clustername_603 $12. ;
+2752              format clustername_604 $12. ;
+2753              format clustername_605 $12. ;
+2754              format clustername_606 $12. ;
+2755              format clustername_607 $12. ;
+2756              format clustername_608 $12. ;
+2757              format clustername_609 $12. ;
+2758              format clustername_610 $12. ;
+2759              format clustername_611 $12. ;
+2760              format clustername_612 $12. ;
+2761              format clustername_613 $12. ;
+2762              format clustername_614 $12. ;
+2763              format clustername_615 $12. ;
+2764              format clustername_616 $12. ;
+2765              format clustername_617 $12. ;
+2766              format clustername_618 $12. ;
+2767              format clustername_619 $12. ;
+2768              format clustername_620 $12. ;
+2769              format clustername_621 $12. ;
+2770              format clustername_622 $12. ;
+2771              format clustername_623 $12. ;
+2772              format clustername_624 $12. ;
+2773              format clustername_625 $12. ;
+2774              format clustername_626 $12. ;
+2775              format clustername_627 $12. ;
+2776              format clustername_628 $12. ;
+2777              format clustername_629 $12. ;
+2778              format clustername_630 $12. ;
+2779              format clustername_631 $12. ;
+2780              format clustername_632 $12. ;
+2781              format clustername_633 $12. ;
+2782              format clustername_634 $12. ;
+2783              format clustername_635 $12. ;
+2784              format clustername_636 $12. ;
+2785              format clustername_637 $12. ;
+2786              format clustername_638 $12. ;
+2787              format clustername_639 $12. ;
+2788              format clustername_640 $12. ;
+2789              format clustername_641 $12. ;
+2790              format clustername_642 $12. ;
+2791              format clustername_643 $12. ;
+2792              format clustername_644 $12. ;
+2793              format clustername_645 $12. ;
+2794              format clustername_646 $12. ;
+2795              format clustername_647 $12. ;
+2796              format clustername_648 $12. ;
+2797              format clustername_649 $12. ;
+2798              format clustername_650 $12. ;
+2799              format clustername_651 $12. ;
+2800              format clustername_652 $12. ;
+2801              format clustername_653 $12. ;
+2802              format clustername_654 $12. ;
+2803              format clustername_655 $12. ;
+2804              format clustername_656 $12. ;
+2805              format clustername_657 $12. ;
+2806              format clustername_658 $12. ;
+2807              format clustername_659 $12. ;
+2808              format clustername_660 $12. ;
+2809              format clustername_661 $12. ;
+2810              format clustername_662 $12. ;
+2811              format clustername_663 $12. ;
+2812              format clustername_664 $12. ;
+2813              format clustername_665 $12. ;
+2814              format clustername_666 $12. ;
+2815              format clustername_667 $12. ;
+2816              format clustername_668 $12. ;
+2817              format clustername_669 $12. ;
+2818              format clustername_670 $12. ;
+2819              format clustername_671 $12. ;
+2820              format clustername_672 $12. ;
+2821              format clustername_673 $12. ;
+2822              format clustername_674 $12. ;
+2823              format clustername_675 $12. ;
+2824              format clustername_676 $12. ;
+2825              format clustername_677 $12. ;
+2826              format clustername_678 $12. ;
+2827              format clustername_679 $12. ;
+2828              format clustername_680 $12. ;
+2829              format clustername_681 $12. ;
+2830              format clustername_682 $12. ;
+2831              format clustername_683 $12. ;
+2832              format clustername_684 $12. ;
+2833              format clustername_685 $12. ;
+2834              format clustername_686 $12. ;
+2835              format clustername_687 $12. ;
+2836              format clustername_688 $12. ;
+2837              format clustername_689 $12. ;
+2838              format clustername_690 $12. ;
+2839              format clustername_691 $12. ;
+2840              format clustername_692 $12. ;
+2841              format clustername_693 $12. ;
+2842              format clustername_694 $12. ;
+2843              format clustername_695 $12. ;
+2844              format clustername_696 $12. ;
+2845              format clustername_697 $12. ;
+2846              format clustername_698 $12. ;
+2847              format clustername_699 $12. ;
+2848              format clustername_700 $12. ;
+2849              format clustername_701 $12. ;
+2850              format clustername_702 $12. ;
+2851              format clustername_703 $12. ;
+2852              format clustername_704 $12. ;
+2853              format clustername_705 $12. ;
+2854              format clustername_706 $12. ;
+2855              format clustername_707 $12. ;
+2856              format clustername_708 $12. ;
+2857              format clustername_709 $12. ;
+2858              format clustername_710 $12. ;
+2859              format clustername_711 $12. ;
+2860              format clustername_712 $12. ;
+2861              format clustername_713 $12. ;
+2862              format clustername_714 $12. ;
+2863              format clustername_715 $12. ;
+2864              format clustername_716 $12. ;
+2865              format clustername_717 $12. ;
+2866              format clustername_718 $12. ;
+2867              format clustername_719 $12. ;
+2868              format clustername_720 $12. ;
+2869              format clustername_721 $12. ;
+2870              format clustername_722 $12. ;
+2871              format clustername_723 $12. ;
+2872              format clustername_724 $12. ;
+2873              format clustername_725 $12. ;
+2874              format clustername_726 $12. ;
+2875              format clustername_727 $12. ;
+2876              format clustername_728 $12. ;
+2877              format clustername_729 $12. ;
+2878              format clustername_730 $12. ;
+2879              format clustername_731 $12. ;
+2880              format clustername_732 $12. ;
+2881              format clustername_733 $12. ;
+2882              format clustername_734 $12. ;
+2883              format clustername_735 $12. ;
+2884              format clustername_736 $12. ;
+2885              format clustername_737 $12. ;
+5 The SAS System                                                                                    20:32 Sunday, September 20, 2020
+
+2886              format clustername_738 $12. ;
+2887              format clustername_739 $12. ;
+2888              format clustername_740 $12. ;
+2889              format clustername_741 $12. ;
+2890              format clustername_742 $12. ;
+2891              format clustername_743 $12. ;
+2892              format clustername_744 $12. ;
+2893              format clustername_745 $12. ;
+2894              format clustername_746 $12. ;
+2895              format clustername_747 $12. ;
+2896              format clustername_748 $12. ;
+2897              format clustername_749 $12. ;
+2898              format clustername_750 $12. ;
+2899              format clustername_751 $12. ;
+2900              format clustername_752 $12. ;
+2901              format clustername_753 $12. ;
+2902              format clustername_754 $12. ;
+2903              format clustername_755 $12. ;
+2904              format clustername_756 $12. ;
+2905              format clustername_757 $12. ;
+2906              format clustername_758 $12. ;
+2907              format clustername_759 $12. ;
+2908              format clustername_760 $12. ;
+2909              format clustername_761 $12. ;
+2910              format clustername_762 $12. ;
+2911              format clustername_763 $12. ;
+2912              format clustername_764 $12. ;
+2913              format clustername_765 $12. ;
+2914              format clustername_766 $12. ;
+2915              format clustername_767 $12. ;
+2916              format clustername_768 $12. ;
+2917              format clustername_769 $12. ;
+2918              format clustername_770 $12. ;
+2919              format clustername_771 $12. ;
+2920              format clustername_772 $12. ;
+2921              format clustername_773 $12. ;
+2922              format clustername_774 $12. ;
+2923              format clustername_775 $12. ;
+2924              format clustername_776 $12. ;
+2925              format clustername_777 $12. ;
+2926              format clustername_778 $12. ;
+2927              format clustername_779 $12. ;
+2928              format clustername_780 $12. ;
+2929              format clustername_781 $12. ;
+2930              format clustername_782 $12. ;
+2931              format clustername_783 $12. ;
+2932              format clustername_784 $12. ;
+2933              format clustername_785 $12. ;
+2934              format clustername_786 $12. ;
+2935              format clustername_787 $12. ;
+2936              format clustername_788 $12. ;
+2937              format clustername_789 $12. ;
+2938              format clustername_790 $12. ;
+2939              format clustername_791 $12. ;
+2940              format clustername_792 $12. ;
+2941              format clustername_793 $12. ;
+2942              format clustername_794 $12. ;
+2943              format clustername_795 $12. ;
+2944              format clustername_796 $12. ;
+2945              format clustername_797 $12. ;
+2946              format clustername_798 $12. ;
+2947              format clustername_799 $12. ;
+2948              format clustername_800 $12. ;
+2949              format clustername_801 $12. ;
+2950              format clustername_802 $12. ;
+2951              format clustername_803 $12. ;
+2952              format clustername_804 $12. ;
+2953              format clustername_805 $12. ;
+2954              format clustername_806 $12. ;
+2955              format clustername_807 $12. ;
+2956              format clustername_808 $12. ;
+2957              format clustername_809 $12. ;
+2958              format clustername_810 $12. ;
+2959              format clustername_811 $12. ;
+2960              format clustername_812 $12. ;
+2961              format clustername_813 $12. ;
+2962              format clustername_814 $12. ;
+2963              format clustername_815 $12. ;
+2964              format clustername_816 $12. ;
+2965              format clustername_817 $12. ;
+2966              format clustername_818 $12. ;
+2967              format clustername_819 $12. ;
+2968              format clustername_820 $12. ;
+2969              format clustername_821 $12. ;
+2970              format clustername_822 $12. ;
+2971              format clustername_823 $12. ;
+2972              format clustername_824 $12. ;
+2973              format clustername_825 $12. ;
+2974              format clustername_826 $12. ;
+2975              format clustername_827 $12. ;
+2976              format clustername_828 $12. ;
+2977              format clustername_829 $12. ;
+2978              format clustername_830 $12. ;
+2979              format clustername_831 $12. ;
+2980              format clustername_832 $12. ;
+2981              format clustername_833 $12. ;
+2982              format clustername_834 $12. ;
+2983              format clustername_835 $12. ;
+2984              format clustername_836 $12. ;
+2985              format clustername_837 $12. ;
+2986              format clustername_838 $12. ;
+2987              format clustername_839 $12. ;
+2988              format clustername_840 $12. ;
+2989              format clustername_841 $12. ;
+2990              format clustername_842 $12. ;
+2991              format clustername_843 $12. ;
+2992              format clustername_844 $12. ;
+2993              format clustername_845 $12. ;
+2994              format clustername_846 $12. ;
+2995              format clustername_847 $12. ;
+2996              format clustername_848 $12. ;
+2997              format clustername_849 $12. ;
+2998              format clustername_850 $12. ;
+2999              format clustername_851 $12. ;
+3000              format clustername_852 $12. ;
+3001              format clustername_853 $12. ;
+3002              format clustername_854 $12. ;
+3003              format clustername_855 $12. ;
+3004              format clustername_856 $12. ;
+3005              format clustername_857 $12. ;
+3006              format clustername_858 $12. ;
+3007              format clustername_859 $12. ;
+3008              format clustername_860 $12. ;
+3009              format clustername_861 $12. ;
+3010              format clustername_862 $12. ;
+3011              format clustername_863 $12. ;
+3012              format clustername_864 $12. ;
+3013              format clustername_865 $12. ;
+3014              format clustername_866 $12. ;
+3015              format clustername_867 $12. ;
+3016              format clustername_868 $12. ;
+3017              format clustername_869 $12. ;
+3018              format clustername_870 $12. ;
+3019              format clustername_871 $12. ;
+3020              format clustername_872 $12. ;
+3021              format clustername_873 $12. ;
+3022              format clustername_874 $12. ;
+3023              format clustername_875 $12. ;
+3024              format clustername_876 $12. ;
+3025              format clustername_877 $12. ;
+3026              format clustername_878 $12. ;
+3027              format clustername_879 $12. ;
+3028              format clustername_880 $12. ;
+3029              format clustername_881 $12. ;
+3030              format clustername_882 $12. ;
+3031              format clustername_883 $12. ;
+3032              format clustername_884 $12. ;
+3033              format clustername_885 $12. ;
+3034              format clustername_886 $12. ;
+3035              format clustername_887 $12. ;
+3036              format clustername_888 $12. ;
+3037              format clustername_889 $12. ;
+3038              format clustername_890 $12. ;
+3039              format clustername_891 $12. ;
+3040              format clustername_892 $12. ;
+3041              format clustername_893 $12. ;
+3042              format clustername_894 $12. ;
+3043              format clustername_895 $12. ;
+3044              format clustername_896 $12. ;
+3045              format clustername_897 $12. ;
+3046              format clustername_898 $12. ;
+3047              format clustername_899 $12. ;
+3048              format clustername_900 $12. ;
+3049              format clustername_901 $12. ;
+3050              format clustername_902 $12. ;
+3051              format clustername_903 $12. ;
+3052              format clustername_904 $12. ;
+3053              format clustername_905 $12. ;
+3054              format clustername_906 $12. ;
+3055              format clustername_907 $12. ;
+3056              format clustername_908 $12. ;
+3057              format clustername_909 $12. ;
+3058              format clustername_910 $12. ;
+3059              format clustername_911 $12. ;
+3060              format clustername_912 $12. ;
+3061              format clustername_913 $12. ;
+3062              format clustername_914 $12. ;
+3063              format clustername_915 $12. ;
+3064              format clustername_916 $12. ;
+3065              format clustername_917 $12. ;
+3066              format clustername_918 $12. ;
+3067              format clustername_919 $12. ;
+3068              format clustername_920 $12. ;
+3069              format clustername_921 $12. ;
+3070              format clustername_922 $12. ;
+3071              format clustername_923 $12. ;
+3072              format clustername_924 $12. ;
+3073              format clustername_925 $12. ;
+3074              format clustername_926 $12. ;
+3075              format clustername_927 $12. ;
+3076              format clustername_928 $12. ;
+3077              format clustername_929 $12. ;
+3078              format clustername_930 $12. ;
+3079              format clustername_931 $12. ;
+3080              format clustername_932 $12. ;
+3081              format clustername_933 $12. ;
+3082              format clustername_934 $12. ;
+3083              format clustername_935 $12. ;
+3084              format clustername_936 $12. ;
+3085              format clustername_937 $12. ;
+3086              format clustername_938 $12. ;
+3087              format clustername_939 $12. ;
+3088              format clustername_940 $12. ;
+3089              format clustername_941 $12. ;
+3090              format clustername_942 $12. ;
+3091              format clustername_943 $12. ;
+3092              format clustername_944 $12. ;
+3093              format clustername_945 $12. ;
+3094              format clustername_946 $12. ;
+3095              format clustername_947 $12. ;
+3096              format clustername_948 $12. ;
+3097              format clustername_949 $12. ;
+3098              format clustername_950 $12. ;
+3099              format clustername_951 $12. ;
+3100              format clustername_952 $12. ;
+3101              format clustername_953 $12. ;
+3102              format clustername_954 $12. ;
+3103              format clustername_955 $12. ;
+3104              format clustername_956 $12. ;
+3105              format clustername_957 $12. ;
+3106              format clustername_958 $12. ;
+3107              format clustername_959 $12. ;
+3108              format clustername_960 $12. ;
+3109              format clustername_961 $12. ;
+3110              format clustername_962 $12. ;
+3111              format clustername_963 $12. ;
+3112              format clustername_964 $12. ;
+3113              format clustername_965 $12. ;
+3114              format clustername_966 $12. ;
+3115              format clustername_967 $12. ;
+3116              format clustername_968 $12. ;
+3117              format clustername_969 $12. ;
+3118              format clustername_970 $12. ;
+3119              format clustername_971 $12. ;
+3120              format clustername_972 $12. ;
+3121              format clustername_973 $12. ;
+3122              format clustername_974 $12. ;
+3123              format clustername_975 $12. ;
+3124              format clustername_976 $12. ;
+3125              format clustername_977 $12. ;
+3126              format clustername_978 $12. ;
+3127              format clustername_979 $12. ;
+3128              format clustername_980 $12. ;
+3129              format clustername_981 $12. ;
+3130              format clustername_982 $12. ;
+3131              format clustername_983 $12. ;
+3132              format clustername_984 $12. ;
+3133              format clustername_985 $12. ;
+3134              format clustername_986 $12. ;
+3135              format clustername_987 $12. ;
+3136              format clustername_988 $12. ;
+3137              format clustername_989 $12. ;
+3138              format clustername_990 $12. ;
+3139              format clustername_991 $12. ;
+3140              format clustername_992 $12. ;
+3141              format clustername_993 $12. ;
+3142              format clustername_994 $12. ;
+3143              format clustername_995 $12. ;
+3144              format clustername_996 $12. ;
+3145              format clustername_997 $12. ;
+3146              format clustername_998 $12. ;
+3147              format clustername_999 $12. ;
+3148              format clustername_1000 $12. ;
+3149              format clus_switched best12. ;
+3150            do;
+3151              EFIOUT + 1;
+3152              put fips $ @;
+3153              put clustername $ @;
+3154              put clustername_1 $ @;
+3155              put clustername_2 $ @;
+3156              put clustername_3 $ @;
+3157              put clustername_4 $ @;
+3158              put clustername_5 $ @;
+3159              put clustername_6 $ @;
+3160              put clustername_7 $ @;
+3161              put clustername_8 $ @;
+3162              put clustername_9 $ @;
+3163              put clustername_10 $ @;
+3164              put clustername_11 $ @;
+3165              put clustername_12 $ @;
+3166              put clustername_13 $ @;
+3167              put clustername_14 $ @;
+3168              put clustername_15 $ @;
+3169              put clustername_16 $ @;
+3170              put clustername_17 $ @;
+3171              put clustername_18 $ @;
+3172              put clustername_19 $ @;
+3173              put clustername_20 $ @;
+3174              put clustername_21 $ @;
+3175              put clustername_22 $ @;
+3176              put clustername_23 $ @;
+3177              put clustername_24 $ @;
+3178              put clustername_25 $ @;
+3179              put clustername_26 $ @;
+3180              put clustername_27 $ @;
+3181              put clustername_28 $ @;
+3182              put clustername_29 $ @;
+3183              put clustername_30 $ @;
+3184              put clustername_31 $ @;
+3185              put clustername_32 $ @;
+3186              put clustername_33 $ @;
+3187              put clustername_34 $ @;
+3188              put clustername_35 $ @;
+3189              put clustername_36 $ @;
+3190              put clustername_37 $ @;
+3191              put clustername_38 $ @;
+3192              put clustername_39 $ @;
+3193              put clustername_40 $ @;
+3194              put clustername_41 $ @;
+3195              put clustername_42 $ @;
+3196              put clustername_43 $ @;
+3197              put clustername_44 $ @;
+3198              put clustername_45 $ @;
+3199              put clustername_46 $ @;
+3200              put clustername_47 $ @;
+3201              put clustername_48 $ @;
+3202              put clustername_49 $ @;
+3203              put clustername_50 $ @;
+3204              put clustername_51 $ @;
+3205              put clustername_52 $ @;
+3206              put clustername_53 $ @;
+3207              put clustername_54 $ @;
+3208              put clustername_55 $ @;
+3209              put clustername_56 $ @;
+3210              put clustername_57 $ @;
+3211              put clustername_58 $ @;
+3212              put clustername_59 $ @;
+3213              put clustername_60 $ @;
+3214              put clustername_61 $ @;
+3215              put clustername_62 $ @;
+3216              put clustername_63 $ @;
+3217              put clustername_64 $ @;
+3218              put clustername_65 $ @;
+3219              put clustername_66 $ @;
+3220              put clustername_67 $ @;
+3221              put clustername_68 $ @;
+3222              put clustername_69 $ @;
+3223              put clustername_70 $ @;
+3224              put clustername_71 $ @;
+3225              put clustername_72 $ @;
+3226              put clustername_73 $ @;
+3227              put clustername_74 $ @;
+3228              put clustername_75 $ @;
+3229              put clustername_76 $ @;
+3230              put clustername_77 $ @;
+3231              put clustername_78 $ @;
+3232              put clustername_79 $ @;
+3233              put clustername_80 $ @;
+3234              put clustername_81 $ @;
+3235              put clustername_82 $ @;
+3236              put clustername_83 $ @;
+3237              put clustername_84 $ @;
+3238              put clustername_85 $ @;
+3239              put clustername_86 $ @;
+3240              put clustername_87 $ @;
+3241              put clustername_88 $ @;
+3242              put clustername_89 $ @;
+3243              put clustername_90 $ @;
+3244              put clustername_91 $ @;
+3245              put clustername_92 $ @;
+3246              put clustername_93 $ @;
+3247              put clustername_94 $ @;
+3248              put clustername_95 $ @;
+3249              put clustername_96 $ @;
+3250              put clustername_97 $ @;
+3251              put clustername_98 $ @;
+3252              put clustername_99 $ @;
+3253              put clustername_100 $ @;
+3254              put clustername_101 $ @;
+3255              put clustername_102 $ @;
+3256              put clustername_103 $ @;
+3257              put clustername_104 $ @;
+3258              put clustername_105 $ @;
+3259              put clustername_106 $ @;
+3260              put clustername_107 $ @;
+3261              put clustername_108 $ @;
+3262              put clustername_109 $ @;
+3263              put clustername_110 $ @;
+3264              put clustername_111 $ @;
+3265              put clustername_112 $ @;
+3266              put clustername_113 $ @;
+3267              put clustername_114 $ @;
+3268              put clustername_115 $ @;
+3269              put clustername_116 $ @;
+3270              put clustername_117 $ @;
+3271              put clustername_118 $ @;
+3272              put clustername_119 $ @;
+3273              put clustername_120 $ @;
+3274              put clustername_121 $ @;
+3275              put clustername_122 $ @;
+3276              put clustername_123 $ @;
+3277              put clustername_124 $ @;
+3278              put clustername_125 $ @;
+3279              put clustername_126 $ @;
+3280              put clustername_127 $ @;
+3281              put clustername_128 $ @;
+3282              put clustername_129 $ @;
+3283              put clustername_130 $ @;
+3284              put clustername_131 $ @;
+3285              put clustername_132 $ @;
+3286              put clustername_133 $ @;
+3287              put clustername_134 $ @;
+3288              put clustername_135 $ @;
+3289              put clustername_136 $ @;
+3290              put clustername_137 $ @;
+3291              put clustername_138 $ @;
+3292              put clustername_139 $ @;
+3293              put clustername_140 $ @;
+3294              put clustername_141 $ @;
+3295              put clustername_142 $ @;
+3296              put clustername_143 $ @;
+3297              put clustername_144 $ @;
+3298              put clustername_145 $ @;
+3299              put clustername_146 $ @;
+3300              put clustername_147 $ @;
+3301              put clustername_148 $ @;
+3302              put clustername_149 $ @;
+3303              put clustername_150 $ @;
+3304              put clustername_151 $ @;
+3305              put clustername_152 $ @;
+3306              put clustername_153 $ @;
+3307              put clustername_154 $ @;
+3308              put clustername_155 $ @;
+3309              put clustername_156 $ @;
+3310              put clustername_157 $ @;
+3311              put clustername_158 $ @;
+3312              put clustername_159 $ @;
+3313              put clustername_160 $ @;
+3314              put clustername_161 $ @;
+3315              put clustername_162 $ @;
+3316              put clustername_163 $ @;
+3317              put clustername_164 $ @;
+3318              put clustername_165 $ @;
+3319              put clustername_166 $ @;
+3320              put clustername_167 $ @;
+3321              put clustername_168 $ @;
+3322              put clustername_169 $ @;
+3323              put clustername_170 $ @;
+3324              put clustername_171 $ @;
+3325              put clustername_172 $ @;
+3326              put clustername_173 $ @;
+3327              put clustername_174 $ @;
+3328              put clustername_175 $ @;
+3329              put clustername_176 $ @;
+3330              put clustername_177 $ @;
+3331              put clustername_178 $ @;
+3332              put clustername_179 $ @;
+3333              put clustername_180 $ @;
+3334              put clustername_181 $ @;
+3335              put clustername_182 $ @;
+3336              put clustername_183 $ @;
+3337              put clustername_184 $ @;
+3338              put clustername_185 $ @;
+3339              put clustername_186 $ @;
+3340              put clustername_187 $ @;
+3341              put clustername_188 $ @;
+3342              put clustername_189 $ @;
+3343              put clustername_190 $ @;
+3344              put clustername_191 $ @;
+3345              put clustername_192 $ @;
+3346              put clustername_193 $ @;
+3347              put clustername_194 $ @;
+3348              put clustername_195 $ @;
+3349              put clustername_196 $ @;
+3350              put clustername_197 $ @;
+3351              put clustername_198 $ @;
+3352              put clustername_199 $ @;
+3353              put clustername_200 $ @;
+3354              put clustername_201 $ @;
+3355              put clustername_202 $ @;
+3356              put clustername_203 $ @;
+3357              put clustername_204 $ @;
+3358              put clustername_205 $ @;
+3359              put clustername_206 $ @;
+3360              put clustername_207 $ @;
+3361              put clustername_208 $ @;
+3362              put clustername_209 $ @;
+3363              put clustername_210 $ @;
+3364              put clustername_211 $ @;
+3365              put clustername_212 $ @;
+3366              put clustername_213 $ @;
+3367              put clustername_214 $ @;
+3368              put clustername_215 $ @;
+3369              put clustername_216 $ @;
+3370              put clustername_217 $ @;
+3371              put clustername_218 $ @;
+3372              put clustername_219 $ @;
+3373              put clustername_220 $ @;
+3374              put clustername_221 $ @;
+3375              put clustername_222 $ @;
+3376              put clustername_223 $ @;
+3377              put clustername_224 $ @;
+3378              put clustername_225 $ @;
+3379              put clustername_226 $ @;
+3380              put clustername_227 $ @;
+3381              put clustername_228 $ @;
+3382              put clustername_229 $ @;
+3383              put clustername_230 $ @;
+3384              put clustername_231 $ @;
+3385              put clustername_232 $ @;
+3386              put clustername_233 $ @;
+3387              put clustername_234 $ @;
+3388              put clustername_235 $ @;
+3389              put clustername_236 $ @;
+3390              put clustername_237 $ @;
+3391              put clustername_238 $ @;
+3392              put clustername_239 $ @;
+3393              put clustername_240 $ @;
+3394              put clustername_241 $ @;
+3395              put clustername_242 $ @;
+3396              put clustername_243 $ @;
+3397              put clustername_244 $ @;
+3398              put clustername_245 $ @;
+3399              put clustername_246 $ @;
+3400              put clustername_247 $ @;
+3401              put clustername_248 $ @;
+3402              put clustername_249 $ @;
+3403              put clustername_250 $ @;
+3404              put clustername_251 $ @;
+3405              put clustername_252 $ @;
+3406              put clustername_253 $ @;
+3407              put clustername_254 $ @;
+3408              put clustername_255 $ @;
+3409              put clustername_256 $ @;
+3410              put clustername_257 $ @;
+3411              put clustername_258 $ @;
+3412              put clustername_259 $ @;
+3413              put clustername_260 $ @;
+3414              put clustername_261 $ @;
+3415              put clustername_262 $ @;
+3416              put clustername_263 $ @;
+3417              put clustername_264 $ @;
+3418              put clustername_265 $ @;
+3419              put clustername_266 $ @;
+3420              put clustername_267 $ @;
+3421              put clustername_268 $ @;
+3422              put clustername_269 $ @;
+3423              put clustername_270 $ @;
+3424              put clustername_271 $ @;
+3425              put clustername_272 $ @;
+3426              put clustername_273 $ @;
+3427              put clustername_274 $ @;
+3428              put clustername_275 $ @;
+3429              put clustername_276 $ @;
+3430              put clustername_277 $ @;
+3431              put clustername_278 $ @;
+3432              put clustername_279 $ @;
+3433              put clustername_280 $ @;
+3434              put clustername_281 $ @;
+3435              put clustername_282 $ @;
+3436              put clustername_283 $ @;
+3437              put clustername_284 $ @;
+3438              put clustername_285 $ @;
+3439              put clustername_286 $ @;
+3440              put clustername_287 $ @;
+3441              put clustername_288 $ @;
+3442              put clustername_289 $ @;
+3443              put clustername_290 $ @;
+3444              put clustername_291 $ @;
+3445              put clustername_292 $ @;
+3446              put clustername_293 $ @;
+3447              put clustername_294 $ @;
+3448              put clustername_295 $ @;
+3449              put clustername_296 $ @;
+3450              put clustername_297 $ @;
+3451              put clustername_298 $ @;
+3452              put clustername_299 $ @;
+3453              put clustername_300 $ @;
+3454              put clustername_301 $ @;
+3455              put clustername_302 $ @;
+3456              put clustername_303 $ @;
+3457              put clustername_304 $ @;
+3458              put clustername_305 $ @;
+3459              put clustername_306 $ @;
+3460              put clustername_307 $ @;
+3461              put clustername_308 $ @;
+3462              put clustername_309 $ @;
+3463              put clustername_310 $ @;
+3464              put clustername_311 $ @;
+3465              put clustername_312 $ @;
+3466              put clustername_313 $ @;
+3467              put clustername_314 $ @;
+3468              put clustername_315 $ @;
+3469              put clustername_316 $ @;
+3470              put clustername_317 $ @;
+3471              put clustername_318 $ @;
+3472              put clustername_319 $ @;
+3473              put clustername_320 $ @;
+3474              put clustername_321 $ @;
+3475              put clustername_322 $ @;
+3476              put clustername_323 $ @;
+3477              put clustername_324 $ @;
+3478              put clustername_325 $ @;
+3479              put clustername_326 $ @;
+3480              put clustername_327 $ @;
+3481              put clustername_328 $ @;
+3482              put clustername_329 $ @;
+3483              put clustername_330 $ @;
+3484              put clustername_331 $ @;
+3485              put clustername_332 $ @;
+3486              put clustername_333 $ @;
+3487              put clustername_334 $ @;
+3488              put clustername_335 $ @;
+3489              put clustername_336 $ @;
+3490              put clustername_337 $ @;
+3491              put clustername_338 $ @;
+3492              put clustername_339 $ @;
+3493              put clustername_340 $ @;
+3494              put clustername_341 $ @;
+3495              put clustername_342 $ @;
+3496              put clustername_343 $ @;
+3497              put clustername_344 $ @;
+3498              put clustername_345 $ @;
+3499              put clustername_346 $ @;
+3500              put clustername_347 $ @;
+3501              put clustername_348 $ @;
+3502              put clustername_349 $ @;
+3503              put clustername_350 $ @;
+3504              put clustername_351 $ @;
+3505              put clustername_352 $ @;
+3506              put clustername_353 $ @;
+3507              put clustername_354 $ @;
+3508              put clustername_355 $ @;
+3509              put clustername_356 $ @;
+3510              put clustername_357 $ @;
+3511              put clustername_358 $ @;
+3512              put clustername_359 $ @;
+3513              put clustername_360 $ @;
+3514              put clustername_361 $ @;
+3515              put clustername_362 $ @;
+3516              put clustername_363 $ @;
+3517              put clustername_364 $ @;
+3518              put clustername_365 $ @;
+3519              put clustername_366 $ @;
+3520              put clustername_367 $ @;
+3521              put clustername_368 $ @;
+3522              put clustername_369 $ @;
+3523              put clustername_370 $ @;
+3524              put clustername_371 $ @;
+3525              put clustername_372 $ @;
+3526              put clustername_373 $ @;
+3527              put clustername_374 $ @;
+3528              put clustername_375 $ @;
+3529              put clustername_376 $ @;
+3530              put clustername_377 $ @;
+3531              put clustername_378 $ @;
+3532              put clustername_379 $ @;
+3533              put clustername_380 $ @;
+3534              put clustername_381 $ @;
+3535              put clustername_382 $ @;
+3536              put clustername_383 $ @;
+3537              put clustername_384 $ @;
+3538              put clustername_385 $ @;
+3539              put clustername_386 $ @;
+3540              put clustername_387 $ @;
+3541              put clustername_388 $ @;
+3542              put clustername_389 $ @;
+3543              put clustername_390 $ @;
+3544              put clustername_391 $ @;
+3545              put clustername_392 $ @;
+3546              put clustername_393 $ @;
+3547              put clustername_394 $ @;
+3548              put clustername_395 $ @;
+3549              put clustername_396 $ @;
+3550              put clustername_397 $ @;
+3551              put clustername_398 $ @;
+3552              put clustername_399 $ @;
+3553              put clustername_400 $ @;
+3554              put clustername_401 $ @;
+3555              put clustername_402 $ @;
+3556              put clustername_403 $ @;
+3557              put clustername_404 $ @;
+3558              put clustername_405 $ @;
+3559              put clustername_406 $ @;
+3560              put clustername_407 $ @;
+3561              put clustername_408 $ @;
+3562              put clustername_409 $ @;
+3563              put clustername_410 $ @;
+3564              put clustername_411 $ @;
+3565              put clustername_412 $ @;
+3566              put clustername_413 $ @;
+3567              put clustername_414 $ @;
+3568              put clustername_415 $ @;
+3569              put clustername_416 $ @;
+3570              put clustername_417 $ @;
+3571              put clustername_418 $ @;
+3572              put clustername_419 $ @;
+3573              put clustername_420 $ @;
+3574              put clustername_421 $ @;
+3575              put clustername_422 $ @;
+3576              put clustername_423 $ @;
+3577              put clustername_424 $ @;
+3578              put clustername_425 $ @;
+3579              put clustername_426 $ @;
+3580              put clustername_427 $ @;
+3581              put clustername_428 $ @;
+3582              put clustername_429 $ @;
+3583              put clustername_430 $ @;
+3584              put clustername_431 $ @;
+3585              put clustername_432 $ @;
+3586              put clustername_433 $ @;
+3587              put clustername_434 $ @;
+3588              put clustername_435 $ @;
+3589              put clustername_436 $ @;
+3590              put clustername_437 $ @;
+3591              put clustername_438 $ @;
+3592              put clustername_439 $ @;
+3593              put clustername_440 $ @;
+3594              put clustername_441 $ @;
+3595              put clustername_442 $ @;
+3596              put clustername_443 $ @;
+3597              put clustername_444 $ @;
+3598              put clustername_445 $ @;
+3599              put clustername_446 $ @;
+3600              put clustername_447 $ @;
+3601              put clustername_448 $ @;
+3602              put clustername_449 $ @;
+3603              put clustername_450 $ @;
+3604              put clustername_451 $ @;
+3605              put clustername_452 $ @;
+3606              put clustername_453 $ @;
+3607              put clustername_454 $ @;
+3608              put clustername_455 $ @;
+3609              put clustername_456 $ @;
+3610              put clustername_457 $ @;
+3611              put clustername_458 $ @;
+3612              put clustername_459 $ @;
+3613              put clustername_460 $ @;
+3614              put clustername_461 $ @;
+3615              put clustername_462 $ @;
+3616              put clustername_463 $ @;
+3617              put clustername_464 $ @;
+3618              put clustername_465 $ @;
+3619              put clustername_466 $ @;
+3620              put clustername_467 $ @;
+3621              put clustername_468 $ @;
+3622              put clustername_469 $ @;
+3623              put clustername_470 $ @;
+3624              put clustername_471 $ @;
+3625              put clustername_472 $ @;
+3626              put clustername_473 $ @;
+3627              put clustername_474 $ @;
+3628              put clustername_475 $ @;
+3629              put clustername_476 $ @;
+3630              put clustername_477 $ @;
+3631              put clustername_478 $ @;
+3632              put clustername_479 $ @;
+3633              put clustername_480 $ @;
+3634              put clustername_481 $ @;
+3635              put clustername_482 $ @;
+3636              put clustername_483 $ @;
+3637              put clustername_484 $ @;
+3638              put clustername_485 $ @;
+3639              put clustername_486 $ @;
+3640              put clustername_487 $ @;
+3641              put clustername_488 $ @;
+3642              put clustername_489 $ @;
+3643              put clustername_490 $ @;
+3644              put clustername_491 $ @;
+3645              put clustername_492 $ @;
+3646              put clustername_493 $ @;
+3647              put clustername_494 $ @;
+3648              put clustername_495 $ @;
+3649              put clustername_496 $ @;
+3650              put clustername_497 $ @;
+3651              put clustername_498 $ @;
+3652              put clustername_499 $ @;
+3653              put clustername_500 $ @;
+3654              put clustername_501 $ @;
+3655              put clustername_502 $ @;
+3656              put clustername_503 $ @;
+3657              put clustername_504 $ @;
+3658              put clustername_505 $ @;
+3659              put clustername_506 $ @;
+3660              put clustername_507 $ @;
+3661              put clustername_508 $ @;
+3662              put clustername_509 $ @;
+3663              put clustername_510 $ @;
+3664              put clustername_511 $ @;
+3665              put clustername_512 $ @;
+3666              put clustername_513 $ @;
+3667              put clustername_514 $ @;
+3668              put clustername_515 $ @;
+3669              put clustername_516 $ @;
+3670              put clustername_517 $ @;
+3671              put clustername_518 $ @;
+3672              put clustername_519 $ @;
+3673              put clustername_520 $ @;
+3674              put clustername_521 $ @;
+3675              put clustername_522 $ @;
+3676              put clustername_523 $ @;
+3677              put clustername_524 $ @;
+3678              put clustername_525 $ @;
+3679              put clustername_526 $ @;
+3680              put clustername_527 $ @;
+3681              put clustername_528 $ @;
+3682              put clustername_529 $ @;
+3683              put clustername_530 $ @;
+3684              put clustername_531 $ @;
+3685              put clustername_532 $ @;
+3686              put clustername_533 $ @;
+3687              put clustername_534 $ @;
+3688              put clustername_535 $ @;
+3689              put clustername_536 $ @;
+3690              put clustername_537 $ @;
+3691              put clustername_538 $ @;
+3692              put clustername_539 $ @;
+3693              put clustername_540 $ @;
+3694              put clustername_541 $ @;
+3695              put clustername_542 $ @;
+3696              put clustername_543 $ @;
+3697              put clustername_544 $ @;
+3698              put clustername_545 $ @;
+3699              put clustername_546 $ @;
+3700              put clustername_547 $ @;
+3701              put clustername_548 $ @;
+3702              put clustername_549 $ @;
+3703              put clustername_550 $ @;
+3704              put clustername_551 $ @;
+3705              put clustername_552 $ @;
+3706              put clustername_553 $ @;
+3707              put clustername_554 $ @;
+3708              put clustername_555 $ @;
+3709              put clustername_556 $ @;
+3710              put clustername_557 $ @;
+3711              put clustername_558 $ @;
+3712              put clustername_559 $ @;
+3713              put clustername_560 $ @;
+3714              put clustername_561 $ @;
+3715              put clustername_562 $ @;
+3716              put clustername_563 $ @;
+3717              put clustername_564 $ @;
+3718              put clustername_565 $ @;
+3719              put clustername_566 $ @;
+3720              put clustername_567 $ @;
+3721              put clustername_568 $ @;
+3722              put clustername_569 $ @;
+3723              put clustername_570 $ @;
+3724              put clustername_571 $ @;
+3725              put clustername_572 $ @;
+3726              put clustername_573 $ @;
+3727              put clustername_574 $ @;
+3728              put clustername_575 $ @;
+3729              put clustername_576 $ @;
+3730              put clustername_577 $ @;
+3731              put clustername_578 $ @;
+3732              put clustername_579 $ @;
+3733              put clustername_580 $ @;
+3734              put clustername_581 $ @;
+3735              put clustername_582 $ @;
+3736              put clustername_583 $ @;
+3737              put clustername_584 $ @;
+3738              put clustername_585 $ @;
+3739              put clustername_586 $ @;
+3740              put clustername_587 $ @;
+3741              put clustername_588 $ @;
+3742              put clustername_589 $ @;
+3743              put clustername_590 $ @;
+3744              put clustername_591 $ @;
+3745              put clustername_592 $ @;
+3746              put clustername_593 $ @;
+3747              put clustername_594 $ @;
+3748              put clustername_595 $ @;
+3749              put clustername_596 $ @;
+3750              put clustername_597 $ @;
+3751              put clustername_598 $ @;
+3752              put clustername_599 $ @;
+3753              put clustername_600 $ @;
+3754              put clustername_601 $ @;
+3755              put clustername_602 $ @;
+3756              put clustername_603 $ @;
+3757              put clustername_604 $ @;
+3758              put clustername_605 $ @;
+3759              put clustername_606 $ @;
+3760              put clustername_607 $ @;
+3761              put clustername_608 $ @;
+3762              put clustername_609 $ @;
+3763              put clustername_610 $ @;
+3764              put clustername_611 $ @;
+3765              put clustername_612 $ @;
+3766              put clustername_613 $ @;
+3767              put clustername_614 $ @;
+3768              put clustername_615 $ @;
+3769              put clustername_616 $ @;
+3770              put clustername_617 $ @;
+3771              put clustername_618 $ @;
+3772              put clustername_619 $ @;
+3773              put clustername_620 $ @;
+3774              put clustername_621 $ @;
+3775              put clustername_622 $ @;
+3776              put clustername_623 $ @;
+3777              put clustername_624 $ @;
+3778              put clustername_625 $ @;
+3779              put clustername_626 $ @;
+3780              put clustername_627 $ @;
+3781              put clustername_628 $ @;
+3782              put clustername_629 $ @;
+3783              put clustername_630 $ @;
+3784              put clustername_631 $ @;
+3785              put clustername_632 $ @;
+3786              put clustername_633 $ @;
+3787              put clustername_634 $ @;
+3788              put clustername_635 $ @;
+3789              put clustername_636 $ @;
+3790              put clustername_637 $ @;
+3791              put clustername_638 $ @;
+3792              put clustername_639 $ @;
+3793              put clustername_640 $ @;
+3794              put clustername_641 $ @;
+3795              put clustername_642 $ @;
+3796              put clustername_643 $ @;
+3797              put clustername_644 $ @;
+3798              put clustername_645 $ @;
+3799              put clustername_646 $ @;
+3800              put clustername_647 $ @;
+3801              put clustername_648 $ @;
+3802              put clustername_649 $ @;
+3803              put clustername_650 $ @;
+3804              put clustername_651 $ @;
+3805              put clustername_652 $ @;
+3806              put clustername_653 $ @;
+3807              put clustername_654 $ @;
+3808              put clustername_655 $ @;
+3809              put clustername_656 $ @;
+3810              put clustername_657 $ @;
+3811              put clustername_658 $ @;
+3812              put clustername_659 $ @;
+3813              put clustername_660 $ @;
+3814              put clustername_661 $ @;
+3815              put clustername_662 $ @;
+3816              put clustername_663 $ @;
+3817              put clustername_664 $ @;
+3818              put clustername_665 $ @;
+3819              put clustername_666 $ @;
+3820              put clustername_667 $ @;
+3821              put clustername_668 $ @;
+3822              put clustername_669 $ @;
+3823              put clustername_670 $ @;
+3824              put clustername_671 $ @;
+3825              put clustername_672 $ @;
+3826              put clustername_673 $ @;
+3827              put clustername_674 $ @;
+3828              put clustername_675 $ @;
+3829              put clustername_676 $ @;
+3830              put clustername_677 $ @;
+3831              put clustername_678 $ @;
+3832              put clustername_679 $ @;
+3833              put clustername_680 $ @;
+3834              put clustername_681 $ @;
+3835              put clustername_682 $ @;
+3836              put clustername_683 $ @;
+3837              put clustername_684 $ @;
+3838              put clustername_685 $ @;
+3839              put clustername_686 $ @;
+3840              put clustername_687 $ @;
+3841              put clustername_688 $ @;
+3842              put clustername_689 $ @;
+3843              put clustername_690 $ @;
+3844              put clustername_691 $ @;
+3845              put clustername_692 $ @;
+3846              put clustername_693 $ @;
+3847              put clustername_694 $ @;
+3848              put clustername_695 $ @;
+3849              put clustername_696 $ @;
+3850              put clustername_697 $ @;
+3851              put clustername_698 $ @;
+3852              put clustername_699 $ @;
+3853              put clustername_700 $ @;
+3854              put clustername_701 $ @;
+3855              put clustername_702 $ @;
+3856              put clustername_703 $ @;
+3857              put clustername_704 $ @;
+3858              put clustername_705 $ @;
+3859              put clustername_706 $ @;
+3860              put clustername_707 $ @;
+3861              put clustername_708 $ @;
+3862              put clustername_709 $ @;
+3863              put clustername_710 $ @;
+3864              put clustername_711 $ @;
+3865              put clustername_712 $ @;
+3866              put clustername_713 $ @;
+3867              put clustername_714 $ @;
+3868              put clustername_715 $ @;
+3869              put clustername_716 $ @;
+3870              put clustername_717 $ @;
+3871              put clustername_718 $ @;
+3872              put clustername_719 $ @;
+3873              put clustername_720 $ @;
+3874              put clustername_721 $ @;
+3875              put clustername_722 $ @;
+3876              put clustername_723 $ @;
+3877              put clustername_724 $ @;
+3878              put clustername_725 $ @;
+3879              put clustername_726 $ @;
+3880              put clustername_727 $ @;
+3881              put clustername_728 $ @;
+3882              put clustername_729 $ @;
+3883              put clustername_730 $ @;
+6 The SAS System                                                                                    20:32 Sunday, September 20, 2020
+
+3884              put clustername_731 $ @;
+3885              put clustername_732 $ @;
+3886              put clustername_733 $ @;
+3887              put clustername_734 $ @;
+3888              put clustername_735 $ @;
+3889              put clustername_736 $ @;
+3890              put clustername_737 $ @;
+3891              put clustername_738 $ @;
+3892              put clustername_739 $ @;
+3893              put clustername_740 $ @;
+3894              put clustername_741 $ @;
+3895              put clustername_742 $ @;
+3896              put clustername_743 $ @;
+3897              put clustername_744 $ @;
+3898              put clustername_745 $ @;
+3899              put clustername_746 $ @;
+3900              put clustername_747 $ @;
+3901              put clustername_748 $ @;
+3902              put clustername_749 $ @;
+3903              put clustername_750 $ @;
+3904              put clustername_751 $ @;
+3905              put clustername_752 $ @;
+3906              put clustername_753 $ @;
+3907              put clustername_754 $ @;
+3908              put clustername_755 $ @;
+3909              put clustername_756 $ @;
+3910              put clustername_757 $ @;
+3911              put clustername_758 $ @;
+3912              put clustername_759 $ @;
+3913              put clustername_760 $ @;
+3914              put clustername_761 $ @;
+3915              put clustername_762 $ @;
+3916              put clustername_763 $ @;
+3917              put clustername_764 $ @;
+3918              put clustername_765 $ @;
+3919              put clustername_766 $ @;
+3920              put clustername_767 $ @;
+3921              put clustername_768 $ @;
+3922              put clustername_769 $ @;
+3923              put clustername_770 $ @;
+3924              put clustername_771 $ @;
+3925              put clustername_772 $ @;
+3926              put clustername_773 $ @;
+3927              put clustername_774 $ @;
+3928              put clustername_775 $ @;
+3929              put clustername_776 $ @;
+3930              put clustername_777 $ @;
+3931              put clustername_778 $ @;
+3932              put clustername_779 $ @;
+3933              put clustername_780 $ @;
+3934              put clustername_781 $ @;
+3935              put clustername_782 $ @;
+3936              put clustername_783 $ @;
+3937              put clustername_784 $ @;
+3938              put clustername_785 $ @;
+3939              put clustername_786 $ @;
+3940              put clustername_787 $ @;
+3941              put clustername_788 $ @;
+3942              put clustername_789 $ @;
+3943              put clustername_790 $ @;
+3944              put clustername_791 $ @;
+3945              put clustername_792 $ @;
+3946              put clustername_793 $ @;
+3947              put clustername_794 $ @;
+3948              put clustername_795 $ @;
+3949              put clustername_796 $ @;
+3950              put clustername_797 $ @;
+3951              put clustername_798 $ @;
+3952              put clustername_799 $ @;
+3953              put clustername_800 $ @;
+3954              put clustername_801 $ @;
+3955              put clustername_802 $ @;
+3956              put clustername_803 $ @;
+3957              put clustername_804 $ @;
+3958              put clustername_805 $ @;
+3959              put clustername_806 $ @;
+3960              put clustername_807 $ @;
+3961              put clustername_808 $ @;
+3962              put clustername_809 $ @;
+3963              put clustername_810 $ @;
+3964              put clustername_811 $ @;
+3965              put clustername_812 $ @;
+3966              put clustername_813 $ @;
+3967              put clustername_814 $ @;
+3968              put clustername_815 $ @;
+3969              put clustername_816 $ @;
+3970              put clustername_817 $ @;
+3971              put clustername_818 $ @;
+3972              put clustername_819 $ @;
+3973              put clustername_820 $ @;
+3974              put clustername_821 $ @;
+3975              put clustername_822 $ @;
+3976              put clustername_823 $ @;
+3977              put clustername_824 $ @;
+3978              put clustername_825 $ @;
+3979              put clustername_826 $ @;
+3980              put clustername_827 $ @;
+3981              put clustername_828 $ @;
+3982              put clustername_829 $ @;
+3983              put clustername_830 $ @;
+3984              put clustername_831 $ @;
+3985              put clustername_832 $ @;
+3986              put clustername_833 $ @;
+3987              put clustername_834 $ @;
+3988              put clustername_835 $ @;
+3989              put clustername_836 $ @;
+3990              put clustername_837 $ @;
+3991              put clustername_838 $ @;
+3992              put clustername_839 $ @;
+3993              put clustername_840 $ @;
+3994              put clustername_841 $ @;
+3995              put clustername_842 $ @;
+3996              put clustername_843 $ @;
+3997              put clustername_844 $ @;
+3998              put clustername_845 $ @;
+3999              put clustername_846 $ @;
+4000              put clustername_847 $ @;
+4001              put clustername_848 $ @;
+4002              put clustername_849 $ @;
+4003              put clustername_850 $ @;
+4004              put clustername_851 $ @;
+4005              put clustername_852 $ @;
+4006              put clustername_853 $ @;
+4007              put clustername_854 $ @;
+4008              put clustername_855 $ @;
+4009              put clustername_856 $ @;
+4010              put clustername_857 $ @;
+4011              put clustername_858 $ @;
+4012              put clustername_859 $ @;
+4013              put clustername_860 $ @;
+4014              put clustername_861 $ @;
+4015              put clustername_862 $ @;
+4016              put clustername_863 $ @;
+4017              put clustername_864 $ @;
+4018              put clustername_865 $ @;
+4019              put clustername_866 $ @;
+4020              put clustername_867 $ @;
+4021              put clustername_868 $ @;
+4022              put clustername_869 $ @;
+4023              put clustername_870 $ @;
+4024              put clustername_871 $ @;
+4025              put clustername_872 $ @;
+4026              put clustername_873 $ @;
+4027              put clustername_874 $ @;
+4028              put clustername_875 $ @;
+4029              put clustername_876 $ @;
+4030              put clustername_877 $ @;
+4031              put clustername_878 $ @;
+4032              put clustername_879 $ @;
+4033              put clustername_880 $ @;
+4034              put clustername_881 $ @;
+4035              put clustername_882 $ @;
+4036              put clustername_883 $ @;
+4037              put clustername_884 $ @;
+4038              put clustername_885 $ @;
+4039              put clustername_886 $ @;
+4040              put clustername_887 $ @;
+4041              put clustername_888 $ @;
+4042              put clustername_889 $ @;
+4043              put clustername_890 $ @;
+4044              put clustername_891 $ @;
+4045              put clustername_892 $ @;
+4046              put clustername_893 $ @;
+4047              put clustername_894 $ @;
+4048              put clustername_895 $ @;
+4049              put clustername_896 $ @;
+4050              put clustername_897 $ @;
+4051              put clustername_898 $ @;
+4052              put clustername_899 $ @;
+4053              put clustername_900 $ @;
+4054              put clustername_901 $ @;
+4055              put clustername_902 $ @;
+4056              put clustername_903 $ @;
+4057              put clustername_904 $ @;
+4058              put clustername_905 $ @;
+4059              put clustername_906 $ @;
+4060              put clustername_907 $ @;
+4061              put clustername_908 $ @;
+4062              put clustername_909 $ @;
+4063              put clustername_910 $ @;
+4064              put clustername_911 $ @;
+4065              put clustername_912 $ @;
+4066              put clustername_913 $ @;
+4067              put clustername_914 $ @;
+4068              put clustername_915 $ @;
+4069              put clustername_916 $ @;
+4070              put clustername_917 $ @;
+4071              put clustername_918 $ @;
+4072              put clustername_919 $ @;
+4073              put clustername_920 $ @;
+4074              put clustername_921 $ @;
+4075              put clustername_922 $ @;
+4076              put clustername_923 $ @;
+4077              put clustername_924 $ @;
+4078              put clustername_925 $ @;
+4079              put clustername_926 $ @;
+4080              put clustername_927 $ @;
+4081              put clustername_928 $ @;
+4082              put clustername_929 $ @;
+4083              put clustername_930 $ @;
+4084              put clustername_931 $ @;
+4085              put clustername_932 $ @;
+4086              put clustername_933 $ @;
+4087              put clustername_934 $ @;
+4088              put clustername_935 $ @;
+4089              put clustername_936 $ @;
+4090              put clustername_937 $ @;
+4091              put clustername_938 $ @;
+4092              put clustername_939 $ @;
+4093              put clustername_940 $ @;
+4094              put clustername_941 $ @;
+4095              put clustername_942 $ @;
+4096              put clustername_943 $ @;
+4097              put clustername_944 $ @;
+4098              put clustername_945 $ @;
+4099              put clustername_946 $ @;
+4100              put clustername_947 $ @;
+4101              put clustername_948 $ @;
+4102              put clustername_949 $ @;
+4103              put clustername_950 $ @;
+4104              put clustername_951 $ @;
+4105              put clustername_952 $ @;
+4106              put clustername_953 $ @;
+4107              put clustername_954 $ @;
+4108              put clustername_955 $ @;
+4109              put clustername_956 $ @;
+4110              put clustername_957 $ @;
+4111              put clustername_958 $ @;
+4112              put clustername_959 $ @;
+4113              put clustername_960 $ @;
+4114              put clustername_961 $ @;
+4115              put clustername_962 $ @;
+4116              put clustername_963 $ @;
+4117              put clustername_964 $ @;
+4118              put clustername_965 $ @;
+4119              put clustername_966 $ @;
+4120              put clustername_967 $ @;
+4121              put clustername_968 $ @;
+4122              put clustername_969 $ @;
+4123              put clustername_970 $ @;
+4124              put clustername_971 $ @;
+4125              put clustername_972 $ @;
+4126              put clustername_973 $ @;
+4127              put clustername_974 $ @;
+4128              put clustername_975 $ @;
+4129              put clustername_976 $ @;
+4130              put clustername_977 $ @;
+4131              put clustername_978 $ @;
+4132              put clustername_979 $ @;
+4133              put clustername_980 $ @;
+4134              put clustername_981 $ @;
+4135              put clustername_982 $ @;
+4136              put clustername_983 $ @;
+4137              put clustername_984 $ @;
+4138              put clustername_985 $ @;
+4139              put clustername_986 $ @;
+4140              put clustername_987 $ @;
+4141              put clustername_988 $ @;
+4142              put clustername_989 $ @;
+4143              put clustername_990 $ @;
+4144              put clustername_991 $ @;
+4145              put clustername_992 $ @;
+4146              put clustername_993 $ @;
+4147              put clustername_994 $ @;
+4148              put clustername_995 $ @;
+4149              put clustername_996 $ @;
+4150              put clustername_997 $ @;
+4151              put clustername_998 $ @;
+4152              put clustername_999 $ @;
+4153              put clustername_1000 $ @;
+4154              put clus_switched ;
+4155              ;
+4156            end;
+4157           if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+4158           if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+4159           run;
+
+NOTE: The file '/ssgprojects/project0002/MobZ.new/data/bootclusters_jtw1990_moe.csv' is:
+      Filename=/ssgprojects/project0002/MobZ.new/data/bootclusters_jtw1990_moe.csv,
+      Owner Name=lv39,Group Name=lv39_0002,
+      Access Permission=-rw-rw----,
+      Last Modified=Sun Sep 20 20:32:51 2020
+
+NOTE: 3141 records were written to the file '/ssgprojects/project0002/MobZ.new/data/bootclusters_jtw1990_moe.csv'.
+      The minimum record length was 8015.
+      The maximum record length was 15923.
+NOTE: There were 3140 observations read from the data set OUTPUTS.BOOTCLUSTERS_JTW1990_MOE.
+NOTE: DATA statement used (Total process time):
+      real time           0.57 seconds
+      user cpu time       0.45 seconds
+      system cpu time     0.08 seconds
+      memory              19182.78k
+      OS Memory           28660.00k
+      Timestamp           09/20/2020 08:32:51 PM
+      Step Count                        4  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     1861
+      Page Swaps                        0
+      Voluntary Context Switches        257
+      Involuntary Context Switches      102
+      Block Input Operations            75872
+      Block Output Operations           51136
+      
+
+3140 records created in /ssgprojects/project0002/MobZ.new/data/bootclusters_jtw1990_moe.csv from OUTPUTS.BOOTCLUSTERS_JTW1990_MOE.
+  
+  
+NOTE: "/ssgprojects/project0002/MobZ.new/data/bootclusters_jtw1990_moe.csv" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.75 seconds
+      user cpu time       0.59 seconds
+      system cpu time     0.10 seconds
+      memory              19182.78k
+      OS Memory           28660.00k
+      Timestamp           09/20/2020 08:32:51 PM
+      Step Count                        4  Switch Count  7
+      Page Faults                       0
+      Page Reclaims                     3846
+      Page Swaps                        0
+      Voluntary Context Switches        303
+      Involuntary Context Switches      111
+      Block Input Operations            79760
+      Block Output Operations           52120
+      
+
+4160       
+4161       
+4162       /* this is for summary statistics */
+4163       
+4164       data moe_means ;
+4165           set OUTPUTS.flows_jtw2009 ;
+4166           moe_ratio = moe/jobsflow ;
+4167       run;
+
+NOTE: There were 135721 observations read from the data set OUTPUTS.FLOWS_JTW2009.
+NOTE: The data set WORK.MOE_MEANS has 135721 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.07 seconds
+      user cpu time       0.01 seconds
+      system cpu time     0.01 seconds
+      memory              648.96k
+      OS Memory           15260.00k
+      Timestamp           09/20/2020 08:32:51 PM
+      Step Count                        5  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     19
+      Page Swaps                        0
+      Voluntary Context Switches        14
+      Involuntary Context Switches      8
+      Block Input Operations            8608
+      Block Output Operations           10760
+      
+
+4168       
+4169       proc means data=moe_means mean p25 p50 p75;
+4170           var moe_ratio ;
+4171           title 'MOE Ratio, all flows';
+4172       run;
+
+NOTE: There were 135721 observations read from the data set WORK.MOE_MEANS.
+NOTE: The PROCEDURE MEANS printed page 1.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           0.04 seconds
+      user cpu time       0.04 seconds
+      system cpu time     0.01 seconds
+      memory              3912.64k
+      OS Memory           16552.00k
+      Timestamp           09/20/2020 08:32:51 PM
+      Step Count                        6  Switch Count  1
+      Page Faults                       0
+      Page Reclaims                     808
+      Page Swaps                        0
+      Voluntary Context Switches        8
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+4173       
+4174       proc means data=moe_means (where=(jobsflow<100)) mean p25 p50 p75;
+4175           var moe_ratio ;
+4176           title 'MOE Ratio, flows<100';
+4177       run;
+
+NOTE: There were 111503 observations read from the data set WORK.MOE_MEANS.
+      WHERE jobsflow<100;
+NOTE: The PROCEDURE MEANS printed page 2.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           0.02 seconds
+      user cpu time       0.02 seconds
+      system cpu time     0.01 seconds
+      memory              1684.90k
+      OS Memory           16288.00k
+      Timestamp           09/20/2020 08:32:52 PM
+      Step Count                        7  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     182
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+4178       
+4179       proc means data=moe_means (where=(jobsflow>=100 and jobsflow<1000))
+4180                       mean p25 p50 p75;
+4181           var moe_ratio ;
+4182           title 'MOE Ratio, flows 100-1000';
+4183       run;
+
+NOTE: There were 16544 observations read from the data set WORK.MOE_MEANS.
+      WHERE (jobsflow>=100 and jobsflow<1000);
+NOTE: The PROCEDURE MEANS printed page 3.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           0.01 seconds
+      user cpu time       0.01 seconds
+      system cpu time     0.00 seconds
+      memory              1942.67k
+      OS Memory           16288.00k
+      Timestamp           09/20/2020 08:32:52 PM
+      Step Count                        8  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     174
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+4184       
+4185       proc means data=moe_means (where=(jobsflow>=1000 and jobsflow < 10000))
+4186                           mean p25 p50 p75;
+4187           var moe_ratio ;
+4188           title 'MOE Ratio, flows 1000-10000';
+4189       run;
+
+NOTE: There were 5738 observations read from the data set WORK.MOE_MEANS.
+      WHERE (jobsflow>=1000 and jobsflow<10000);
+NOTE: The PROCEDURE MEANS printed page 4.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.01 seconds
+      system cpu time     0.00 seconds
+      memory              1811.62k
+      OS Memory           16288.00k
+      Timestamp           09/20/2020 08:32:52 PM
+      Step Count                        9  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     150
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+4190       
+4191       proc means data=moe_means (where=(jobsflow>=10000)) mean p25 p50 p75;
+4192           var moe_ratio ;
+4193           title 'MOE Ratio, flows 10000+';
+4194       run;
+
+NOTE: There were 1936 observations read from the data set WORK.MOE_MEANS.
+      WHERE jobsflow>=10000;
+NOTE: The PROCEDURE MEANS printed page 5.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.01 seconds
+      system cpu time     0.00 seconds
+      memory              1620.90k
+      OS Memory           16288.00k
+      Timestamp           09/20/2020 08:32:52 PM
+      Step Count                        10  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     150
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           1.87 seconds
+      user cpu time       1.19 seconds
+      system cpu time     0.29 seconds
+      memory              24779.68k
+      OS Memory           28660.00k
+      Timestamp           09/20/2020 08:32:52 PM
+      Step Count                        10  Switch Count  64
+      Page Faults                       0
+      Page Reclaims                     13806
+      Page Swaps                        0
+      Voluntary Context Switches        1563
+      Involuntary Context Switches      280
+      Block Input Operations            192032
+      Block Output Operations           158112
+      
