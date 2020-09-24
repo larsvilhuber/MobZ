@@ -63,8 +63,9 @@ else
 fi
 
 # SEER data
-if [ ! -f  us.1990_2018.singleages.adjusted.txt.gz ]
-then
-curl  https://seer.cancer.gov/popdata/yr1990_2018.singleages/us.1990_2018.singleages.adjusted.txt.gz >  us.1990_2018.singleages.adjusted.txt.gz
-fi
-
+#if [ ! -f  us.1990_2018.singleages.adjusted.txt.gz ]
+#then
+#curl  https://seer.cancer.gov/popdata/yr1990_2018.singleages/us.1990_2018.singleages.adjusted.txt.gz >  us.1990_2018.singleages.adjusted.txt.gz
+#fi
+curl https://data.nber.org/seer-pop/uswbosingleagesadj.dta.zip > uswbosingleagesadj.dta.zip
+unzip uswbosingleagesadj.dta.zip

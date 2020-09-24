@@ -84,8 +84,8 @@ cty_industryXXX.dta: provided via email by David Dorn. See [ddorn/README.md](ddo
 
 SEER population estimates
 -------------------------
-Used in ADH replication. Sourced from  https://seer.cancer.gov/popdata/yr1990_2018.singleages/us.1990_2018.singleages.adjusted.txt.gz
-
+Used in ADH replication. Original sourced from  https://seer.cancer.gov/popdata/yr1990_2018.singleages/us.1990_2018.singleages.adjusted.txt.gz
+However, we use https://data.nber.org/seer-pop/uswbosingleagesadj.dta.zip
 
 
 
