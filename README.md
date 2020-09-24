@@ -1,10 +1,8 @@
 ---
 title: "README and Guidance"
 author: "Andrew Foote, Mark Kutzbach, Lars Vilhuber"
-date: "2020-09-21"
+date: "2020-09-24"
 output:
-  pdf_document:
-    toc: yes
   html_document: 
     keep_md: yes
     self_contained: no
@@ -13,6 +11,8 @@ output:
     toc_float: yes
     df_print: paged
     lib_dir: _aux/libs
+  pdf_document:
+    toc: yes
 editor_options:
   chunk_output_type: console
 bibliography: [data.bib]
@@ -106,8 +106,9 @@ The data were produced by an agency of the US Government and are in the public d
 
 
 - Source: @SEER_popdata_2020
-- Source URL: https://seer.cancer.gov/popdata/yr1990_2018.singleages/us.1990_2018.singleages.adjusted.txt.gz
-- Raw data is not provided as part of this package, but a derived file (`popcounts.dta`) is provided.
+- Original Source URL: https://seer.cancer.gov/popdata/yr1990_2018.singleages/us.1990_2018.singleages.adjusted.txt.gz
+- Our Source URL: https://data.nber.org/seer-pop/uswbosingleagesadj.dta.zip
+- Raw data is not provided as part of this package, but a derived file (`popcounts.dta`) is provided in $interwrk.
 - [Datafile](#dataset-list):   `popcounts.dta`
 
 The data were produced by an agency of the US Government and are in the public domain. 
@@ -120,7 +121,7 @@ The data were produced by an agency of the US Government and are in the public d
 - The datafile is not provided as part of this package.
 - Datafile: `cw_cty_czone.zip`
 
-Before using this data, ask David Dorn for permission. Posted here with permission.
+Before re-using this data, ask David Dorn for permission. Posted here with permission.
 
 #### County-level industry data
 
@@ -162,8 +163,19 @@ The following files are provided in `$raw` directory:
 |nhgis/nhgis0012_ds107_1980_county.dat       |
 |CAINC30__ALL_AREAS_1969_2018.csv            |
 |czlma903.xls                                |
-|popcounts.dta                               |
 
+The following files are provided in `$interwrk` directory. They can be recreated from files in `$raw` using various programs, and are provided as a convenience.
+
+
+|filename                        |
+|:-------------------------------|
+|07_adh_cutoff_post.dta          |
+|bartik_results_cutoff.dta       |
+|bartik_results_moe_new.dta      |
+|bls_us_county.dta.gz            |
+|bootstrap_results.dta           |
+|finalstats_jtw1990_moe_new2.dta |
+|popcounts.dta                   |
 
 ## Data Created by this Archive
 
@@ -185,14 +197,14 @@ Variables:
 Sample observations:
 
 
-work_cty    jobsflow  home_cty    flowsize   sd_ratio   mean_ratio      draw        moe
----------  ---------  ---------  ---------  ---------  -----------  --------  ---------
-31137              8  40097              1    0.48832      1.62034   2.12948   17.03581
-25021              6  25023              1    0.48832      1.62034   1.76572   10.59431
-23021              2  23021              1    0.48832      1.62034   0.77939    1.55878
-26161              9  12095              1    0.48832      1.62034   1.26426   11.37833
-23025              2  23021              1    0.48832      1.62034   2.04119    4.08237
-20091              5  26161              1    0.48832      1.62034   1.50346    7.51730
+|work_cty | jobsflow|home_cty | flowsize| sd_ratio| mean_ratio|    draw|      moe|
+|:--------|--------:|:--------|--------:|--------:|----------:|-------:|--------:|
+|31137    |        8|40097    |        1|  0.48832|    1.62034| 2.12948| 17.03581|
+|25021    |        6|25023    |        1|  0.48832|    1.62034| 1.76572| 10.59431|
+|23021    |        2|23021    |        1|  0.48832|    1.62034| 0.77939|  1.55878|
+|26161    |        9|12095    |        1|  0.48832|    1.62034| 1.26426| 11.37833|
+|23025    |        2|23021    |        1|  0.48832|    1.62034| 2.04119|  4.08237|
+|20091    |        5|26161    |        1|  0.48832|    1.62034| 1.50346|  7.51730|
 
 ### Clusters for 1990 created by our algorithm
 
@@ -210,14 +222,14 @@ The naming convention for the commuting zones is CL + (fips of largest county by
 Sample observations:
 
 
-_PARENT_   _NAME_     county    cluster
----------  ---------  -------  --------
-CL625      cty39007   39007         625
-CL625      cty27143   27143         625
-CL625      cty08017   08017         625
-CL625      cty08061   08061         625
-CL625      cty08011   08011         625
-CL625      cty08099   08099         625
+|_PARENT_ |_NAME_   |county | cluster|
+|:--------|:--------|:------|-------:|
+|CL625    |cty39007 |39007  |     625|
+|CL625    |cty27143 |27143  |     625|
+|CL625    |cty08017 |08017  |     625|
+|CL625    |cty08061 |08061  |     625|
+|CL625    |cty08011 |08011  |     625|
+|CL625    |cty08099 |08099  |     625|
 
 ### Bootstrap cluster assignments
 
@@ -399,22 +411,33 @@ Required data are commuting zones, BEA-collected receipt of UI benefits [@bea_ta
 Programs prefixed with `00` prepare the data:
 
 
-|filename |
-|:--------|
+|filename                            |
+|:-----------------------------------|
+|06_qcew/00_bea_readin.do            |
+|06_qcew/00_describe_bootclusters.do |
+|06_qcew/00_qcew_extraction.sas      |
+|06_qcew/00_qcew_post_extraction.do  |
+|06_qcew/00_readin_czones.do         |
 
 #### Analysis programs
 
 The remaining programs generate the analysis described in the manuscript, and output tables and figures as per [the list below](#lot). Programs with non-numeric prefixes are called by other programs, and should not be run separately. Scripts (`*.sh`) are for convenience, and are not necessary - simply execute all programs in numerical order.
 
 
-|filename |
-|:--------|
+|filename                        |
+|:-------------------------------|
+|06_qcew/01_regressions_table.do |
+|06_qcew/02_01_cluster_loop.do   |
+|06_qcew/02_02_cluster_loop.do   |
+|06_qcew/03_01_cluster_graphs.do |
+|06_qcew/03_02_cutoff_graphs.do  |
+|06_qcew/zz_bartik_merge.do      |
 
 The complete sequence of programs ran in about 36 hours.
 
 ### Replication programs for Case Study 2 in Section 4.2
 
-All programs  in `$programs/adh/` subdirectory. Change working directory, and execute in numerical order.
+All programs  in `$programs/07_adh/` subdirectory. Change working directory, and execute in numerical order.
 
 
 
@@ -425,40 +448,55 @@ Required data are commuting zones, and various ADH-related data listed earlier.
 Programs prefixed with `00` prepare the data:
 
 
-|filename |
-|:--------|
+|filename                             |
+|:------------------------------------|
+|07_adh/00_01_census_creation.do      |
+|07_adh/00_02_ctyindustry_creation.do |
+|07_adh/00_03_IPW_creation.do         |
+|07_adh/00_04_cbp_readin.do           |
+|07_adh/00_05_subset_qcewdata.do      |
+|07_adh/00_06_subset_seerpop.do       |
+|07_adh/00_07_mergecounty.do          |
+|07_adh/00_08_cz_merge.do             |
 
 #### Analysis programs
 
 The remaining programs generate the analysis described in the manuscript, and output tables and figures as per [the list below](#lot). Programs with non-numeric prefixes are called by other programs, and should not be run separately. Scripts (`*.sh`) are for convenience, and are not necessary - simply execute all programs in numerical order.
 
 
-|filename |
-|:--------|
+|filename                       |
+|:------------------------------|
+|07_adh/01_table3.do            |
+|07_adh/02_01_cutoff_loop.do    |
+|07_adh/02_02_overall_loop.do   |
+|07_adh/03_01_cutoff_graphs.do  |
+|07_adh/03_02_overall_graphs.do |
+|07_adh/zz_aggregatedata.do     |
+|07_adh/zz_ctymerge.do          |
 
 The complete sequence of programs ran in about 36 hours.
 
 ## List of tables and programs {#lot}
 
 
-Figure/Table #     Title                                                         Program                           Output file                                                                                                                                          
------------------  ------------------------------------------------------------  --------------------------------  -----------------------------------------------------------------------------------------------------------------------------------------------------
-Figure 1 – left    Replication of Commuting Zones from TS: County Mapping        09_maps_paper.sas                 commutingzones.png                                                                                                                                   
-Figure 1 – right   Replication of Commuting Zones from TS: County Mapping        02_clusters.sas                   1990_replicationmap.png                                                                                                                              
-Figure 2           Effect of Cluster Height on Number of Clusters                04_figures2_3.do                  numclus_cutoff.pdf                                                                                                                                   
-Figure 3           Cluster Height and Share Workers Commuting Between Clusters   04_figures2_3.do                  flows_cutoff.pdf                                                                                                                                     
-Figure 4           Results from Re-sampling Commuting Flows                      05_03_bootstrap_graphs_new.do     numclusters_jtw1990.pdf meanclussize_jtw1990.pdf mismatch_jtw1990.pdf                                                                                
-Figure 5           Differences in Effect Based on Cluster Cutoff                 06_qcew/03_02_cutoff_graphs.do    cutoff_bartik.pdf                                                                                                                                    
-Figure 6           Distribution based on Realizations of CZs                     06_qcew/03_01_cluster_graphs.do   beta_bartik_distribution.pdf tdistribution_bartik.pdf                                                                                                
-Figure 7           Differences in Effect Based on Cluster Cutoff                 07_adh/03_01_cutoff_graphs.do     cutoff_1990.png cutoff_iqr_1990.png                                                                                                                  
-Figure 8           Distribution of Effect, 1990-2000                             07_adh/03_02_overall_graphs.do    1990_distribution.png 1990_tstat_distribution.png                                                                                                    
-Table 1            Replication of TS1990 Commuting Zones: Summary Statistics     NA                                NA                                                                                                                                                   
-Table 2            Effect of Labor Demand on Unemployment Receipt                06_qcew/01_regressions_table.do   06_qcew/01_regressions_table.log                                                                                                                     
-Table 3            China Syndrome Replication and Comparison, 1990-2000          07_adh/01_table3.do               07_adh/01_table3.log                                                                                                                                 
-Figure A1          Clusters in California at Incremental Height Cutoffs          08_map_inset.sas                  california_clustermap_800_inset6.png california_clustermap_880_inset6.png california_clustermap_1000_inset6.png california_clustermap_960_inset6.png 
-Figure A2          Hierarchical Clustering, Cutoff = 0.945                       09_maps_paper.sas                 jtw1990_highcutoff                                                                                                                                   
-Table A1 (4)       Summary Statistics of Ratio of MOE to Flows                   NA                                NA                                                                                                                                                   
-Table A2 (5)       Summary Statistics for empirical example                      NA                                NA                                                                                                                                                   
+|Figure/Table #   |Title                                                       |Program                         |Output file                                                                                                                                          |
+|:----------------|:-----------------------------------------------------------|:-------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------|
+|Figure 1 – left  |Replication of Commuting Zones from TS: County Mapping      |09_maps_paper.sas               |commutingzones.png                                                                                                                                   |
+|Figure 1 – right |Replication of Commuting Zones from TS: County Mapping      |02_clusters.sas                 |1990_replicationmap.png                                                                                                                              |
+|Figure 2         |Effect of Cluster Height on Number of Clusters              |04_figures2_3.do                |numclus_cutoff.pdf                                                                                                                                   |
+|Figure 3         |Cluster Height and Share Workers Commuting Between Clusters |04_figures2_3.do                |flows_cutoff.pdf                                                                                                                                     |
+|Figure 4         |Results from Re-sampling Commuting Flows                    |05_03_bootstrap_graphs_new.do   |numclusters_jtw1990.pdf meanclussize_jtw1990.pdf mismatch_jtw1990.pdf                                                                                |
+|Figure 5         |Differences in Effect Based on Cluster Cutoff               |06_qcew/03_02_cutoff_graphs.do  |cutoff_bartik.pdf                                                                                                                                    |
+|Figure 6         |Distribution based on Realizations of CZs                   |06_qcew/03_01_cluster_graphs.do |beta_bartik_distribution.pdf tdistribution_bartik.pdf                                                                                                |
+|Figure 7         |Differences in Effect Based on Cluster Cutoff               |07_adh/03_01_cutoff_graphs.do   |cutoff_1990.png cutoff_iqr_1990.png                                                                                                                  |
+|Figure 8         |Distribution of Effect, 1990-2000                           |07_adh/03_02_overall_graphs.do  |1990_distribution.png 1990_tstat_distribution.png                                                                                                    |
+|Table 1          |Replication of TS1990 Commuting Zones: Summary Statistics   |NA                              |NA                                                                                                                                                   |
+|Table 2          |Effect of Labor Demand on Unemployment Receipt              |06_qcew/01_regressions_table.do |06_qcew/01_regressions_table.log                                                                                                                     |
+|Table 3          |China Syndrome Replication and Comparison, 1990-2000        |07_adh/01_table3.do             |07_adh/01_table3.log                                                                                                                                 |
+|Figure A1        |Clusters in California at Incremental Height Cutoffs        |08_map_inset.sas                |california_clustermap_800_inset6.png california_clustermap_880_inset6.png california_clustermap_1000_inset6.png california_clustermap_960_inset6.png |
+|Figure A2        |Hierarchical Clustering, Cutoff = 0.945                     |09_maps_paper.sas               |jtw1990_highcutoff                                                                                                                                   |
+|Table A1 (4)     |Summary Statistics of Ratio of MOE to Flows                 |NA                              |NA                                                                                                                                                   |
+|Table A2 (5)     |Summary Statistics for empirical example                    |NA                              |NA                                                                                                                                                   |
 
 
 ## References

@@ -11,7 +11,7 @@
 
 <meta name="author" content="Andrew Foote, Mark Kutzbach, Lars Vilhuber" />
 
-<meta name="date" content="2020-09-21" />
+<meta name="date" content="2020-09-24" />
 
 <title>README and Guidance</title>
 
@@ -258,7 +258,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">README and Guidance</h1>
 <h4 class="author">Andrew Foote, Mark Kutzbach, Lars Vilhuber</h4>
-<h4 class="date">2020-09-21</h4>
+<h4 class="date">2020-09-24</h4>
 
 </div>
 
@@ -359,8 +359,9 @@ div.tocify {
 <h4>NIH/NCI SEER county population estimates</h4>
 <ul>
 <li>Source: <span class="citation">National Cancer Institute (2020)</span></li>
-<li>Source URL: <a href="https://seer.cancer.gov/popdata/yr1990_2018.singleages/us.1990_2018.singleages.adjusted.txt.gz" class="uri">https://seer.cancer.gov/popdata/yr1990_2018.singleages/us.1990_2018.singleages.adjusted.txt.gz</a></li>
-<li>Raw data is not provided as part of this package, but a derived file (<code>popcounts.dta</code>) is provided.</li>
+<li>Original Source URL: <a href="https://seer.cancer.gov/popdata/yr1990_2018.singleages/us.1990_2018.singleages.adjusted.txt.gz" class="uri">https://seer.cancer.gov/popdata/yr1990_2018.singleages/us.1990_2018.singleages.adjusted.txt.gz</a></li>
+<li>Our Source URL: <a href="https://data.nber.org/seer-pop/uswbosingleagesadj.dta.zip" class="uri">https://data.nber.org/seer-pop/uswbosingleagesadj.dta.zip</a></li>
+<li>Raw data is not provided as part of this package, but a derived file (<code>popcounts.dta</code>) is provided in $interwrk.</li>
 <li><a href="#dataset-list">Datafile</a>: <code>popcounts.dta</code></li>
 </ul>
 <p>The data were produced by an agency of the US Government and are in the public domain.</p>
@@ -376,7 +377,7 @@ div.tocify {
 <li>The datafile is not provided as part of this package.</li>
 <li>Datafile: <code>cw_cty_czone.zip</code></li>
 </ul>
-<p>Before using this data, ask David Dorn for permission. Posted here with permission.</p>
+<p>Before re-using this data, ask David Dorn for permission. Posted here with permission.</p>
 </div>
 <div id="county-level-industry-data" class="section level4">
 <h4>County-level industry data</h4>
@@ -458,6 +459,34 @@ div.tocify {
 </tr>
 <tr class="even">
 <td align="left">czlma903.xls</td>
+</tr>
+</tbody>
+</table>
+<p>The following files are provided in <code>$interwrk</code> directory. They can be recreated from files in <code>$raw</code> using various programs, and are provided as a convenience.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">filename</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">07_adh_cutoff_post.dta</td>
+</tr>
+<tr class="even">
+<td align="left">bartik_results_cutoff.dta</td>
+</tr>
+<tr class="odd">
+<td align="left">bartik_results_moe_new.dta</td>
+</tr>
+<tr class="even">
+<td align="left">bls_us_county.dta.gz</td>
+</tr>
+<tr class="odd">
+<td align="left">bootstrap_results.dta</td>
+</tr>
+<tr class="even">
+<td align="left">finalstats_jtw1990_moe_new2.dta</td>
 </tr>
 <tr class="odd">
 <td align="left">popcounts.dta</td>
@@ -847,6 +876,21 @@ sas         05_02_bootstrap.sas</code></pre>
 </tr>
 </thead>
 <tbody>
+<tr class="odd">
+<td align="left">06_qcew/00_bea_readin.do</td>
+</tr>
+<tr class="even">
+<td align="left">06_qcew/00_describe_bootclusters.do</td>
+</tr>
+<tr class="odd">
+<td align="left">06_qcew/00_qcew_extraction.sas</td>
+</tr>
+<tr class="even">
+<td align="left">06_qcew/00_qcew_post_extraction.do</td>
+</tr>
+<tr class="odd">
+<td align="left">06_qcew/00_readin_czones.do</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -860,6 +904,24 @@ sas         05_02_bootstrap.sas</code></pre>
 </tr>
 </thead>
 <tbody>
+<tr class="odd">
+<td align="left">06_qcew/01_regressions_table.do</td>
+</tr>
+<tr class="even">
+<td align="left">06_qcew/02_01_cluster_loop.do</td>
+</tr>
+<tr class="odd">
+<td align="left">06_qcew/02_02_cluster_loop.do</td>
+</tr>
+<tr class="even">
+<td align="left">06_qcew/03_01_cluster_graphs.do</td>
+</tr>
+<tr class="odd">
+<td align="left">06_qcew/03_02_cutoff_graphs.do</td>
+</tr>
+<tr class="even">
+<td align="left">06_qcew/zz_bartik_merge.do</td>
+</tr>
 </tbody>
 </table>
 <p>The complete sequence of programs ran in about 36 hours.</p>
@@ -867,7 +929,7 @@ sas         05_02_bootstrap.sas</code></pre>
 </div>
 <div id="replication-programs-for-case-study-2-in-section-4.2" class="section level3">
 <h3>Replication programs for Case Study 2 in Section 4.2</h3>
-<p>All programs in <code>$programs/adh/</code> subdirectory. Change working directory, and execute in numerical order.</p>
+<p>All programs in <code>$programs/07_adh/</code> subdirectory. Change working directory, and execute in numerical order.</p>
 <div id="data-preparation-1" class="section level4">
 <h4>Data preparation</h4>
 <p>Required data are commuting zones, and various ADH-related data listed earlier.</p>
@@ -879,6 +941,30 @@ sas         05_02_bootstrap.sas</code></pre>
 </tr>
 </thead>
 <tbody>
+<tr class="odd">
+<td align="left">07_adh/00_01_census_creation.do</td>
+</tr>
+<tr class="even">
+<td align="left">07_adh/00_02_ctyindustry_creation.do</td>
+</tr>
+<tr class="odd">
+<td align="left">07_adh/00_03_IPW_creation.do</td>
+</tr>
+<tr class="even">
+<td align="left">07_adh/00_04_cbp_readin.do</td>
+</tr>
+<tr class="odd">
+<td align="left">07_adh/00_05_subset_qcewdata.do</td>
+</tr>
+<tr class="even">
+<td align="left">07_adh/00_06_subset_seerpop.do</td>
+</tr>
+<tr class="odd">
+<td align="left">07_adh/00_07_mergecounty.do</td>
+</tr>
+<tr class="even">
+<td align="left">07_adh/00_08_cz_merge.do</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -892,6 +978,27 @@ sas         05_02_bootstrap.sas</code></pre>
 </tr>
 </thead>
 <tbody>
+<tr class="odd">
+<td align="left">07_adh/01_table3.do</td>
+</tr>
+<tr class="even">
+<td align="left">07_adh/02_01_cutoff_loop.do</td>
+</tr>
+<tr class="odd">
+<td align="left">07_adh/02_02_overall_loop.do</td>
+</tr>
+<tr class="even">
+<td align="left">07_adh/03_01_cutoff_graphs.do</td>
+</tr>
+<tr class="odd">
+<td align="left">07_adh/03_02_overall_graphs.do</td>
+</tr>
+<tr class="even">
+<td align="left">07_adh/zz_aggregatedata.do</td>
+</tr>
+<tr class="odd">
+<td align="left">07_adh/zz_ctymerge.do</td>
+</tr>
 </tbody>
 </table>
 <p>The complete sequence of programs ran in about 36 hours.</p>
@@ -901,6 +1008,12 @@ sas         05_02_bootstrap.sas</code></pre>
 <div id="lot" class="section level2">
 <h2>List of tables and programs</h2>
 <table>
+<colgroup>
+<col width="6%" />
+<col width="23%" />
+<col width="12%" />
+<col width="57%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left">Figure/Table #</th>
@@ -1043,7 +1156,7 @@ sas         05_02_bootstrap.sas</code></pre>
 <p>Minnesota Population Center. 2016. “National Historical Geographic Information System.” Minneapolis, MN: University of Minnesota. <a href="https://doi.org/10.18128/D050.V11.0">https://doi.org/10.18128/D050.V11.0</a>.</p>
 </div>
 <div id="ref-SEER_popdata_2020">
-<p>National Cancer Institute. 2020. “U.S. Population Data (County-Level)- SEER Population Data.” [Datafile] 1990-2018. National Institutes of Health [distributor]. <a href="https://seer.cancer.gov/popdata/download.html">https://seer.cancer.gov/popdata/download.html</a>.</p>
+<p>National Cancer Institute. 2020. “U.S. Population Data (County-Level)- SEER Population Data.” [Datafile] 1990-2018. National Bureau of Economic Research [distributor]. <a href="https://data.nber.org/seer-pop/">https://data.nber.org/seer-pop/</a>.</p>
 </div>
 <div id="ref-u.s.censusbureau_census_2003">
 <p>U.S. Census Bureau. 2003. “Census of Population and Housing, 2000 [United States]: County-to-County Worker Flow Files: Version 1.” [Datafile]. U.S. Department of Commerce [producer]. <a href="https://doi.org/10.3886/ICPSR13405.V1">https://doi.org/10.3886/ICPSR13405.V1</a>.</p>

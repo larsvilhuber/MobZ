@@ -3,8 +3,6 @@ title: "README and Guidance"
 author: "Andrew Foote, Mark Kutzbach, Lars Vilhuber"
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
-    toc: yes
   html_document: 
     keep_md: yes
     self_contained: no
@@ -13,6 +11,8 @@ output:
     toc_float: yes
     df_print: paged
     lib_dir: _aux/libs
+  pdf_document:
+    toc: yes
 editor_options:
   chunk_output_type: console
 bibliography: [data.bib]
@@ -118,8 +118,9 @@ The data were produced by an agency of the US Government and are in the public d
 
 
 - Source: @SEER_popdata_2020
-- Source URL: https://seer.cancer.gov/popdata/yr1990_2018.singleages/us.1990_2018.singleages.adjusted.txt.gz
-- Raw data is not provided as part of this package, but a derived file (`popcounts.dta`) is provided.
+- Original Source URL: https://seer.cancer.gov/popdata/yr1990_2018.singleages/us.1990_2018.singleages.adjusted.txt.gz
+- Our Source URL: https://data.nber.org/seer-pop/uswbosingleagesadj.dta.zip
+- Raw data is not provided as part of this package, but a derived file (`popcounts.dta`) is provided in $interwrk.
 - [Datafile](#dataset-list):   `popcounts.dta`
 
 The data were produced by an agency of the US Government and are in the public domain. 
@@ -132,7 +133,7 @@ The data were produced by an agency of the US Government and are in the public d
 - The datafile is not provided as part of this package.
 - Datafile: `cw_cty_czone.zip`
 
-Before using this data, ask David Dorn for permission. Posted here with permission.
+Before re-using this data, ask David Dorn for permission. Posted here with permission.
 
 #### County-level industry data
 
@@ -173,6 +174,17 @@ bind_rows(enframe(list.files(raw,recursive=FALSE,full.names=FALSE,
   kable()
 ```
 
+The following files are provided in `$interwrk` directory. They can be recreated from files in `$raw` using various programs, and are provided as a convenience.
+
+```{r list_data2,include=TRUE}
+bind_rows(enframe(list.files(interwrk,recursive=FALSE,full.names=FALSE,
+                   pattern="*.dta"))
+          ) %>%
+    arrange(value) %>%
+    mutate(filename=str_remove(value,paste0(raw,"/"))) %>% 
+    select(filename) %>%
+  kable()
+```
 
 ## Data Created by this Archive
 
@@ -416,7 +428,7 @@ The complete sequence of programs ran in about 36 hours.
 
 ### Replication programs for Case Study 2 in Section 4.2
 
-All programs  in `$programs/adh/` subdirectory. Change working directory, and execute in numerical order.
+All programs  in `$programs/07_adh/` subdirectory. Change working directory, and execute in numerical order.
 
 ```{r list_programs3,include=TRUE,cache=FALSE}
 subdir = "07_adh"
