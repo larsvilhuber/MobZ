@@ -19,7 +19,7 @@ destring czone, replace
 tempfile czone 
 save `czone', replace
 
-/* from 00_05_mergecounty.do */
+/* from 00_06_mergecounty.do */
 
 use  "$interwrk/cty_censusdata.dta", clear
 

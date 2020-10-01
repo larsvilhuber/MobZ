@@ -3,8 +3,6 @@ title: "README and Guidance"
 author: "Andrew Foote, Mark Kutzbach, Lars Vilhuber"
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
-    toc: yes
   html_document: 
     keep_md: yes
     self_contained: no
@@ -13,6 +11,8 @@ output:
     toc_float: yes
     df_print: paged
     lib_dir: _aux/libs
+  pdf_document:
+    toc: yes
 editor_options:
   chunk_output_type: console
 bibliography: [data.bib]
@@ -118,8 +118,9 @@ The data were produced by an agency of the US Government and are in the public d
 
 
 - Source: @SEER_popdata_2020
-- Source URL: https://seer.cancer.gov/popdata/yr1990_2018.singleages/us.1990_2018.singleages.adjusted.txt.gz
-- Raw data is not provided as part of this package, but a derived file (`popcounts.dta`) is provided.
+- Original Source URL: https://seer.cancer.gov/popdata/yr1990_2018.singleages/us.1990_2018.singleages.adjusted.txt.gz
+- Our Source URL: https://data.nber.org/seer-pop/uswbosingleagesadj.dta.zip
+- Raw data is not provided as part of this package, but a derived file (`popcounts.dta`) is provided in $interwrk.
 - [Datafile](#dataset-list):   `popcounts.dta`
 
 The data were produced by an agency of the US Government and are in the public domain. 
@@ -132,7 +133,7 @@ The data were produced by an agency of the US Government and are in the public d
 - The datafile is not provided as part of this package.
 - Datafile: `cw_cty_czone.zip`
 
-Before using this data, ask David Dorn for permission. Posted here with permission.
+Before re-using this data, ask David Dorn for permission. Posted here with permission.
 
 #### County-level industry data
 
@@ -150,16 +151,6 @@ Before using this data, ask David Dorn for permission. Posted here with permissi
   - Note: the files are also archived at @Autor_ReplChina_2013.
 - The datafiles are NOT provided as part of this package.
 - Datafiles: `$raw/adh_data/Public Release Data/dta/sic87dd_trade_data.dta` and `$raw/adh_data/Public Release Data/dta/workfile_china.dta`
-
-### BLS data
-
-Data on local unemployment rates. Used in replications.
-
-- Source: @BLS_LAUS_2020
-- Source URL: https://download.bls.gov/pub/time.series/la/la.data.0.CurrentU$arg `for arg in 90-94 95-99 00-04 05-09 10-14 15-19`
-- Alternate Source URL: https://www.bls.gov/lau/laucnty15.txt (and other files, back to 1990, with similar year suffix)
-- Renamed to: urates_counties.csv
-- Not used?
 
 ### Dataset list
 
@@ -183,6 +174,17 @@ bind_rows(enframe(list.files(raw,recursive=FALSE,full.names=FALSE,
   kable()
 ```
 
+The following files are provided in `$interwrk` directory. They can be recreated from files in `$raw` using various programs, and are provided as a convenience.
+
+```{r list_data2,include=TRUE}
+bind_rows(enframe(list.files(interwrk,recursive=FALSE,full.names=FALSE,
+                   pattern="*.dta"))
+          ) %>%
+    arrange(value) %>%
+    mutate(filename=str_remove(value,paste0(raw,"/"))) %>% 
+    select(filename) %>%
+  kable()
+```
 
 ## Data Created by this Archive
 
@@ -217,10 +219,12 @@ Filename: **`clusfin_jtw1990.{csv,dta,sas7bdat}`**
 
 Variables:
 
-- `_PARENT_` : Character cluster number (CL + NNNNN)
+- `_PARENT_` : Character cluster number (CL + NNNNN or CL + "10" + NNNNN)
 - `_NAME_`: Character county FIPS code (cty + NNNNN)
 - `county`: county FIPS code (numeric part, NNNNN)
-- `cluster`: numeric cluster number (numeric part, NNNNN)
+- `cluster`: numeric cluster number (numeric part, NNNNN or "10" + NNNNN)
+
+The naming convention for the commuting zones is CL + (fips of largest county by residence labor force). For singletons, the commuting zone is named CL + "10" + fips, to distinguish it from clusters in other realizations in which that county is the largest unit. 
 
 Sample observations:
 
@@ -234,8 +238,7 @@ head(clusfin_jtw1990) %>% kable()
 
 ### Bootstrap cluster assignments
 
-This dataset contains the 1000 realizations of the commuting zones from our paper. It can be used to crosswalk county fips codes to commuting zone realizations. The naming convention for the commuting zones in our data is CL + (fips of largest county by residence labor force), but otherwise are arbitrary. 
-
+This dataset contains the 1000 realizations of the commuting zones from our paper. It can be used to crosswalk county fips codes to commuting zone realizations.
 
 Filename: **`bootclusters_jtw1990_moe.{csv,sas7bdat}`** (for technical reasons, the `dta` file has a `_new` suffix)
 
@@ -425,7 +428,7 @@ The complete sequence of programs ran in about 36 hours.
 
 ### Replication programs for Case Study 2 in Section 4.2
 
-All programs  in `$programs/adh/` subdirectory. Change working directory, and execute in numerical order.
+All programs  in `$programs/07_adh/` subdirectory. Change working directory, and execute in numerical order.
 
 ```{r list_programs3,include=TRUE,cache=FALSE}
 subdir = "07_adh"

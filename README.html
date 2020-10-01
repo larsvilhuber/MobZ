@@ -11,7 +11,7 @@
 
 <meta name="author" content="Andrew Foote, Mark Kutzbach, Lars Vilhuber" />
 
-<meta name="date" content="2020-09-20" />
+<meta name="date" content="2020-09-24" />
 
 <title>README and Guidance</title>
 
@@ -258,7 +258,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">README and Guidance</h1>
 <h4 class="author">Andrew Foote, Mark Kutzbach, Lars Vilhuber</h4>
-<h4 class="date">2020-09-20</h4>
+<h4 class="date">2020-09-24</h4>
 
 </div>
 
@@ -332,7 +332,7 @@ div.tocify {
 <h3>BLS Data (Quarterly Census of Employment and Wages)</h3>
 <p>Data from Quarterly Census of Employment and Wages (QCEW) program</p>
 <ul>
-<li>Source: <span class="citation">Bureau of Labor Statistics (2020b)</span></li>
+<li>Source: <span class="citation">Bureau of Labor Statistics (2020)</span></li>
 <li>Source URL: <a href="https://www.bls.gov/cew/downloadable-data-files.htm" class="uri">https://www.bls.gov/cew/downloadable-data-files.htm</a></li>
 <li>Note: Data are downloaded using programs provided in <span class="citation">Vilhuber and Bjelland (2020)</span> (not part of this archive), see <a href="https://github.com/labordynamicsinstitute/readin_qcew_sas/releases/tag/v20200622">https://github.com/labordynamicsinstitute/readin_qcew_sas/releases/tag/v20200622</a> (also <a href="https://doi.org/10.5281/zenodo.3903458">https://doi.org/10.5281/zenodo.3903458</a>).</li>
 <li>The full data are not provided as part of this package.
@@ -359,8 +359,9 @@ div.tocify {
 <h4>NIH/NCI SEER county population estimates</h4>
 <ul>
 <li>Source: <span class="citation">National Cancer Institute (2020)</span></li>
-<li>Source URL: <a href="https://seer.cancer.gov/popdata/yr1990_2018.singleages/us.1990_2018.singleages.adjusted.txt.gz" class="uri">https://seer.cancer.gov/popdata/yr1990_2018.singleages/us.1990_2018.singleages.adjusted.txt.gz</a></li>
-<li>Raw data is not provided as part of this package, but a derived file (<code>popcounts.dta</code>) is provided.</li>
+<li>Original Source URL: <a href="https://seer.cancer.gov/popdata/yr1990_2018.singleages/us.1990_2018.singleages.adjusted.txt.gz" class="uri">https://seer.cancer.gov/popdata/yr1990_2018.singleages/us.1990_2018.singleages.adjusted.txt.gz</a></li>
+<li>Our Source URL: <a href="https://data.nber.org/seer-pop/uswbosingleagesadj.dta.zip" class="uri">https://data.nber.org/seer-pop/uswbosingleagesadj.dta.zip</a></li>
+<li>Raw data is not provided as part of this package, but a derived file (<code>popcounts.dta</code>) is provided in $interwrk.</li>
 <li><a href="#dataset-list">Datafile</a>: <code>popcounts.dta</code></li>
 </ul>
 <p>The data were produced by an agency of the US Government and are in the public domain.</p>
@@ -376,7 +377,7 @@ div.tocify {
 <li>The datafile is not provided as part of this package.</li>
 <li>Datafile: <code>cw_cty_czone.zip</code></li>
 </ul>
-<p>Before using this data, ask David Dorn for permission. Posted here with permission.</p>
+<p>Before re-using this data, ask David Dorn for permission. Posted here with permission.</p>
 </div>
 <div id="county-level-industry-data" class="section level4">
 <h4>County-level industry data</h4>
@@ -400,17 +401,6 @@ div.tocify {
 <li>Datafiles: <code>$raw/adh_data/Public Release Data/dta/sic87dd_trade_data.dta</code> and <code>$raw/adh_data/Public Release Data/dta/workfile_china.dta</code></li>
 </ul>
 </div>
-</div>
-<div id="bls-data" class="section level3">
-<h3>BLS data</h3>
-<p>Data on local unemployment rates. Used in replications.</p>
-<ul>
-<li>Source: <span class="citation">Bureau of Labor Statistics (2020a)</span></li>
-<li>Source URL: <a href="https://download.bls.gov/pub/time.series/la/la.data.0.CurrentU$arg" class="uri">https://download.bls.gov/pub/time.series/la/la.data.0.CurrentU$arg</a> <code>for arg in 90-94 95-99 00-04 05-09 10-14 15-19</code></li>
-<li>Alternate Source URL: <a href="https://www.bls.gov/lau/laucnty15.txt" class="uri">https://www.bls.gov/lau/laucnty15.txt</a> (and other files, back to 1990, with similar year suffix)</li>
-<li>Renamed to: urates_counties.csv</li>
-<li>Not used?</li>
-</ul>
 </div>
 <div id="dataset-list" class="section level3">
 <h3>Dataset list</h3>
@@ -470,11 +460,36 @@ div.tocify {
 <tr class="even">
 <td align="left">czlma903.xls</td>
 </tr>
+</tbody>
+</table>
+<p>The following files are provided in <code>$interwrk</code> directory. They can be recreated from files in <code>$raw</code> using various programs, and are provided as a convenience.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">filename</th>
+</tr>
+</thead>
+<tbody>
 <tr class="odd">
-<td align="left">popcounts.dta</td>
+<td align="left">07_adh_cutoff_post.dta</td>
 </tr>
 <tr class="even">
-<td align="left">table1.xlsx</td>
+<td align="left">bartik_results_cutoff.dta</td>
+</tr>
+<tr class="odd">
+<td align="left">bartik_results_moe_new.dta</td>
+</tr>
+<tr class="even">
+<td align="left">bls_us_county.dta.gz</td>
+</tr>
+<tr class="odd">
+<td align="left">bootstrap_results.dta</td>
+</tr>
+<tr class="even">
+<td align="left">finalstats_jtw1990_moe_new2.dta</td>
+</tr>
+<tr class="odd">
+<td align="left">popcounts.dta</td>
 </tr>
 </tbody>
 </table>
@@ -579,11 +594,12 @@ div.tocify {
 <p>Filename: <strong><code>clusfin_jtw1990.{csv,dta,sas7bdat}</code></strong></p>
 <p>Variables:</p>
 <ul>
-<li><code>_PARENT_</code> : Character cluster number (CL + NNNNN)</li>
+<li><code>_PARENT_</code> : Character cluster number (CL + NNNNN or CL + “10” + NNNNN)</li>
 <li><code>_NAME_</code>: Character county FIPS code (cty + NNNNN)</li>
 <li><code>county</code>: county FIPS code (numeric part, NNNNN)</li>
-<li><code>cluster</code>: numeric cluster number (numeric part, NNNNN)</li>
+<li><code>cluster</code>: numeric cluster number (numeric part, NNNNN or “10” + NNNNN)</li>
 </ul>
+<p>The naming convention for the commuting zones is CL + (fips of largest county by residence labor force). For singletons, the commuting zone is named CL + “10” + fips, to distinguish it from clusters in other realizations in which that county is the largest unit.</p>
 <p>Sample observations:</p>
 <table>
 <thead>
@@ -636,7 +652,7 @@ div.tocify {
 </div>
 <div id="bootstrap-cluster-assignments" class="section level3">
 <h3>Bootstrap cluster assignments</h3>
-<p>This dataset contains the 1000 realizations of the commuting zones from our paper. It can be used to crosswalk county fips codes to commuting zone realizations. The naming convention for the commuting zones in our data is CL + (fips of largest county by residence labor force), but otherwise are arbitrary.</p>
+<p>This dataset contains the 1000 realizations of the commuting zones from our paper. It can be used to crosswalk county fips codes to commuting zone realizations.</p>
 <p>Filename: <strong><code>bootclusters_jtw1990_moe.{csv,sas7bdat}</code></strong> (for technical reasons, the <code>dta</code> file has a <code>_new</code> suffix)</p>
 <p>Variables:</p>
 <ul>
@@ -851,7 +867,7 @@ sas         05_02_bootstrap.sas</code></pre>
 <p>All programs are in <code>$programs/06_qcew/</code> subdirectory. Change working directory, and execute in numerical order.</p>
 <div id="data-preparation" class="section level4">
 <h4>Data preparation</h4>
-<p>Required data are commuting zones, BEA-collected receipt of UI benefits <span class="citation">(Bureau of Economic Analysis 2019)</span>, QCEW employment data <span class="citation">(Bureau of Labor Statistics 2020b)</span>.</p>
+<p>Required data are commuting zones, BEA-collected receipt of UI benefits <span class="citation">(Bureau of Economic Analysis 2019)</span>, QCEW employment data <span class="citation">(Bureau of Labor Statistics 2020)</span>.</p>
 <p>Programs prefixed with <code>00</code> prepare the data:</p>
 <table>
 <thead>
@@ -913,7 +929,7 @@ sas         05_02_bootstrap.sas</code></pre>
 </div>
 <div id="replication-programs-for-case-study-2-in-section-4.2" class="section level3">
 <h3>Replication programs for Case Study 2 in Section 4.2</h3>
-<p>All programs in <code>$programs/adh/</code> subdirectory. Change working directory, and execute in numerical order.</p>
+<p>All programs in <code>$programs/07_adh/</code> subdirectory. Change working directory, and execute in numerical order.</p>
 <div id="data-preparation-1" class="section level4">
 <h4>Data preparation</h4>
 <p>Required data are commuting zones, and various ADH-related data listed earlier.</p>
@@ -941,10 +957,13 @@ sas         05_02_bootstrap.sas</code></pre>
 <td align="left">07_adh/00_05_subset_qcewdata.do</td>
 </tr>
 <tr class="even">
-<td align="left">07_adh/00_06_mergecounty.do</td>
+<td align="left">07_adh/00_06_subset_seerpop.do</td>
 </tr>
 <tr class="odd">
-<td align="left">07_adh/00_07_cz_merge.do</td>
+<td align="left">07_adh/00_07_mergecounty.do</td>
+</tr>
+<tr class="even">
+<td align="left">07_adh/00_08_cz_merge.do</td>
 </tr>
 </tbody>
 </table>
@@ -989,6 +1008,12 @@ sas         05_02_bootstrap.sas</code></pre>
 <div id="lot" class="section level2">
 <h2>List of tables and programs</h2>
 <table>
+<colgroup>
+<col width="6%" />
+<col width="23%" />
+<col width="12%" />
+<col width="57%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left">Figure/Table #</th>
@@ -1115,11 +1140,8 @@ sas         05_02_bootstrap.sas</code></pre>
 <div id="ref-bea_table30_2019">
 <p>Bureau of Economic Analysis. 2019. “Table 30: Economic Profile by County, 1969-2018.” [Datafile]. U.S. Department of Commerce [producer]. <a href="https://apps.bea.gov/regional/zip/CAINC30.zip">https://apps.bea.gov/regional/zip/CAINC30.zip</a>.</p>
 </div>
-<div id="ref-BLS_LAUS_2020">
-<p>Bureau of Labor Statistics. 2020a. “Local Area Unemployment Statistics (LA).” [Datafile] 1990-2019. Department of Labor [distributor]. <a href="https://download.bls.gov/pub/time.series/la/">https://download.bls.gov/pub/time.series/la/</a>.</p>
-</div>
 <div id="ref-BLS_QCEW_2020">
-<p>———. 2020b. “Quarterly Census of Employment and Wages – Data Files.” [Datafiles]. Department of Labor [distributor]. <a href="https://www.bls.gov/cew/downloadable-data-files.htm">https://www.bls.gov/cew/downloadable-data-files.htm</a>.</p>
+<p>Bureau of Labor Statistics. 2020. “Quarterly Census of Employment and Wages – Data Files.” [Datafiles]. Department of Labor [distributor]. <a href="https://www.bls.gov/cew/downloadable-data-files.htm">https://www.bls.gov/cew/downloadable-data-files.htm</a>.</p>
 </div>
 <div id="ref-Dorn2017">
 <p>Dorn, David. 2017. “County-Level Industry Data.” [Dataset]. (provided via email).</p>
@@ -1134,7 +1156,7 @@ sas         05_02_bootstrap.sas</code></pre>
 <p>Minnesota Population Center. 2016. “National Historical Geographic Information System.” Minneapolis, MN: University of Minnesota. <a href="https://doi.org/10.18128/D050.V11.0">https://doi.org/10.18128/D050.V11.0</a>.</p>
 </div>
 <div id="ref-SEER_popdata_2020">
-<p>National Cancer Institute. 2020. “U.S. Population Data (County-Level)- SEER Population Data.” [Datafile] 1990-2018. National Institutes of Health [distributor]. <a href="https://seer.cancer.gov/popdata/download.html">https://seer.cancer.gov/popdata/download.html</a>.</p>
+<p>National Cancer Institute. 2020. “U.S. Population Data (County-Level)- SEER Population Data.” [Datafile] 1990-2018. National Bureau of Economic Research [distributor]. <a href="https://data.nber.org/seer-pop/">https://data.nber.org/seer-pop/</a>.</p>
 </div>
 <div id="ref-u.s.censusbureau_census_2003">
 <p>U.S. Census Bureau. 2003. “Census of Population and Housing, 2000 [United States]: County-to-County Worker Flow Files: Version 1.” [Datafile]. U.S. Department of Commerce [producer]. <a href="https://doi.org/10.3886/ICPSR13405.V1">https://doi.org/10.3886/ICPSR13405.V1</a>.</p>

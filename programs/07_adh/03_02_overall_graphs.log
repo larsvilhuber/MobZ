@@ -1,22 +1,22 @@
 
   ___  ____  ____  ____  ____ (R)
  /__    /   ____/   /   ____/
-___/   /   /___/   /   /___/   14.2   Copyright 1985-2015 StataCorp LLC
-  Statistics/Data Analysis            StataCorp
+___/   /   /___/   /   /___/   16.1   Copyright 1985-2019 StataCorp LLC
+  Statistics/Data analysis            StataCorp
                                       4905 Lakeway Drive
                                       College Station, Texas 77845 USA
-                                      800-STATA-PC        http://www.stata.com
+                                      800-STATA-PC        https://www.stata.com
                                       979-696-4600        stata@stata.com
                                       979-696-4601 (fax)
 
-8-user Stata network perpetual license:
-       Serial number:  501406244326
-         Licensed to:  ECCO Cornell University
-                       Ithaca, NY
+Stata license: 5-user network perpetual
+Serial number: 501606316764
+  Licensed to: LDI Econ Cornell University
+               Ithaca, NY
 
 Notes:
-      1.  Stata is running in batch mode.
-      2.  Unicode is supported; see help unicode_advice.
+      1. Stata is running in batch mode.
+      2. Unicode is supported; see help unicode_advice.
 
 . do 03_02_overall_graphs.do 
 
@@ -71,10 +71,10 @@ Notes:
 === SYSTEM DIAGNOSTICS ===
 
 . di "Stata version: `c(stata_version)'"
-Stata version: 14.2
+Stata version: 16.1
 
 . di "Updated as of: `c(born_date)'"
-Updated as of: 19 Dec 2017
+Updated as of: 30 Jun 2020
 
 . di "Variant:       `variant'"
 Variant:       IC
@@ -117,14 +117,14 @@ Machine type:  PC (64-bit x86-64)
 . cap mkdir "$logdir"
 
 . log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
-(note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile_23_Aug_2020
-> -11_09_31.log not found)
+(note: file /home/vilhuber/Workspace/git/larsvilhuber/MobZ/programs/logs/logfil
+> e_20_Sep_2020-21_56_17.log not found)
 -------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile_23_Aug_202
-> 0-11_09_31.log
+       log:  /home/vilhuber/Workspace/git/larsvilhuber/MobZ/programs/logs/logfi
+> le_20_Sep_2020-21_56_17.log
   log type:  text
- opened on:  23 Aug 2020, 11:09:31
+ opened on:  20 Sep 2020, 21:56:17
 
 . cap mkdir "$temp"
 
@@ -147,11 +147,12 @@ Machine type:  PC (64-bit x86-64)
 . sysdir set SITE     "${programs}/ado/site"
 
 . sysdir
-   STATA:  /usr/local/stata14/
-    BASE:  /usr/local/stata14/ado/base/
-    SITE:  /ssgprojects/project0002/MobZ.new/programs/ado/site/
-    PLUS:  /ssgprojects/project0002/MobZ.new/programs/ado/plus/
-PERSONAL:  /ssgprojects/project0002/MobZ.new/programs/ado/personal/
+   STATA:  /usr/local/stata16/
+    BASE:  /usr/local/stata16/ado/base/
+    SITE:  /home/vilhuber/Workspace/git/larsvilhuber/MobZ/programs/ado/site/
+    PLUS:  /home/vilhuber/Workspace/git/larsvilhuber/MobZ/programs/ado/plus/
+PERSONAL:  /home/vilhuber/Workspace/git/larsvilhuber/MobZ/programs/ado/personal
+> /
 OLDPLACE:  ~/ado/
 
 . 
@@ -180,6 +181,11 @@ OLDPLACE:  ~/ado/
 .    global cbpdata "/data/clean/cbp"
 
 . 
+. /* for graphing */
+. /* from https://github.com/graykimbrough/uncluttered-stata-graphs */
+. 
+. set scheme uncluttered
+
 . 
 . 
 . use "$interwrk/bootstrap_results.dta", clear
@@ -228,11 +234,12 @@ delimiter now ;
 >                     , box place(ne) fcolor(white)  just(left) color(red) marg
 > in(small))
 >        ;
-(file /ssgprojects/project0002/MobZ.new/figures/1990_distribution.gph saved)
+(file /home/vilhuber/Workspace/git/larsvilhuber/MobZ/figures/1990_distribution.
+> gph saved)
 
 .               graph export "$outgraphs/1990_distribution_SOLE.pdf", replace ;
-(file /ssgprojects/project0002/MobZ.new/figures/1990_distribution_SOLE.pdf writ
-> ten in PDF format)
+(file /home/vilhuber/Workspace/git/larsvilhuber/MobZ/figures/1990_distribution_
+> SOLE.pdf written in PDF format)
 
 .               twoway (hist beta_1990 if iteration!=0)
 >         (kdensity beta_1990 if iteration!=0)
@@ -245,11 +252,12 @@ delimiter now ;
 >        )
 >        legend(off)              
 >        ;
-(file /ssgprojects/project0002/MobZ.new/figures/1990_distribution.gph saved)
+(file /home/vilhuber/Workspace/git/larsvilhuber/MobZ/figures/1990_distribution.
+> gph saved)
 
 .               graph export "$outgraphs/1990_distribution.pdf", replace ;
-(file /ssgprojects/project0002/MobZ.new/figures/1990_distribution.pdf written i
-> n PDF format)
+(file /home/vilhuber/Workspace/git/larsvilhuber/MobZ/figures/1990_distribution.
+> pdf written in PDF format)
 
 . sum tstat_1990 beta_1990 if iteration!=0,d;
 
@@ -332,12 +340,13 @@ delimiter now ;
 >        title("Distribution of T-Statistic, 1990")
 >        legend(off)
 >        ;
-(file /ssgprojects/project0002/MobZ.new/figures/1990_tdistribution.gph saved)
+(file /home/vilhuber/Workspace/git/larsvilhuber/MobZ/figures/1990_tdistribution
+> .gph saved)
 
 .               graph export "$outgraphs/1990_tstat_distribution.pdf", replace 
 > ;
-(file /ssgprojects/project0002/MobZ.new/figures/1990_tstat_distribution.pdf wri
-> tten in PDF format)
+(file /home/vilhuber/Workspace/git/larsvilhuber/MobZ/figures/1990_tstat_distrib
+> ution.pdf written in PDF format)
 
 . twoway (hist beta_2000 if iteration!=0)
 > (kdensity beta_2000 if iteration!=0),
@@ -347,13 +356,12 @@ delimiter now ;
 >        title("Distribution of Estimated Effect, 1990")
 >        legend(off)
 >        xline(`true_est');
-(note: file /ssgprojects/project0002/MobZ.new/figures/2000_distribution.gph not
->  found)
-(file /ssgprojects/project0002/MobZ.new/figures/2000_distribution.gph saved)
+(file /home/vilhuber/Workspace/git/larsvilhuber/MobZ/figures/2000_distribution.
+> gph saved)
 
 . graph export "$outgraphs/2000_distribution.pdf", replace ;
-(file /ssgprojects/project0002/MobZ.new/figures/2000_distribution.pdf written i
-> n PDF format)
+(file /home/vilhuber/Workspace/git/larsvilhuber/MobZ/figures/2000_distribution.
+> pdf written in PDF format)
 
 .        twoway (hist beta_all if iteration!=0)
 >         (kdensity beta_all if iteration!=0),
@@ -363,13 +371,12 @@ delimiter now ;
 >        title("Distribution of Estimated Effect, 1990")
 >        legend(off)
 >        xline(`true_est');
-(note: file /ssgprojects/project0002/MobZ.new/figures/all_distribution.gph not 
-> found)
-(file /ssgprojects/project0002/MobZ.new/figures/all_distribution.gph saved)
+(file /home/vilhuber/Workspace/git/larsvilhuber/MobZ/figures/all_distribution.g
+> ph saved)
 
 .        graph export "$outgraphs/all_distribution.pdf", replace ;
-(file /ssgprojects/project0002/MobZ.new/figures/all_distribution.pdf written in
->  PDF format)
+(file /home/vilhuber/Workspace/git/larsvilhuber/MobZ/figures/all_distribution.p
+> df written in PDF format)
 
 . 
 end of do-file

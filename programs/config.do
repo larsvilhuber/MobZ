@@ -86,3 +86,7 @@ sysdir
     /* this is where the raw Stata versions of CBP data reside */
    global cbpdata "/data/clean/cbp"
 
+/* for graphing */
+/* from https://github.com/graykimbrough/uncluttered-stata-graphs */
+
+set scheme uncluttered
