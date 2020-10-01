@@ -20,6 +20,15 @@ proc export data=OUTPUTS.bootclusters_jtw1990_moe
 replace ;
 run;
 
+/* output the 2009 bootclusters as well */
+proc export data=OUTPUTS.bootclusters_jtw2009
+            outfile = "&diroutputs./bootclusters_jtw2009.dta"
+replace ;
+run;
+proc export data=OUTPUTS.bootclusters_jtw2009
+            outfile = "&diroutputs./bootclusters_jtw2009.csv"
+replace ;
+run;
 
 /* this is for summary statistics */    
     
