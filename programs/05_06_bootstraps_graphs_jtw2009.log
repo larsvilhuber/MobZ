@@ -18,7 +18,7 @@ Notes:
       1. Stata is running in batch mode.
       2. Unicode is supported; see help unicode_advice.
 
-. do 05_05_bootstrap_graphs_new.do 
+. do 05_06_bootstraps_graphs_jtw2009.do 
 
 . /* creates Figure 4 */
 . 
@@ -115,13 +115,13 @@ Machine type:  PC (64-bit x86-64)
 
 . log using "${logdir}/logfile_`cdate'-`ctime'.log", replace text
 (note: file /ssgprojects/project0002/MobZ.new/programs/logs/logfile__5_Oct_2020
-> -22_32_52.log not found)
+> -22_33_08.log not found)
 -------------------------------------------------------------------------------
       name:  <unnamed>
        log:  /ssgprojects/project0002/MobZ.new/programs/logs/logfile__5_Oct_202
-> 0-22_32_52.log
+> 0-22_33_08.log
   log type:  text
- opened on:   5 Oct 2020, 22:32:52
+ opened on:   5 Oct 2020, 22:33:08
 
 . cap mkdir "$temp"
 
@@ -186,53 +186,57 @@ OLDPLACE:  ~/ado/
 . 
 . #delimit ;
 delimiter now ;
-. use "$interwrk/finalstats_jtw1990_moe_new2.dta", clear;
+. use "$interwrk/finalstats_jtw2009_moe_new2.dta", clear;
 
 . /* make the graphs */
 > 
 > twoway (histogram share_mismatch_wgt)
 >        (kdensity share_mismatch_wgt),
->        saving("$outgraphs/mismatch_jtw1990.gph", replace)
+>        saving("$outgraphs/mismatch_jtw2009.gph", replace)
 >        xtitle("Population Share in Different Commuting Zone")
 >        ytitle("Density")
 >        legend(off)
 >        ;
-(file /ssgprojects/project0002/MobZ.new/figures/mismatch_jtw1990.gph saved)
+(note: file /ssgprojects/project0002/MobZ.new/figures/mismatch_jtw2009.gph not 
+> found)
+(file /ssgprojects/project0002/MobZ.new/figures/mismatch_jtw2009.gph saved)
 
-.             graph export "$outgraphs/mismatch_jtw1990.pdf", replace;
-(file /ssgprojects/project0002/MobZ.new/figures/mismatch_jtw1990.pdf written in
+.             graph export "$outgraphs/mismatch_jtw2009.pdf", replace;
+(file /ssgprojects/project0002/MobZ.new/figures/mismatch_jtw2009.pdf written in
 >  PDF format)
 
 .  twoway (histogram mean_clussize)
 >        (kdensity mean_clussize)
->        (scatteri 0 4.16 15 4.16, recast(line) lcolor(red) lwidth(thick) lpatt
-> ern(dash)),
->        saving("$outgraphs/meanclussize_jtw1990.gph", replace)
+>        /* (scatteri 0 4.16 15 4.16, recast(line) lcolor(red) lwidth(thick) lp
+> attern(dash)) */,
+>        saving("$outgraphs/meanclussize_jtw2009.gph", replace)
 >        xtitle("Mean Cluster Size")
 >        ytitle("Density")
->        /*xline(3.88)*/
 >        legend(off)
 >        ;
-(file /ssgprojects/project0002/MobZ.new/figures/meanclussize_jtw1990.gph saved)
+(note: file /ssgprojects/project0002/MobZ.new/figures/meanclussize_jtw2009.gph 
+> not found)
+(file /ssgprojects/project0002/MobZ.new/figures/meanclussize_jtw2009.gph saved)
 
-. graph export "$outgraphs/meanclussize_jtw1990.pdf", replace;
-(file /ssgprojects/project0002/MobZ.new/figures/meanclussize_jtw1990.pdf writte
+. graph export "$outgraphs/meanclussize_jtw2009.pdf", replace;
+(file /ssgprojects/project0002/MobZ.new/figures/meanclussize_jtw2009.pdf writte
 > n in PDF format)
 
 . twoway (histogram numclusters)
 >        (kdensity numclusters)
->        (scatteri 0 755 .07 755, recast(line) lcolor(red) lwidth(thick) lpatte
-> rn(dash)),
->        saving("$outgraphs/numclusters_jtw1990.gph", replace)
+>        /* (scatteri 0 755 .07 755, recast(line) lcolor(red) lwidth(thick) lpa
+> ttern(dash))*/,
+>        saving("$outgraphs/numclusters_jtw2009.gph", replace)
 >        xtitle("Number of Clusters")
 >        ytitle("Density")
->        /*xline(810)*/
 >        legend(off)
 >        ;
-(file /ssgprojects/project0002/MobZ.new/figures/numclusters_jtw1990.gph saved)
+(note: file /ssgprojects/project0002/MobZ.new/figures/numclusters_jtw2009.gph n
+> ot found)
+(file /ssgprojects/project0002/MobZ.new/figures/numclusters_jtw2009.gph saved)
 
-. graph export "$outgraphs/numclusters_jtw1990.pdf", replace;
-(file /ssgprojects/project0002/MobZ.new/figures/numclusters_jtw1990.pdf written
+. graph export "$outgraphs/numclusters_jtw2009.pdf", replace;
+(file /ssgprojects/project0002/MobZ.new/figures/numclusters_jtw2009.pdf written
 >  in PDF format)
 
 . 

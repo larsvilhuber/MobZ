@@ -1,0 +1,3670 @@
+1                                                          The SAS System                            17:04 Thursday, October 1, 2020
+
+NOTE: Copyright (c) 2002-2012 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software 9.4 (TS1M0) 
+      Licensed to CORNELL UNIVERSITY-T&R, Site 70084770.
+NOTE: This session is executing on the Linux 2.6.32-696.18.7.el6.x86_64 (LIN X64) platform.
+
+
+
+NOTE: Updated analytical products:
+      
+      SAS/STAT 12.3 (maintenance)
+      SAS/ETS 12.3 (maintenance)
+      SAS/OR 12.3 (maintenance)
+      SAS/IML 12.3 (maintenance)
+      SAS/QC 12.3 (maintenance)
+
+NOTE: Additional host information:
+
+ Linux LIN X64 2.6.32-696.18.7.el6.x86_64 #1 SMP Thu Jan 4 17:31:22 UTC 2018 x86_64 CentOS release 6.3 (Final) 
+
+You are running SAS 9. Some SAS 8 files will be automatically converted 
+by the V9 engine; others are incompatible.  Please see 
+http://support.sas.com/rnd/migration/planning/platform/64bit.html
+
+PROC MIGRATE will preserve current SAS file attributes and is 
+recommended for converting all your SAS libraries from any 
+SAS 8 release to SAS 9.  For details and examples, please see
+http://support.sas.com/rnd/migration/index.html
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the file "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+
+NOTE: SAS initialization used:
+      real time           0.02 seconds
+      cpu time            0.02 seconds
+      
+
+NOTE: AUTOEXEC processing beginning; file is /home/fs01/lv39/autoexec.sas.
+
+NOTE: Libref OPMQA was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/lv39/Desktop/opm-qa
+NOTE: Libref HERE was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /ssgprojects/project0002/MobZ.new/programs
+=========== running on ecco.vrdc.cornell.edu ============
+
+NOTE: AUTOEXEC processing completed.
+
+1          /***************
+2          This preps the new file
+3          for use in the
+4           bootstrap macro loops
+2 The SAS System                                                                                     17:04 Thursday, October 1, 2020
+
+5          ****************/
+6          
+7          %include "config.sas"/source2;
+NOTE: %INCLUDE (level 1) file config.sas is file /ssgprojects/project0002/MobZ.new/programs/config.sas.
+8         +%let root = /ssgprojects/project0002/MobZ.new ;
+9         +%let raw=&root./raw ;
+10        +%let dirprog=&root/programs;
+11        +%let dirfig=&root/figures;
+12        +%let diroutputs=&root./data;
+13        +%let dirinterwrk=&root./data/interwrk;
+14        +%let logdir=&dirprog./logs;
+15        +%Let mappath=&root./figures ;
+16        +
+17        +
+18        +libname OUTPUTS "&diroutputs.";
+NOTE: Libref OUTPUTS was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /ssgprojects/project0002/MobZ.new/data
+19        +libname INTERWRK "&dirinterwrk.";
+NOTE: Libref INTERWRK was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /ssgprojects/project0002/MobZ.new/data/interwrk
+20        +libname GEO "&diroutputs." ;
+NOTE: Libref GEO refers to the same physical library as OUTPUTS.
+NOTE: Libref GEO was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /ssgprojects/project0002/MobZ.new/data
+21        +libname INPUTS "&raw" ;
+NOTE: Libref INPUTS was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /ssgprojects/project0002/MobZ.new/raw
+22        +options sasautos=(SASAUTOS, "&dirprog./macros") mautosource nocenter ps=1000;
+23        +
+24        +
+25        +%global tstamp;
+26        +%let t=%sysfunc(today());
+27        +%let tt=%sysfunc(time());
+28        +%let dstamp=%trim(%sysfunc(year(&t.),z4.))%trim(%sysfunc(month(&t.),z2.))%trim(%sysfunc(day(&t.),z2.));
+29        +%let tstamp=&dstamp._%trim(%sysfunc(hour(&tt.),z2.))%trim(%sysfunc(minute(&tt.),z2.))%trim(%sysfunc(second(&tt.),z2.));
+30        +
+31        +
+32        +* Cluster threshold;
+33        +%let cutoff=0.9385 ; /*national cutoff for their way*/
+34        +
+35        +* Cutoffs ;
+36        +    %let cutoff_bottom = 0.8 ;
+37        +    %let cutoff_top = 1.0 ;
+38        +    %let ci90 = 1.645 ;
+39        +
+40        +* Bootstrap draws ;
+41        +*  - paper: 1000;
+42        +*  - testing: 3;
+43        +
+44        +%let bootstrap_num = 1000;
+45        +
+46        +/* write this out for Stata */
+47        +data _null_;
+48        +   file "&dirprog./config-bootstrap.do";
+49        +   put "/* Configuration written out by SAS -- config.sas            */";
+50        +   put "/* -- any edits will be overwritten next time SAS is run! -- */";
+51        +   put "global bootstrap_num &bootstrap_num.";
+52        +run;
+
+NOTE: The file "/ssgprojects/project0002/MobZ.new/programs/config-bootstrap.do" is:
+      Filename=/ssgprojects/project0002/MobZ.new/programs/config-bootstrap.do,
+      Owner Name=lv39,Group Name=lv39_0002,
+      Access Permission=-rw-rw----,
+      Last Modified=Thu Oct  1 17:04:39 2020
+
+NOTE: 3 records were written to the file "/ssgprojects/project0002/MobZ.new/programs/config-bootstrap.do".
+      The minimum record length was 25.
+      The maximum record length was 63.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              677.15k
+      OS Memory           5784.00k
+      Timestamp           10/01/2020 05:04:39 PM
+      Step Count                        1  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     496
+      Page Swaps                        0
+      Voluntary Context Switches        8
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+53        +
+NOTE: %INCLUDE (level 1) ending.
+54         
+55         data OUTPUTS.flows_jtw1990_moe ;
+56             infile "&dirinterwrk./jtw1990_moe.csv" delimiter = ',' firstobs= 2;
+57             informat work_cty $5.;
+58             informat jobsflow best32. ;
+59             informat home_cty $5. ;
+60             informat flowsize best8. ;
+61             informat sd_ratio best32. ;
+62             informat mean_ratio best32. ;
+63             informat draw best8. ;
+64             informat moe best32. ;
+65         input work_cty jobsflow home_cty flowsize sd_ratio mean_ratio draw moe ;
+66         run;
+
+NOTE: The infile "/ssgprojects/project0002/MobZ.new/data/interwrk/jtw1990_moe.csv" is:
+      Filename=/ssgprojects/project0002/MobZ.new/data/interwrk/jtw1990_moe.csv,
+      Owner Name=lv39,Group Name=lv39_0002,
+      Access Permission=-rw-rw----,
+      Last Modified=Mon Jun 22 17:19:17 2020,
+      File Size (bytes)=10690197
+
+NOTE: 216658 records were read from the infile "/ssgprojects/project0002/MobZ.new/data/interwrk/jtw1990_moe.csv".
+      The minimum record length was 47.
+      The maximum record length was 58.
+NOTE: The data set OUTPUTS.FLOWS_JTW1990_MOE has 216658 observations and 8 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.22 seconds
+      user cpu time       0.14 seconds
+      system cpu time     0.03 seconds
+      memory              457.65k
+      OS Memory           6040.00k
+      Timestamp           10/01/2020 05:04:39 PM
+      Step Count                        2  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     214
+      Page Swaps                        0
+      Voluntary Context Switches        120
+      Involuntary Context Switches      33
+      Block Input Operations            20912
+      Block Output Operations           27272
+      
+
+67         
+68         
+69         
+70         
+71         
+72         proc print data=OUTPUTS.flows_jtw1990_moe (obs=50);
+73         run;
+
+NOTE: There were 50 observations read from the data set OUTPUTS.FLOWS_JTW1990_MOE.
+NOTE: The PROCEDURE PRINT printed page 1.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.02 seconds
+      user cpu time       0.01 seconds
+      system cpu time     0.01 seconds
+      memory              2029.09k
+      OS Memory           7064.00k
+      Timestamp           10/01/2020 05:04:39 PM
+      Step Count                        3  Switch Count  1
+      Page Faults                       0
+      Page Reclaims                     851
+      Page Swaps                        0
+      Voluntary Context Switches        17
+      Involuntary Context Switches      2
+      Block Input Operations            160
+      Block Output Operations           0
+      
+
+74         
+75         %let modname=bootstrap_statistics;
+76         
+77         /*===================================================================*/
+78         /* After the first few macro command, the LOG output gets redirected */
+79         /* search for a file with "module_bootstrap_statistics" in the name !*/
+80         /*===================================================================*/
+81         
+82         %bootstrap_statistics(jtw1990_moe,&bootstrap_num.,cutoff=&cutoff.) ;
+
+NOTE: There were 216658 observations read from the data set OUTPUTS.FLOWS_JTW1990_MOE.
+NOTE: The data set WORK.FLOWS has 216658 observations and 8 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.18 seconds
+      user cpu time       0.14 seconds
+      system cpu time     0.04 seconds
+      memory              23313.65k
+      OS Memory           30276.00k
+      Timestamp           10/01/2020 05:04:39 PM
+      Step Count                        4  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     5238
+      Page Swaps                        0
+      Voluntary Context Switches        9
+      Involuntary Context Switches      29
+      Block Input Operations            27296
+      Block Output Operations           27280
+      
+
+
+NOTE: There were 216658 observations read from the data set WORK.FLOWS.
+      WHERE (not MISSING(home_cty)) and (not MISSING(work_cty));
+NOTE: The data set WORK.FLOWS has 152672 observations and 3 variables.
+NOTE: PROCEDURE SUMMARY used (Total process time):
+      real time           0.24 seconds
+      user cpu time       0.22 seconds
+      system cpu time     0.03 seconds
+      memory              22209.40k
+      OS Memory           30220.00k
+      Timestamp           10/01/2020 05:04:39 PM
+      Step Count                        5  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     4567
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           7304
+      
+
+
+NOTE: There were 152364 observations read from the data set WORK.FLOWS.
+      WHERE (SUBSTR(home_cty, 1, 2)<='56') and (SUBSTR(work_cty, 1, 2)<='56');
+NOTE: The data set WORK.FLOWS has 152364 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.06 seconds
+      user cpu time       0.06 seconds
+      system cpu time     0.00 seconds
+      memory              536.28k
+      OS Memory           9368.00k
+      Timestamp           10/01/2020 05:04:39 PM
+      Step Count                        6  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     17
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      1
+      Block Input Operations            0
+      Block Output Operations           7304
+      
+
+
+NOTE: There were 152364 observations read from the data set WORK.FLOWS.
+NOTE: The data set WORK.RESLF_JTW1990_MOE has 3140 observations and 2 variables.
+NOTE: PROCEDURE SUMMARY used (Total process time):
+      real time           0.04 seconds
+      user cpu time       0.04 seconds
+      system cpu time     0.00 seconds
+      memory              2402.25k
+      OS Memory           10396.00k
+      Timestamp           10/01/2020 05:04:39 PM
+      Step Count                        7  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     163
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 3140 observations read from the data set WORK.RESLF_JTW1990_MOE.
+NOTE: The data set WORK.RESLF has 3140 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              786.62k
+      OS Memory           9628.00k
+      Timestamp           10/01/2020 05:04:39 PM
+      Step Count                        8  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     6
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           144
+      
+
+NOTE: There were 152364 observations read from the data set WORK.FLOWS.
+NOTE: The data set WORK.CTYFLOWSSORTED has 152364 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      user cpu time       0.02 seconds
+      system cpu time     0.00 seconds
+      memory              503.46k
+      OS Memory           9368.00k
+      Timestamp           10/01/2020 05:04:39 PM
+      Step Count                        9  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     12
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           7304
+      
+
+
+NOTE: There were 152364 observations read from the data set WORK.CTYFLOWSSORTED.
+NOTE: The data set WORK.CTYFLOWSSORTED has 152364 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.07 seconds
+      user cpu time       0.07 seconds
+      system cpu time     0.00 seconds
+      memory              10082.03k
+      OS Memory           18632.00k
+      Timestamp           10/01/2020 05:04:39 PM
+      Step Count                        10  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     1991
+      Page Swaps                        0
+      Voluntary Context Switches        2
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           7304
+      
+
+
+NOTE: There were 152364 observations read from the data set WORK.FLOWS.
+NOTE: The data set WORK.FLOWS_SORT has 152364 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.05 seconds
+      user cpu time       0.04 seconds
+      system cpu time     0.00 seconds
+      memory              10339.31k
+      OS Memory           18892.00k
+      Timestamp           10/01/2020 05:04:39 PM
+      Step Count                        11  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     1991
+      Page Swaps                        0
+      Voluntary Context Switches        2
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           7312
+      
+
+
+NOTE: There were 152364 observations read from the data set WORK.CTYFLOWSSORTED.
+NOTE: There were 152364 observations read from the data set WORK.FLOWS_SORT.
+NOTE: The data set WORK.CTYPAIRS has 237674 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.08 seconds
+      user cpu time       0.08 seconds
+      system cpu time     0.00 seconds
+      memory              931.75k
+      OS Memory           9624.00k
+      Timestamp           10/01/2020 05:04:40 PM
+      Step Count                        12  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     38
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           14984
+      
+
+
+NOTE: There were 237674 observations read from the data set WORK.CTYPAIRS.
+NOTE: There were 3140 observations read from the data set WORK.RESLF.
+NOTE: The data set WORK.CTYPAIRS has 237674 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.05 seconds
+      user cpu time       0.04 seconds
+      system cpu time     0.01 seconds
+      memory              794.28k
+      OS Memory           9624.00k
+      Timestamp           10/01/2020 05:04:40 PM
+      Step Count                        13  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     21
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           18696
+      
+
+
+NOTE: There were 237674 observations read from the data set WORK.CTYPAIRS.
+NOTE: The data set WORK.CTYPAIRS has 237674 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.12 seconds
+      user cpu time       0.11 seconds
+      system cpu time     0.02 seconds
+      memory              16207.75k
+      OS Memory           24808.00k
+      Timestamp           10/01/2020 05:04:40 PM
+      Step Count                        14  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3640
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           18696
+      
+
+
+NOTE: There were 237674 observations read from the data set WORK.CTYPAIRS.
+NOTE: There were 3140 observations read from the data set WORK.RESLF.
+NOTE: The data set WORK.CTYPAIRS_JTW1990_MOE has 237674 observations and 7 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.06 seconds
+      user cpu time       0.06 seconds
+      system cpu time     0.01 seconds
+      memory              808.78k
+      OS Memory           9624.00k
+      Timestamp           10/01/2020 05:04:40 PM
+      Step Count                        15  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     39
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           26120
+      
+
+
+NOTE: There were 237674 observations read from the data set WORK.CTYPAIRS_JTW1990_MOE.
+NOTE: The PROCEDURE MEANS printed page 2.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           0.13 seconds
+      user cpu time       0.13 seconds
+      system cpu time     0.01 seconds
+      memory              4491.28k
+      OS Memory           13004.00k
+      Timestamp           10/01/2020 05:04:40 PM
+      Step Count                        16  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     859
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+
+NOTE: Deleting WORK.CTYPAIRS (memtype=DATA).
+NOTE: Deleting WORK.RESLF (memtype=DATA).
+NOTE: Deleting WORK.CTYFLOWSSORTED (memtype=DATA).
+NOTE: Deleting WORK.FLOWS (memtype=DATA).
+
+NOTE: PROCEDURE DATASETS used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              212.84k
+      OS Memory           9624.00k
+      Timestamp           10/01/2020 05:04:40 PM
+      Step Count                        17  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     59
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+
+NOTE: There were 237674 observations read from the data set WORK.CTYPAIRS_JTW1990_MOE.
+NOTE: The PROCEDURE FREQ printed pages 3-6.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.10 seconds
+      user cpu time       0.10 seconds
+      system cpu time     0.00 seconds
+      memory              743.45k
+      OS Memory           9624.00k
+      Timestamp           10/01/2020 05:04:40 PM
+      Step Count                        18  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     88
+      Page Swaps                        0
+      Voluntary Context Switches        2
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           776
+      
+
+NOTE: The execution of this query involves performing one or more Cartesian product joins that can not be optimized.
+NOTE: Table WORK.CTYSHELL created, with 9859600 rows and 2 columns.
+
+NOTE: PROCEDURE SQL used (Total process time):
+      real time           3.77 seconds
+      user cpu time       3.48 seconds
+      system cpu time     0.30 seconds
+      memory              390012.37k
+      OS Memory           398480.00k
+      Timestamp           10/01/2020 05:04:44 PM
+      Step Count                        19  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     96853
+      Page Swaps                        0
+      Voluntary Context Switches        2
+      Involuntary Context Switches      4
+      Block Input Operations            0
+      Block Output Operations           195224
+      
+
+
+NOTE: There were 9859600 observations read from the data set WORK.CTYSHELL.
+NOTE: The data set WORK.CTYSHELL has 9859600 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.89 seconds
+      user cpu time       0.81 seconds
+      system cpu time     0.09 seconds
+      memory              500.90k
+      OS Memory           9624.00k
+      Timestamp           10/01/2020 05:04:45 PM
+      Step Count                        20  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     4
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      1
+      Block Input Operations            0
+      Block Output Operations           195208
+      
+
+
+NOTE: There were 9859600 observations read from the data set WORK.CTYSHELL.
+NOTE: The data set WORK.CTYSHELL has 9859600 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           3.11 seconds
+      user cpu time       2.76 seconds
+      system cpu time     0.34 seconds
+      memory              389250.93k
+      OS Memory           397964.00k
+      Timestamp           10/01/2020 05:04:48 PM
+      Step Count                        21  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     96584
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      8
+      Block Input Operations            0
+      Block Output Operations           195208
+      
+
+
+NOTE: There were 237674 observations read from the data set WORK.CTYPAIRS_JTW1990_MOE.
+NOTE: The data set WORK.CTYPAIRS has 237674 observations and 7 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.13 seconds
+      user cpu time       0.12 seconds
+      system cpu time     0.03 seconds
+      memory              23594.18k
+      OS Memory           32580.00k
+      Timestamp           10/01/2020 05:04:48 PM
+      Step Count                        22  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     5065
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      1
+      Block Input Operations            0
+      Block Output Operations           26128
+      
+
+
+NOTE: There were 9859600 observations read from the data set WORK.CTYSHELL.
+NOTE: There were 237674 observations read from the data set WORK.CTYPAIRS.
+NOTE: The data set WORK.CLUSTER has 9859600 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.65 seconds
+      user cpu time       2.46 seconds
+      system cpu time     0.19 seconds
+      memory              796.28k
+      OS Memory           10136.00k
+      Timestamp           10/01/2020 05:04:51 PM
+      Step Count                        23  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     22
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      3
+      Block Input Operations            0
+      Block Output Operations           465032
+      
+
+
+NOTE: There were 9859600 observations read from the data set WORK.CLUSTER.
+NOTE: The data set WORK.CLUSTERMATRIX has 3140 observations and 3142 variables.
+NOTE: PROCEDURE TRANSPOSE used (Total process time):
+      real time           29.82 seconds
+      user cpu time       29.51 seconds
+      system cpu time     0.19 seconds
+      memory              4294.15k
+      OS Memory           13300.00k
+      Timestamp           10/01/2020 05:05:20 PM
+      Step Count                        24  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     517
+      Page Swaps                        0
+      Voluntary Context Switches        2990
+      Involuntary Context Switches      36
+      Block Input Operations            0
+      Block Output Operations           161944
+      
+
+
+NOTE: There were 3140 observations read from the data set WORK.CLUSTERMATRIX.
+NOTE: The data set WORK.CLUSTERMATRIX_JTW1990_MOE has 3140 observations and 3142 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.28 seconds
+      user cpu time       0.03 seconds
+      system cpu time     0.09 seconds
+      memory              3832.25k
+      OS Memory           13344.00k
+      Timestamp           10/01/2020 05:05:21 PM
+      Step Count                        25  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     583
+      Page Swaps                        0
+      Voluntary Context Switches        2984
+      Involuntary Context Switches      2
+      Block Input Operations            0
+      Block Output Operations           161808
+      
+
+
+NOTE: The data set WORK.CLUSTERTREE_JTW1990_MOE has 6279 observations and 3157 variables.
+NOTE: The PROCEDURE CLUSTER printed pages 7-13.
+NOTE: PROCEDURE CLUSTER used (Total process time):
+      real time           3:16.22
+      user cpu time       3:16.03
+      system cpu time     0.27 seconds
+      memory              120643.25k
+      OS Memory           129740.00k
+      Timestamp           10/01/2020 05:08:37 PM
+      Step Count                        26  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     1578
+      Page Swaps                        0
+      Voluntary Context Switches        6
+      Involuntary Context Switches      287
+      Block Input Operations            0
+      Block Output Operations           323680
+      
+
+
+NOTE: Deleting WORK.CLUSTERMATRIX_JTW1990_MOE (memtype=DATA).
+NOTE: Deleting WORK.CLUSTERMATRIX (memtype=DATA).
+NOTE: Deleting WORK.CLUSTER (memtype=DATA).
+NOTE: Deleting WORK.CTYSHELL (memtype=DATA).
+NOTE: Deleting WORK.CTYPAIRS (memtype=DATA).
+
+NOTE: PROCEDURE DATASETS used (Total process time):
+      real time           0.11 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.11 seconds
+      memory              746.68k
+      OS Memory           11676.00k
+      Timestamp           10/01/2020 05:08:37 PM
+      Step Count                        27  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     133
+      Page Swaps                        0
+      Voluntary Context Switches        15
+      Involuntary Context Switches      4
+      Block Input Operations            16
+      Block Output Operations           96
+      
+
+
+NOTE: There were 6279 observations read from the data set WORK.CLUSTERTREE_JTW1990_MOE.
+NOTE: The data set WORK.TEST has 6279 observations and 3157 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.28 seconds
+      user cpu time       0.06 seconds
+      system cpu time     0.22 seconds
+      memory              166773.15k
+      OS Memory           176244.00k
+      Timestamp           10/01/2020 05:08:37 PM
+      Step Count                        28  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     39497
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      1
+      Block Input Operations            0
+      Block Output Operations           322320
+      
+
+
+NOTE: There were 6279 observations read from the data set WORK.CLUSTERTREE_JTW1990_MOE.
+NOTE: The data set WORK.CLUSTERTREE has 6279 observations and 3157 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.28 seconds
+      user cpu time       0.07 seconds
+      system cpu time     0.22 seconds
+      memory              166753.21k
+      OS Memory           176244.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        29  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     39499
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           322320
+      
+
+"Setting data into tempset"
+
+NOTE: There were 6279 observations read from the data set WORK.CLUSTERTREE_JTW1990_MOE.
+NOTE: The data set WORK.CLUSTERTREE has 6279 observations and 3157 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.21 seconds
+      user cpu time       0.04 seconds
+      system cpu time     0.17 seconds
+      memory              3842.43k
+      OS Memory           13348.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        30  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     512
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           322312
+      
+
+
+NOTE: There were 6279 observations read from the data set WORK.CLUSTERTREE.
+NOTE: The data set WORK.CTYDATA has 3140 observations and 3 variables.
+NOTE: The data set WORK.CLUSTERDATA has 2385 observations and 2 variables.
+NOTE: The data set WORK.CUTCLUSTERS has 754 observations and 2 variables.
+NOTE: The data set WORK.CLUSTERHEIGHT has 5525 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.06 seconds
+      user cpu time       0.03 seconds
+      system cpu time     0.04 seconds
+      memory              3065.06k
+      OS Memory           12740.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        31  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     679
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      1
+      Block Input Operations            0
+      Block Output Operations           928
+      
+
+
+NOTE: There were 754 observations read from the data set WORK.CUTCLUSTERS.
+NOTE: The data set WORK.CUTCLUSTERS has 754 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              525.31k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        32  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     15
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 2385 observations read from the data set WORK.CLUSTERDATA.
+NOTE: The data set WORK.CLUSTERDATA has 2385 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.01 seconds
+      system cpu time     0.00 seconds
+      memory              517.84k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        33  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 2385 observations read from the data set WORK.CLUSTERDATA.
+NOTE: There were 754 observations read from the data set WORK.CUTCLUSTERS.
+NOTE: The data set WORK.CLUSTERDATA has 2583 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              789.03k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        34  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     21
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 2583 observations read from the data set WORK.CLUSTERDATA.
+NOTE: The data set WORK.CLUSTERDATA has 2583 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              517.84k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        35  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+"Start of Geneology loop while mein=0, pointbreak=0, and cirguitbreaker=1"
+
+NOTE: There were 3140 observations read from the data set WORK.CTYDATA.
+NOTE: The data set WORK.CTYDATA has 3140 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              1076.59k
+      OS Memory           11680.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        36  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     11
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           264
+      
+
+
+NOTE: There were 3140 observations read from the data set WORK.CTYDATA.
+NOTE: There were 2583 observations read from the data set WORK.CLUSTERDATA.
+NOTE: The data set WORK.CTYDATA has 2566 observations and 2 variables.
+NOTE: The data set WORK.CTYDATA_FINISHED has 574 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.01 seconds
+      system cpu time     0.00 seconds
+      memory              941.75k
+      OS Memory           11672.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        37  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     40
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           272
+      
+
+
+NOTE: There were 574 observations read from the data set WORK.CTYDATA_FINISHED.
+NOTE: The data set WORK.CLUSTERSFINISHED has 574 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              501.62k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        38  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     4
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      82:69   
+NOTE: There were 1 observations read from the data set WORK.CTYDATA.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              387.00k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        39  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     12
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+"        2566"
+"================================================================================="
+"END of Geneology loop while mein=0, pointbreak=0, and circuitbreaker=1"
+"================================================================================="
+"Start of Geneology loop while mein=0, pointbreak=0, and cirguitbreaker=2"
+
+NOTE: There were 2566 observations read from the data set WORK.CTYDATA.
+NOTE: The data set WORK.CTYDATA has 2566 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              518.03k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        40  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 2566 observations read from the data set WORK.CTYDATA.
+NOTE: There were 2583 observations read from the data set WORK.CLUSTERDATA.
+NOTE: The data set WORK.CTYDATA has 1234 observations and 2 variables.
+NOTE: The data set WORK.CTYDATA_FINISHED has 1332 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              941.06k
+      OS Memory           11672.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        41  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     40
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           272
+      
+
+
+NOTE: Appending WORK.CTYDATA_FINISHED to WORK.CLUSTERSFINISHED.
+NOTE: There were 1332 observations read from the data set WORK.CTYDATA_FINISHED.
+NOTE: 1332 observations added.
+NOTE: The data set WORK.CLUSTERSFINISHED has 1906 observations and 2 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              464.71k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        42  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     22
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      82:69   
+NOTE: There were 1 observations read from the data set WORK.CTYDATA.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              387.09k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        43  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+3 The SAS System                                                                                     17:04 Thursday, October 1, 2020
+
+      
+
+"        1234"
+"================================================================================="
+"END of Geneology loop while mein=0, pointbreak=0, and circuitbreaker=2"
+"================================================================================="
+"Start of Geneology loop while mein=0, pointbreak=0, and cirguitbreaker=3"
+
+NOTE: There were 1234 observations read from the data set WORK.CTYDATA.
+NOTE: The data set WORK.CTYDATA has 1234 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.01 seconds
+      system cpu time     0.00 seconds
+      memory              518.03k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        44  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 1234 observations read from the data set WORK.CTYDATA.
+NOTE: There were 2583 observations read from the data set WORK.CLUSTERDATA.
+NOTE: The data set WORK.CTYDATA has 334 observations and 2 variables.
+NOTE: The data set WORK.CTYDATA_FINISHED has 900 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              940.96k
+      OS Memory           11672.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        45  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     40
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           272
+      
+
+
+NOTE: Appending WORK.CTYDATA_FINISHED to WORK.CLUSTERSFINISHED.
+NOTE: There were 900 observations read from the data set WORK.CTYDATA_FINISHED.
+NOTE: 900 observations added.
+NOTE: The data set WORK.CLUSTERSFINISHED has 2806 observations and 2 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              464.71k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        46  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     17
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      82:69   
+NOTE: There were 1 observations read from the data set WORK.CTYDATA.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              387.00k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        47  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+"         334"
+"================================================================================="
+"END of Geneology loop while mein=0, pointbreak=0, and circuitbreaker=3"
+"================================================================================="
+"Start of Geneology loop while mein=0, pointbreak=0, and cirguitbreaker=4"
+
+NOTE: There were 334 observations read from the data set WORK.CTYDATA.
+NOTE: The data set WORK.CTYDATA has 334 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              518.03k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        48  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 334 observations read from the data set WORK.CTYDATA.
+NOTE: There were 2583 observations read from the data set WORK.CLUSTERDATA.
+NOTE: The data set WORK.CTYDATA has 88 observations and 2 variables.
+NOTE: The data set WORK.CTYDATA_FINISHED has 246 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              940.96k
+      OS Memory           11672.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        49  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     40
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           272
+      
+
+
+NOTE: Appending WORK.CTYDATA_FINISHED to WORK.CLUSTERSFINISHED.
+NOTE: There were 246 observations read from the data set WORK.CTYDATA_FINISHED.
+NOTE: 246 observations added.
+NOTE: The data set WORK.CLUSTERSFINISHED has 3052 observations and 2 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              464.71k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        50  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     18
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      82:69   
+NOTE: There were 1 observations read from the data set WORK.CTYDATA.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              387.00k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        51  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+"          88"
+"================================================================================="
+"END of Geneology loop while mein=0, pointbreak=0, and circuitbreaker=4"
+"================================================================================="
+"Start of Geneology loop while mein=0, pointbreak=0, and cirguitbreaker=5"
+
+NOTE: There were 88 observations read from the data set WORK.CTYDATA.
+NOTE: The data set WORK.CTYDATA has 88 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              518.03k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        52  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 88 observations read from the data set WORK.CTYDATA.
+NOTE: There were 2583 observations read from the data set WORK.CLUSTERDATA.
+NOTE: The data set WORK.CTYDATA has 60 observations and 2 variables.
+NOTE: The data set WORK.CTYDATA_FINISHED has 28 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              941.06k
+      OS Memory           11672.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        53  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     40
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           272
+      
+
+
+NOTE: Appending WORK.CTYDATA_FINISHED to WORK.CLUSTERSFINISHED.
+NOTE: There were 28 observations read from the data set WORK.CTYDATA_FINISHED.
+NOTE: 28 observations added.
+NOTE: The data set WORK.CLUSTERSFINISHED has 3080 observations and 2 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              464.71k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        54  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     18
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      82:69   
+NOTE: There were 1 observations read from the data set WORK.CTYDATA.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              387.09k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        55  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+"          60"
+"================================================================================="
+"END of Geneology loop while mein=0, pointbreak=0, and circuitbreaker=5"
+"================================================================================="
+"Start of Geneology loop while mein=0, pointbreak=0, and cirguitbreaker=6"
+
+NOTE: There were 60 observations read from the data set WORK.CTYDATA.
+NOTE: The data set WORK.CTYDATA has 60 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              518.03k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        56  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 60 observations read from the data set WORK.CTYDATA.
+NOTE: There were 2583 observations read from the data set WORK.CLUSTERDATA.
+NOTE: The data set WORK.CTYDATA has 56 observations and 2 variables.
+NOTE: The data set WORK.CTYDATA_FINISHED has 4 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              940.96k
+      OS Memory           11672.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        57  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     40
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           272
+      
+
+
+NOTE: Appending WORK.CTYDATA_FINISHED to WORK.CLUSTERSFINISHED.
+NOTE: There were 4 observations read from the data set WORK.CTYDATA_FINISHED.
+NOTE: 4 observations added.
+NOTE: The data set WORK.CLUSTERSFINISHED has 3084 observations and 2 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              464.71k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        58  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     18
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      82:69   
+NOTE: There were 1 observations read from the data set WORK.CTYDATA.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              387.00k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        59  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+"          56"
+"================================================================================="
+"END of Geneology loop while mein=0, pointbreak=0, and circuitbreaker=6"
+"================================================================================="
+"Start of Geneology loop while mein=0, pointbreak=0, and cirguitbreaker=7"
+
+NOTE: There were 56 observations read from the data set WORK.CTYDATA.
+NOTE: The data set WORK.CTYDATA has 56 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              518.03k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        60  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 56 observations read from the data set WORK.CTYDATA.
+NOTE: There were 2583 observations read from the data set WORK.CLUSTERDATA.
+NOTE: The data set WORK.CTYDATA has 40 observations and 2 variables.
+NOTE: The data set WORK.CTYDATA_FINISHED has 16 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              940.96k
+      OS Memory           11672.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        61  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     40
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           272
+      
+
+
+NOTE: Appending WORK.CTYDATA_FINISHED to WORK.CLUSTERSFINISHED.
+NOTE: There were 16 observations read from the data set WORK.CTYDATA_FINISHED.
+NOTE: 16 observations added.
+NOTE: The data set WORK.CLUSTERSFINISHED has 3100 observations and 2 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              464.71k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        62  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     18
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      82:69   
+NOTE: There were 1 observations read from the data set WORK.CTYDATA.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              387.00k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        63  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+"          40"
+"================================================================================="
+"END of Geneology loop while mein=0, pointbreak=0, and circuitbreaker=7"
+"================================================================================="
+"Start of Geneology loop while mein=0, pointbreak=0, and cirguitbreaker=8"
+
+NOTE: There were 40 observations read from the data set WORK.CTYDATA.
+NOTE: The data set WORK.CTYDATA has 40 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              518.03k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        64  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 40 observations read from the data set WORK.CTYDATA.
+NOTE: There were 2583 observations read from the data set WORK.CLUSTERDATA.
+NOTE: The data set WORK.CTYDATA has 27 observations and 2 variables.
+NOTE: The data set WORK.CTYDATA_FINISHED has 13 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.01 seconds
+      system cpu time     0.00 seconds
+      memory              941.06k
+      OS Memory           11672.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        65  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     40
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           272
+      
+
+
+NOTE: Appending WORK.CTYDATA_FINISHED to WORK.CLUSTERSFINISHED.
+NOTE: There were 13 observations read from the data set WORK.CTYDATA_FINISHED.
+NOTE: 13 observations added.
+NOTE: The data set WORK.CLUSTERSFINISHED has 3113 observations and 2 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              464.71k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        66  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     18
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      82:69   
+NOTE: There were 1 observations read from the data set WORK.CTYDATA.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              387.09k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        67  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+"          27"
+"================================================================================="
+"END of Geneology loop while mein=0, pointbreak=0, and circuitbreaker=8"
+"================================================================================="
+"Start of Geneology loop while mein=0, pointbreak=0, and cirguitbreaker=9"
+
+NOTE: There were 27 observations read from the data set WORK.CTYDATA.
+NOTE: The data set WORK.CTYDATA has 27 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              518.03k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        68  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 27 observations read from the data set WORK.CTYDATA.
+NOTE: There were 2583 observations read from the data set WORK.CLUSTERDATA.
+NOTE: The data set WORK.CTYDATA has 24 observations and 2 variables.
+NOTE: The data set WORK.CTYDATA_FINISHED has 3 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              940.96k
+      OS Memory           11672.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        69  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     40
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           272
+      
+
+
+NOTE: Appending WORK.CTYDATA_FINISHED to WORK.CLUSTERSFINISHED.
+NOTE: There were 3 observations read from the data set WORK.CTYDATA_FINISHED.
+NOTE: 3 observations added.
+NOTE: The data set WORK.CLUSTERSFINISHED has 3116 observations and 2 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              464.71k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        70  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     18
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      82:69   
+NOTE: There were 1 observations read from the data set WORK.CTYDATA.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              387.00k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        71  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+"          24"
+"================================================================================="
+"END of Geneology loop while mein=0, pointbreak=0, and circuitbreaker=9"
+"================================================================================="
+"Start of Geneology loop while mein=0, pointbreak=0, and cirguitbreaker=10"
+
+NOTE: There were 24 observations read from the data set WORK.CTYDATA.
+NOTE: The data set WORK.CTYDATA has 24 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              518.03k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        72  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 24 observations read from the data set WORK.CTYDATA.
+NOTE: There were 2583 observations read from the data set WORK.CLUSTERDATA.
+NOTE: The data set WORK.CTYDATA has 20 observations and 2 variables.
+NOTE: The data set WORK.CTYDATA_FINISHED has 4 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              940.96k
+      OS Memory           11672.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        73  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     40
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           272
+      
+
+
+NOTE: Appending WORK.CTYDATA_FINISHED to WORK.CLUSTERSFINISHED.
+NOTE: There were 4 observations read from the data set WORK.CTYDATA_FINISHED.
+NOTE: 4 observations added.
+NOTE: The data set WORK.CLUSTERSFINISHED has 3120 observations and 2 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              464.71k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        74  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     18
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      82:69   
+NOTE: There were 1 observations read from the data set WORK.CTYDATA.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              387.00k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        75  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+"          20"
+"================================================================================="
+"END of Geneology loop while mein=0, pointbreak=0, and circuitbreaker=10"
+"================================================================================="
+"Start of Geneology loop while mein=0, pointbreak=0, and cirguitbreaker=11"
+
+NOTE: There were 20 observations read from the data set WORK.CTYDATA.
+NOTE: The data set WORK.CTYDATA has 20 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              518.03k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        76  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 20 observations read from the data set WORK.CTYDATA.
+NOTE: There were 2583 observations read from the data set WORK.CLUSTERDATA.
+NOTE: The data set WORK.CTYDATA has 20 observations and 2 variables.
+NOTE: The data set WORK.CTYDATA_FINISHED has 0 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              941.06k
+      OS Memory           11672.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        77  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     40
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           272
+      
+
+
+NOTE: Appending WORK.CTYDATA_FINISHED to WORK.CLUSTERSFINISHED.
+NOTE: There were 0 observations read from the data set WORK.CTYDATA_FINISHED.
+NOTE: 0 observations added.
+NOTE: The data set WORK.CLUSTERSFINISHED has 3120 observations and 2 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              464.71k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        78  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     18
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      82:69   
+NOTE: There were 1 observations read from the data set WORK.CTYDATA.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              387.09k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        79  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+"          20"
+"================================================================================="
+"END of Geneology loop while mein=0, pointbreak=0, and circuitbreaker=11"
+"================================================================================="
+"Start of Geneology loop while mein=0, pointbreak=0, and cirguitbreaker=12"
+
+NOTE: There were 20 observations read from the data set WORK.CTYDATA.
+NOTE: The data set WORK.CTYDATA has 20 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              518.03k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        80  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 20 observations read from the data set WORK.CTYDATA.
+NOTE: There were 2583 observations read from the data set WORK.CLUSTERDATA.
+NOTE: The data set WORK.CTYDATA has 16 observations and 2 variables.
+NOTE: The data set WORK.CTYDATA_FINISHED has 4 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              940.96k
+      OS Memory           11672.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        81  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     40
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           272
+      
+
+
+NOTE: Appending WORK.CTYDATA_FINISHED to WORK.CLUSTERSFINISHED.
+NOTE: There were 4 observations read from the data set WORK.CTYDATA_FINISHED.
+NOTE: 4 observations added.
+NOTE: The data set WORK.CLUSTERSFINISHED has 3124 observations and 2 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.01 seconds
+      memory              464.71k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        82  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     18
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      82:69   
+NOTE: There were 1 observations read from the data set WORK.CTYDATA.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              387.00k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        83  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+"          16"
+"================================================================================="
+"END of Geneology loop while mein=0, pointbreak=0, and circuitbreaker=12"
+"================================================================================="
+"Start of Geneology loop while mein=0, pointbreak=0, and cirguitbreaker=13"
+
+NOTE: There were 16 observations read from the data set WORK.CTYDATA.
+NOTE: The data set WORK.CTYDATA has 16 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              518.03k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        84  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 16 observations read from the data set WORK.CTYDATA.
+NOTE: There were 2583 observations read from the data set WORK.CLUSTERDATA.
+NOTE: The data set WORK.CTYDATA has 10 observations and 2 variables.
+NOTE: The data set WORK.CTYDATA_FINISHED has 6 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              940.96k
+      OS Memory           11672.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        85  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     40
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           272
+      
+
+
+NOTE: Appending WORK.CTYDATA_FINISHED to WORK.CLUSTERSFINISHED.
+NOTE: There were 6 observations read from the data set WORK.CTYDATA_FINISHED.
+NOTE: 6 observations added.
+NOTE: The data set WORK.CLUSTERSFINISHED has 3130 observations and 2 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              464.71k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        86  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     18
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      82:69   
+NOTE: There were 1 observations read from the data set WORK.CTYDATA.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              387.00k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        87  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+"          10"
+"================================================================================="
+"END of Geneology loop while mein=0, pointbreak=0, and circuitbreaker=13"
+"================================================================================="
+"Start of Geneology loop while mein=0, pointbreak=0, and cirguitbreaker=14"
+
+4 The SAS System                                                                                     17:04 Thursday, October 1, 2020
+
+NOTE: There were 10 observations read from the data set WORK.CTYDATA.
+NOTE: The data set WORK.CTYDATA has 10 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              518.03k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        88  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 10 observations read from the data set WORK.CTYDATA.
+NOTE: There were 2583 observations read from the data set WORK.CLUSTERDATA.
+NOTE: The data set WORK.CTYDATA has 8 observations and 2 variables.
+NOTE: The data set WORK.CTYDATA_FINISHED has 2 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              941.06k
+      OS Memory           11672.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        89  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     40
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           272
+      
+
+
+NOTE: Appending WORK.CTYDATA_FINISHED to WORK.CLUSTERSFINISHED.
+NOTE: There were 2 observations read from the data set WORK.CTYDATA_FINISHED.
+NOTE: 2 observations added.
+NOTE: The data set WORK.CLUSTERSFINISHED has 3132 observations and 2 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              464.71k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        90  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     18
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      82:69   
+NOTE: There were 1 observations read from the data set WORK.CTYDATA.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              387.09k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        91  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+"           8"
+"================================================================================="
+"END of Geneology loop while mein=0, pointbreak=0, and circuitbreaker=14"
+"================================================================================="
+"Start of Geneology loop while mein=0, pointbreak=0, and cirguitbreaker=15"
+
+NOTE: There were 8 observations read from the data set WORK.CTYDATA.
+NOTE: The data set WORK.CTYDATA has 8 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              518.03k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        92  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 8 observations read from the data set WORK.CTYDATA.
+NOTE: There were 2583 observations read from the data set WORK.CLUSTERDATA.
+NOTE: The data set WORK.CTYDATA has 6 observations and 2 variables.
+NOTE: The data set WORK.CTYDATA_FINISHED has 2 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              940.96k
+      OS Memory           11672.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        93  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     40
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           272
+      
+
+
+NOTE: Appending WORK.CTYDATA_FINISHED to WORK.CLUSTERSFINISHED.
+NOTE: There were 2 observations read from the data set WORK.CTYDATA_FINISHED.
+NOTE: 2 observations added.
+NOTE: The data set WORK.CLUSTERSFINISHED has 3134 observations and 2 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.01 seconds
+      system cpu time     0.00 seconds
+      memory              464.71k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        94  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     18
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      82:69   
+NOTE: There were 1 observations read from the data set WORK.CTYDATA.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              387.00k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        95  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+"           6"
+"================================================================================="
+"END of Geneology loop while mein=0, pointbreak=0, and circuitbreaker=15"
+"================================================================================="
+"Start of Geneology loop while mein=0, pointbreak=0, and cirguitbreaker=16"
+
+NOTE: There were 6 observations read from the data set WORK.CTYDATA.
+NOTE: The data set WORK.CTYDATA has 6 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              518.03k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        96  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 6 observations read from the data set WORK.CTYDATA.
+NOTE: There were 2583 observations read from the data set WORK.CLUSTERDATA.
+NOTE: The data set WORK.CTYDATA has 3 observations and 2 variables.
+NOTE: The data set WORK.CTYDATA_FINISHED has 3 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              940.96k
+      OS Memory           11672.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        97  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     40
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           272
+      
+
+
+NOTE: Appending WORK.CTYDATA_FINISHED to WORK.CLUSTERSFINISHED.
+NOTE: There were 3 observations read from the data set WORK.CTYDATA_FINISHED.
+NOTE: 3 observations added.
+NOTE: The data set WORK.CLUSTERSFINISHED has 3137 observations and 2 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              464.71k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        98  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     18
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      82:69   
+NOTE: There were 1 observations read from the data set WORK.CTYDATA.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              387.00k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        99  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+"           3"
+"================================================================================="
+"END of Geneology loop while mein=0, pointbreak=0, and circuitbreaker=16"
+"================================================================================="
+"Start of Geneology loop while mein=0, pointbreak=0, and cirguitbreaker=17"
+
+NOTE: There were 3 observations read from the data set WORK.CTYDATA.
+NOTE: The data set WORK.CTYDATA has 3 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              518.03k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        100  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 3 observations read from the data set WORK.CTYDATA.
+NOTE: There were 2583 observations read from the data set WORK.CLUSTERDATA.
+NOTE: The data set WORK.CTYDATA has 2 observations and 2 variables.
+NOTE: The data set WORK.CTYDATA_FINISHED has 1 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              941.06k
+      OS Memory           11672.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        101  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     40
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           272
+      
+
+
+NOTE: Appending WORK.CTYDATA_FINISHED to WORK.CLUSTERSFINISHED.
+NOTE: There were 1 observations read from the data set WORK.CTYDATA_FINISHED.
+NOTE: 1 observations added.
+NOTE: The data set WORK.CLUSTERSFINISHED has 3138 observations and 2 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              464.71k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        102  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     18
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      82:69   
+NOTE: There were 1 observations read from the data set WORK.CTYDATA.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              387.09k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        103  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+"           2"
+"================================================================================="
+"END of Geneology loop while mein=0, pointbreak=0, and circuitbreaker=17"
+"================================================================================="
+"Start of Geneology loop while mein=0, pointbreak=0, and cirguitbreaker=18"
+
+NOTE: There were 2 observations read from the data set WORK.CTYDATA.
+NOTE: The data set WORK.CTYDATA has 2 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              518.03k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        104  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 2 observations read from the data set WORK.CTYDATA.
+NOTE: There were 2583 observations read from the data set WORK.CLUSTERDATA.
+NOTE: The data set WORK.CTYDATA has 0 observations and 2 variables.
+NOTE: The data set WORK.CTYDATA_FINISHED has 2 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.01 seconds
+      system cpu time     0.00 seconds
+      memory              940.96k
+      OS Memory           11672.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        105  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     40
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           272
+      
+
+
+NOTE: Appending WORK.CTYDATA_FINISHED to WORK.CLUSTERSFINISHED.
+NOTE: There were 2 observations read from the data set WORK.CTYDATA_FINISHED.
+NOTE: 2 observations added.
+NOTE: The data set WORK.CLUSTERSFINISHED has 3140 observations and 2 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              464.71k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        106  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     18
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      82:69   
+NOTE: There were 0 observations read from the data set WORK.CTYDATA.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              387.00k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        107  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+"           2"
+"================================================================================="
+"END of Geneology loop while mein=0, pointbreak=0, and circuitbreaker=18"
+"================================================================================="
+"Start of Geneology loop while mein=0, pointbreak=0, and cirguitbreaker=19"
+
+NOTE: Input data set is empty.
+NOTE: The data set WORK.CTYDATA has 0 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.01 seconds
+      memory              391.81k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        108  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 0 observations read from the data set WORK.CTYDATA.
+NOTE: There were 2583 observations read from the data set WORK.CLUSTERDATA.
+NOTE: The data set WORK.CTYDATA has 0 observations and 2 variables.
+NOTE: The data set WORK.CTYDATA_FINISHED has 0 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              940.96k
+      OS Memory           11672.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        109  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     40
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           272
+      
+
+
+NOTE: Appending WORK.CTYDATA_FINISHED to WORK.CLUSTERSFINISHED.
+NOTE: There were 0 observations read from the data set WORK.CTYDATA_FINISHED.
+NOTE: 0 observations added.
+NOTE: The data set WORK.CLUSTERSFINISHED has 3140 observations and 2 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              464.71k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        110  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     18
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      82:69   
+NOTE: There were 0 observations read from the data set WORK.CTYDATA.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              387.00k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        111  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+"           2"
+
+NOTE: There were 0 observations read from the data set WORK.CTYDATA.
+NOTE: The data set WORK.CTYDATA has 0 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              502.87k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        112  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: Appending WORK.CTYDATA to WORK.CLUSTERSFINISHED.
+NOTE: There were 0 observations read from the data set WORK.CTYDATA.
+NOTE: 0 observations added.
+NOTE: The data set WORK.CLUSTERSFINISHED has 3140 observations and 2 variables.
+NOTE: PROCEDURE APPEND used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              464.71k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        113  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     8
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+"================================================================================="
+"END of Geneology loop while mein=0, pointbreak=1, and circuitbreaker=19"
+"================================================================================="
+
+NOTE: There were 3140 observations read from the data set WORK.CLUSTERSFINISHED.
+NOTE: The data set WORK.CLUSTERSFINISHED has 3140 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              517.84k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        114  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     18
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 5525 observations read from the data set WORK.CLUSTERHEIGHT.
+NOTE: The data set WORK.CLUSTERHEIGHT has 5525 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.01 seconds
+      system cpu time     0.00 seconds
+      memory              1075.59k
+      OS Memory           11680.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        115  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     39
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           392
+      
+
+
+NOTE: There were 3140 observations read from the data set WORK.CLUSTERSFINISHED.
+NOTE: There were 5525 observations read from the data set WORK.CLUSTERHEIGHT.
+NOTE: The data set WORK.CLUSTERSFINISHED has 3140 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              804.53k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        116  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     38
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           392
+      
+
+
+NOTE: There were 3140 observations read from the data set WORK.CLUSTERSFINISHED.
+NOTE: The data set WORK.CLUSFIN_JTW1990_MOE has 3140 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              1321.59k
+      OS Memory           11940.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        117  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     33
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           400
+      
+
+
+NOTE: There were 3140 observations read from the data set WORK.CLUSFIN_JTW1990_MOE.
+NOTE: The PROCEDURE FREQ printed page 14.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.01 seconds
+      system cpu time     0.00 seconds
+      memory              608.40k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        118  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     9
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           264
+      
+
+
+NOTE: There were 3140 observations read from the data set WORK.CLUSFIN_JTW1990_MOE.
+NOTE: The data set WORK.NUMCLUS has 3140 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              503.53k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        119  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           392
+      
+
+
+NOTE: There were 3140 observations read from the data set WORK.NUMCLUS.
+NOTE: The data set WORK.CLUSSIZE has 755 observations and 4 variables.
+NOTE: PROCEDURE SUMMARY used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              1856.81k
+      OS Memory           12188.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        120  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     159
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 12 observations read from the data set WORK.CLUSSIZE.
+      WHERE numcounties=1;
+NOTE: The data set WORK.SINGLETONS has 12 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              514.37k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        121  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     5
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 755 observations read from the data set WORK.CLUSSIZE.
+NOTE: The PROCEDURE MEANS printed page 15.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              1558.28k
+      OS Memory           12188.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        122  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     150
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+
+NOTE: There were 755 observations read from the data set WORK.CLUSSIZE.
+NOTE: The data set WORK.MEAN_CLUSSIZE has 1 observations and 3 variables.
+NOTE: PROCEDURE SUMMARY used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              1443.28k
+      OS Memory           12188.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        123  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     149
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 755 observations read from the data set WORK.CLUSSIZE.
+NOTE: The data set WORK.MEDIAN_CLUSSIZE has 1 observations and 3 variables.
+NOTE: PROCEDURE SUMMARY used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              1509.18k
+      OS Memory           12188.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        124  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     149
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 3140 observations read from the data set WORK.NUMCLUS.
+NOTE: 2385 observations with duplicate key values were deleted.
+NOTE: The data set WORK.CLUSTERCOUNT has 755 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              1315.31k
+      OS Memory           11940.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        125  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     41
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           144
+      
+
+
+NOTE: There were 755 observations read from the data set WORK.CLUSTERCOUNT.
+NOTE: The data set WORK.CLUSTERCOUNT has 1 observations and 3 variables.
+NOTE: PROCEDURE SUMMARY used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              1445.31k
+      OS Memory           12188.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        126  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     149
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+                               Directory
+
+Libref             WORK                                                 
+Engine             V9                                                   
+Physical Name      /temporary/SAS_work234D00000375_ecco.vrdc.cornell.edu
+Filename           /temporary/SAS_work234D00000375_ecco.vrdc.cornell.edu
+Inode Number       558                                                  
+Access Permission  rwx------                                            
+Owner Name         lv39                                                 
+File Size (bytes)  4096                                                 
+
+
+                             Member
+ #  Name                     Type      File Size  Last Modified
+
+ 1  CLUSFIN_JTW1990_MOE      DATA         262144  10/01/2020 17:08:38        
+ 2  CLUSSIZE                 DATA         131072  10/01/2020 17:08:38        
+ 3  CLUSTERCOUNT             DATA         131072  10/01/2020 17:08:38        
+ 4  CLUSTERDATA              DATA         131072  10/01/2020 17:08:38        
+ 5  CLUSTERHEIGHT            DATA         262144  10/01/2020 17:08:38        
+ 6  CLUSTERSFINISHED         DATA         262144  10/01/2020 17:08:38        
+ 7  CLUSTERTREE              DATA      165150720  10/01/2020 17:08:38        
+ 8  CLUSTERTREE_JTW1990_MOE  DATA      165150720  10/01/2020 17:08:37        
+ 9  CTYDATA                  DATA         131072  10/01/2020 17:08:38        
+10  CTYDATA_FINISHED         DATA         131072  10/01/2020 17:08:38        
+11  CTYPAIRS_JTW1990_MOE     DATA       13434880  10/01/2020 17:04:40        
+12  CUTCLUSTERS              DATA         131072  10/01/2020 17:08:38        
+13  FLOWS_SORT               DATA        3801088  10/01/2020 17:04:39        
+14  MEAN_CLUSSIZE            DATA         131072  10/01/2020 17:08:38        
+15  MEDIAN_CLUSSIZE          DATA         131072  10/01/2020 17:08:38        
+16  NUMCLUS                  DATA         262144  10/01/2020 17:08:38        
+17  RESLF_JTW1990_MOE        DATA         131072  10/01/2020 17:04:39        
+18  SASMACR                  CATALOG       65536  10/01/2020 17:08:37        
+19  SINGLETONS               DATA         131072  10/01/2020 17:08:38        
+20  TEST                     DATA      165150720  10/01/2020 17:08:37        
+
+NOTE: Deleting WORK.CLUSSIZE (memtype=DATA).
+NOTE: Deleting WORK.CLUSTERSFINISHED (memtype=DATA).
+NOTE: Deleting WORK.CLUSTERHEIGHT (memtype=DATA).
+NOTE: Deleting WORK.CTYDATA (memtype=DATA).
+NOTE: Deleting WORK.CUTCLUSTERS (memtype=DATA).
+NOTE: Deleting WORK.CLUSTERTREE (memtype=DATA).
+NOTE: PROCEDURE DATASETS used (Total process time):
+      real time           0.03 seconds
+      user cpu time       0.01 seconds
+      system cpu time     0.03 seconds
+      memory              303.53k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        127  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     42
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      517:214   
+NOTE: There were 1 observations read from the data set WORK.MEAN_CLUSSIZE.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              387.09k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        128  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      1
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      82:45   
+NOTE: There were 1 observations read from the data set WORK.CLUSTERCOUNT.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              387.00k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        129  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+" Mean cluster size is : 4.1589403974 and number of clusters is          755"
+
+NOTE: There were 3140 observations read from the data set WORK.CLUSFIN_JTW1990_MOE.
+NOTE: The data set WORK.CLUSTERSSORTED has 3140 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              1318.15k
+      OS Memory           11940.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        130  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     33
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           400
+      
+
+
+NOTE: There were 3140 observations read from the data set WORK.RESLF_JTW1990_MOE.
+NOTE: The data set WORK.RESLF_NAMING has 3140 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              788.37k
+      OS Memory           11420.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        131  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     6
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           144
+      
+
+
+NOTE: There were 3140 observations read from the data set WORK.CLUSTERSSORTED.
+NOTE: There were 3140 observations read from the data set WORK.RESLF_NAMING.
+NOTE: The data set WORK.CLUSTERS_RESLF has 3140 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              790.34k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        132  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     21
+5 The SAS System                                                                                     17:04 Thursday, October 1, 2020
+
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           264
+      
+
+
+NOTE: There were 3140 observations read from the data set WORK.CLUSTERS_RESLF.
+NOTE: The data set WORK.CLUSTERS_RESLF has 3140 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              1067.50k
+      OS Memory           11680.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        133  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     17
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           264
+      
+
+
+NOTE: There were 3140 observations read from the data set WORK.CLUSTERS_RESLF.
+NOTE: The data set WORK.LARGEST_CTY has 755 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.01 seconds
+      system cpu time     0.00 seconds
+      memory              570.09k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        134  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 3140 observations read from the data set WORK.CLUSTERS_RESLF.
+NOTE: There were 755 observations read from the data set WORK.LARGEST_CTY.
+NOTE: The data set WORK.FINAL has 3140 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              788.18k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        135  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     21
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           264
+      
+
+
+NOTE: There were 3140 observations read from the data set WORK.FINAL.
+NOTE: The data set WORK.FINAL has 3140 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.01 seconds
+      memory              1060.93k
+      OS Memory           11680.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        136  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     24
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           264
+      
+
+
+NOTE: There were 3140 observations read from the data set WORK.FINAL.
+NOTE: The data set WORK.CLUSTERSNAMED_JTW1990_MOE has 3140 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              505.68k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        137  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           264
+      
+
+
+NOTE: There were 100 observations read from the data set WORK.CLUSTERSNAMED_JTW1990_MOE.
+NOTE: The PROCEDURE PRINT printed page 16.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              360.75k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        138  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     6
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+
+NOTE: There were 3140 observations read from the data set WORK.CLUSTERSNAMED_JTW1990_MOE.
+NOTE: The data set WORK.CLUSTERSNAMED_JTW1990_MOE has 3140 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              518.31k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        139  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           264
+      
+
+
+NOTE: PROCEDURE CONTENTS used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              517.21k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        140  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     34
+      Page Swaps                        0
+      Voluntary Context Switches        10
+      Involuntary Context Switches      2
+      Block Input Operations            160
+      Block Output Operations           8
+      
+NOTE: The PROCEDURE CONTENTS printed page 17.
+
+NOTE: There were 20 observations read from the data set OUTPUTS.FLOWS_JTW1990_MOE.
+NOTE: The PROCEDURE PRINT printed page 18.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              446.93k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        141  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     7
+      Page Swaps                        0
+      Voluntary Context Switches        8
+      Involuntary Context Switches      2
+      Block Input Operations            160
+      Block Output Operations           0
+      
+
+
+NOTE: There were 216658 observations read from the data set OUTPUTS.FLOWS_JTW1990_MOE.
+NOTE: The data set WORK.FLOWS_JTW1990_MOE_P1 has 216658 observations and 3 variables.
+NOTE: The data set WORK.FLOWSP has 216643 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.14 seconds
+      user cpu time       0.10 seconds
+      system cpu time     0.04 seconds
+      memory              737.00k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:38 PM
+      Step Count                        142  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     49
+      Page Swaps                        0
+      Voluntary Context Switches        9
+      Involuntary Context Switches      28
+      Block Input Operations            27296
+      Block Output Operations           51088
+      
+
+NOTE: There were 216658 observations read from the data set WORK.FLOWS_JTW1990_MOE_P1.
+NOTE: The PROCEDURE PRINT printed pages 19-236.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.50 seconds
+      user cpu time       0.49 seconds
+      system cpu time     0.00 seconds
+      memory              373.59k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:39 PM
+      Step Count                        143  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     6
+      Page Swaps                        0
+      Voluntary Context Switches        2
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           18176
+      
+
+                               Directory
+
+Libref             WORK                                                 
+Engine             V9                                                   
+Physical Name      /temporary/SAS_work234D00000375_ecco.vrdc.cornell.edu
+Filename           /temporary/SAS_work234D00000375_ecco.vrdc.cornell.edu
+Inode Number       558                                                  
+Access Permission  rwx------                                            
+Owner Name         lv39                                                 
+File Size (bytes)  4096                                                 
+
+
+                               Member
+ #  Name                       Type      File Size  Last Modified
+
+ 1  CLUSFIN_JTW1990_MOE        DATA         262144  10/01/2020 17:08:38        
+ 2  CLUSTERCOUNT               DATA         131072  10/01/2020 17:08:38        
+ 3  CLUSTERDATA                DATA         131072  10/01/2020 17:08:38        
+ 4  CLUSTERSNAMED_JTW1990_MOE  DATA         196608  10/01/2020 17:08:38        
+ 5  CLUSTERSSORTED             DATA         262144  10/01/2020 17:08:38        
+ 6  CLUSTERS_RESLF             DATA         196608  10/01/2020 17:08:38        
+ 7  CLUSTERTREE_JTW1990_MOE    DATA      165150720  10/01/2020 17:08:37        
+ 8  CTYDATA_FINISHED           DATA         131072  10/01/2020 17:08:38        
+ 9  CTYPAIRS_JTW1990_MOE       DATA       13434880  10/01/2020 17:04:40        
+10  FINAL                      DATA         196608  10/01/2020 17:08:38        
+11  FLOWSP                     DATA       20971520  10/01/2020 17:08:38        
+12  FLOWS_JTW1990_MOE_P1       DATA        5308416  10/01/2020 17:08:38        
+13  FLOWS_SORT                 DATA        3801088  10/01/2020 17:04:39        
+14  LARGEST_CTY                DATA         131072  10/01/2020 17:08:38        
+15  MEAN_CLUSSIZE              DATA         131072  10/01/2020 17:08:38        
+16  MEDIAN_CLUSSIZE            DATA         131072  10/01/2020 17:08:38        
+17  NUMCLUS                    DATA         262144  10/01/2020 17:08:38        
+18  RESLF_JTW1990_MOE          DATA         131072  10/01/2020 17:04:39        
+19  RESLF_NAMING               DATA         131072  10/01/2020 17:08:38        
+20  SASMACR                    CATALOG       65536  10/01/2020 17:08:37        
+21  SINGLETONS                 DATA         131072  10/01/2020 17:08:38        
+22  TEST                       DATA      165150720  10/01/2020 17:08:37        
+NOTE: Deleting WORK.FLOWSP (memtype=DATA).
+
+NOTE: PROCEDURE DATASETS used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.01 seconds
+      memory              303.53k
+      OS Memory           11160.00k
+      Timestamp           10/01/2020 05:08:39 PM
+      Step Count                        144  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     10
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+
+NOTE: There were 216658 observations read from the data set WORK.FLOWS_JTW1990_MOE_P1.
+NOTE: The data set WORK.FLOWS has 216658 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.13 seconds
+      user cpu time       0.12 seconds
+      system cpu time     0.01 seconds
+      memory              14800.12k
+      OS Memory           25144.00k
+      Timestamp           10/01/2020 05:08:39 PM
+      Step Count                        145  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2875
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           10256
+      
+
+
+NOTE: There were 216658 observations read from the data set WORK.FLOWS.
+      WHERE (not MISSING(home_cty)) and (not MISSING(work_cty));
+NOTE: The data set WORK.FLOWS has 152672 observations and 3 variables.
+NOTE: PROCEDURE SUMMARY used (Total process time):
+      real time           0.24 seconds
+      user cpu time       0.24 seconds
+      system cpu time     0.01 seconds
+      memory              22204.06k
+      OS Memory           32268.00k
+      Timestamp           10/01/2020 05:08:39 PM
+      Step Count                        146  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     4129
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           7304
+      
+
+
+NOTE: There were 152364 observations read from the data set WORK.FLOWS.
+      WHERE (SUBSTR(home_cty, 1, 2)<='56') and (SUBSTR(work_cty, 1, 2)<='56');
+NOTE: The data set WORK.FLOWS has 152364 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.06 seconds
+      user cpu time       0.06 seconds
+      system cpu time     0.00 seconds
+      memory              530.90k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:39 PM
+      Step Count                        147  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           7304
+      
+
+
+NOTE: There were 152364 observations read from the data set WORK.FLOWS.
+NOTE: The data set WORK.RESLF_JTW1990_MOE_P1 has 3140 observations and 2 variables.
+NOTE: PROCEDURE SUMMARY used (Total process time):
+      real time           0.04 seconds
+      user cpu time       0.04 seconds
+      system cpu time     0.00 seconds
+      memory              2402.62k
+      OS Memory           12444.00k
+      Timestamp           10/01/2020 05:08:39 PM
+      Step Count                        148  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     157
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      1
+      Block Input Operations            0
+      Block Output Operations           136
+      
+
+
+NOTE: There were 3140 observations read from the data set WORK.RESLF_JTW1990_MOE_P1.
+NOTE: The data set WORK.RESLF has 3140 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.01 seconds
+      memory              787.46k
+      OS Memory           11676.00k
+      Timestamp           10/01/2020 05:08:39 PM
+      Step Count                        149  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     6
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           144
+      
+
+NOTE: There were 152364 observations read from the data set WORK.FLOWS.
+NOTE: The data set WORK.CTYFLOWSSORTED has 152364 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      user cpu time       0.02 seconds
+      system cpu time     0.00 seconds
+      memory              506.65k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:39 PM
+      Step Count                        150  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     2
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           7304
+      
+
+
+NOTE: There were 152364 observations read from the data set WORK.CTYFLOWSSORTED.
+NOTE: The data set WORK.CTYFLOWSSORTED has 152364 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.07 seconds
+      user cpu time       0.07 seconds
+      system cpu time     0.01 seconds
+      memory              10082.87k
+      OS Memory           20680.00k
+      Timestamp           10/01/2020 05:08:39 PM
+      Step Count                        151  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     1988
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           7304
+      
+
+
+NOTE: There were 152364 observations read from the data set WORK.FLOWS.
+NOTE: The data set WORK.FLOWS_SORT has 152364 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.05 seconds
+      user cpu time       0.04 seconds
+      system cpu time     0.01 seconds
+      memory              10339.62k
+      OS Memory           20940.00k
+      Timestamp           10/01/2020 05:08:39 PM
+      Step Count                        152  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     1991
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           7312
+      
+
+
+NOTE: There were 152364 observations read from the data set WORK.CTYFLOWSSORTED.
+NOTE: There were 152364 observations read from the data set WORK.FLOWS_SORT.
+NOTE: The data set WORK.CTYPAIRS has 237674 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.08 seconds
+      user cpu time       0.08 seconds
+      system cpu time     0.00 seconds
+      memory              804.31k
+      OS Memory           11672.00k
+      Timestamp           10/01/2020 05:08:40 PM
+      Step Count                        153  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     21
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           14984
+      
+
+
+NOTE: There were 237674 observations read from the data set WORK.CTYPAIRS.
+NOTE: There were 3140 observations read from the data set WORK.RESLF.
+NOTE: The data set WORK.CTYPAIRS has 237674 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.05 seconds
+      user cpu time       0.04 seconds
+      system cpu time     0.01 seconds
+      memory              798.09k
+      OS Memory           11672.00k
+      Timestamp           10/01/2020 05:08:40 PM
+      Step Count                        154  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     21
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           18696
+      
+
+
+NOTE: There were 237674 observations read from the data set WORK.CTYPAIRS.
+NOTE: The data set WORK.CTYPAIRS has 237674 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.12 seconds
+      user cpu time       0.12 seconds
+      system cpu time     0.02 seconds
+      memory              16208.43k
+      OS Memory           26856.00k
+      Timestamp           10/01/2020 05:08:40 PM
+      Step Count                        155  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3638
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           18696
+      
+
+
+NOTE: There were 237674 observations read from the data set WORK.CTYPAIRS.
+NOTE: There were 3140 observations read from the data set WORK.RESLF.
+NOTE: The data set WORK.CTYPAIRS_JTW1990_MOE_P1 has 237674 observations and 7 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.07 seconds
+      user cpu time       0.06 seconds
+      system cpu time     0.00 seconds
+      memory              813.06k
+      OS Memory           11672.00k
+      Timestamp           10/01/2020 05:08:40 PM
+      Step Count                        156  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     21
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           26120
+      
+
+
+NOTE: There were 237674 observations read from the data set WORK.CTYPAIRS_JTW1990_MOE_P1.
+NOTE: The PROCEDURE MEANS printed page 237.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           0.16 seconds
+      user cpu time       0.16 seconds
+      system cpu time     0.01 seconds
+      memory              6514.31k
+      OS Memory           16860.00k
+      Timestamp           10/01/2020 05:08:40 PM
+      Step Count                        157  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     1254
+      Page Swaps                        0
+      Voluntary Context Switches        0
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           0
+      
+
+
+NOTE: Deleting WORK.CTYPAIRS (memtype=DATA).
+NOTE: Deleting WORK.RESLF (memtype=DATA).
+NOTE: Deleting WORK.CTYFLOWSSORTED (memtype=DATA).
+NOTE: Deleting WORK.FLOWS (memtype=DATA).
+
+NOTE: PROCEDURE DATASETS used (Total process time):
+      real time           0.00 seconds
+      user cpu time       0.00 seconds
+      system cpu time     0.00 seconds
+      memory              212.87k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:40 PM
+      Step Count                        158  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     3
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           8
+      
+
+
+NOTE: There were 237674 observations read from the data set WORK.CTYPAIRS_JTW1990_MOE_P1.
+NOTE: The PROCEDURE FREQ printed pages 238-241.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.10 seconds
+      user cpu time       0.11 seconds
+      system cpu time     0.01 seconds
+      memory              713.93k
+      OS Memory           11416.00k
+      Timestamp           10/01/2020 05:08:40 PM
+      Step Count                        159  Switch Count  0
+      Page Faults                       0
+      Page Reclaims                     9
+      Page Swaps                        0
+      Voluntary Context Switches        1
+      Involuntary Context Switches      0
+      Block Input Operations            0
+      Block Output Operations           776
+      
+
+"ENTERING REVIEW "
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           56:52:58.21
+      user cpu time       56:03:05.51
+      system cpu time     43:25.71
+      memory              658184.14k
+      OS Memory           806804.00k
+      Timestamp           10/04/2020 01:57:37 AM
+      Step Count                        167880  Switch Count  335770
+      Page Faults                       0
+      Page Reclaims                     301435937
+      Page Swaps                        0
+      Voluntary Context Switches        7448557
+      Involuntary Context Switches      365872
+      Block Input Operations            28089032
+      Block Output Operations           2909566264
+      
