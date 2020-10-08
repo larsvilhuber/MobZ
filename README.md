@@ -1,7 +1,7 @@
 ---
 title: "README and Guidance"
 author: "Andrew Foote, Mark Kutzbach, Lars Vilhuber"
-date: "2020-09-24"
+date: "2020-10-07"
 output:
   html_document: 
     keep_md: yes
@@ -12,7 +12,9 @@ output:
     df_print: paged
     lib_dir: _aux/libs
   pdf_document:
+    keep_tex: yes
     toc: yes
+    extra_dependencies: ["array","pdflscape","float","colortbl"]
 editor_options:
   chunk_output_type: console
 bibliography: [data.bib]
@@ -163,6 +165,7 @@ The following files are provided in `$raw` directory:
 |nhgis/nhgis0012_ds107_1980_county.dat       |
 |CAINC30__ALL_AREAS_1969_2018.csv            |
 |czlma903.xls                                |
+|table1.xlsx                                 |
 
 The following files are provided in `$interwrk` directory. They can be recreated from files in `$raw` using various programs, and are provided as a convenience.
 
@@ -172,6 +175,7 @@ The following files are provided in `$interwrk` directory. They can be recreated
 |07_adh_cutoff_post.dta          |
 |bartik_results_cutoff.dta       |
 |bartik_results_moe_new.dta      |
+|bls_us_county.dta               |
 |bls_us_county.dta.gz            |
 |bootstrap_results.dta           |
 |finalstats_jtw1990_moe_new2.dta |
@@ -273,24 +277,60 @@ These programs were last run as follows:
 
 To create the commuting zone analysis, data download programs (and in some cases, cleaning programs) are in the `raw` folder. They are not downloaded by the SAS and Stata programs in the `$programs` folder. Download is accomplished using Linux tools, but can also be done by hand, using the URLs mentioned above or in the scripts. 
 
-
-|filename                                   |
-|:------------------------------------------|
-|01_get_data.sh                             |
-|02_convert.R                               |
-|03_get_adh.sh                              |
-|nhgis/main.sh                              |
-|nhgis/nhgis0008_ds95_1970_county.do        |
-|nhgis/nhgis0008_ds98_1970_county.do        |
-|nhgis/nhgis0008_ds99_1970_county.do        |
-|nhgis/nhgis0009_ds122_1990_county.do       |
-|nhgis/nhgis0009_ds123_1990_county.do       |
-|nhgis/nhgis0010_ds146_2000_county.do       |
-|nhgis/nhgis0010_ds151_2000_county.do       |
-|nhgis/nhgis0011_ds195_20095_2009_county.do |
-|nhgis/nhgis0011_ds196_20095_2009_county.do |
-|nhgis/nhgis0012_ds103_1980_county.do       |
-|nhgis/nhgis0012_ds107_1980_county.do       |
+<table>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> filename </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 01_get_data.sh </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 02_convert.R </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 03_get_adh.sh </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> nhgis/main.sh </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> nhgis/nhgis0008_ds95_1970_county.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> nhgis/nhgis0008_ds98_1970_county.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> nhgis/nhgis0008_ds99_1970_county.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> nhgis/nhgis0009_ds122_1990_county.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> nhgis/nhgis0009_ds123_1990_county.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> nhgis/nhgis0010_ds146_2000_county.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> nhgis/nhgis0010_ds151_2000_county.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> nhgis/nhgis0011_ds195_20095_2009_county.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> nhgis/nhgis0011_ds196_20095_2009_county.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> nhgis/nhgis0012_ds103_1980_county.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> nhgis/nhgis0012_ds107_1980_county.do </td>
+  </tr>
+</tbody>
+</table>
 
 Notes:
 
@@ -322,21 +362,23 @@ To create the replicated commuting zones,
 run the following programs in numerical order:
 
 
-|filename                      |
-|:-----------------------------|
-|01_dataprep.sas               |
-|02_01_clusters.sas            |
-|02_02_export_data.sas         |
-|03_prep_figures.sas           |
-|04_figures2_3.do              |
-|05_01_flows.do                |
-|05_02_bootstrap.sas           |
-|05_03_export_bootstraps.sas   |
-|05_04_bootstrap_graphs_new.do |
-|08_map_inset.sas              |
-|09_maps_paper.sas             |
-|config.do                     |
-|config.sas                    |
+|filename                           |
+|:----------------------------------|
+|01_dataprep.sas                    |
+|02_01_clusters.sas                 |
+|02_02_export_data.sas              |
+|03_prep_figures.sas                |
+|04_figures2_3.do                   |
+|05_01_flows.do                     |
+|05_02_bootstrap_1990.sas           |
+|05_03_bootstrap_2009.sas           |
+|05_04_export_bootstraps.sas        |
+|05_05_bootstrap_graphs_new.do      |
+|05_06_bootstraps_graphs_jtw2009.do |
+|08_map_inset.sas                   |
+|09_maps_paper.sas                  |
+|config.do                          |
+|config.sas                         |
 
 
 
@@ -410,28 +452,62 @@ Required data are commuting zones, BEA-collected receipt of UI benefits [@bea_ta
 
 Programs prefixed with `00` prepare the data:
 
-
-|filename                            |
-|:-----------------------------------|
-|06_qcew/00_bea_readin.do            |
-|06_qcew/00_describe_bootclusters.do |
-|06_qcew/00_qcew_extraction.sas      |
-|06_qcew/00_qcew_post_extraction.do  |
-|06_qcew/00_readin_czones.do         |
+<table>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> filename </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 06_qcew/00_bea_readin.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 06_qcew/00_describe_bootclusters.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 06_qcew/00_qcew_extraction.sas </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 06_qcew/00_qcew_post_extraction.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 06_qcew/00_readin_czones.do </td>
+  </tr>
+</tbody>
+</table>
 
 #### Analysis programs
 
 The remaining programs generate the analysis described in the manuscript, and output tables and figures as per [the list below](#lot). Programs with non-numeric prefixes are called by other programs, and should not be run separately. Scripts (`*.sh`) are for convenience, and are not necessary - simply execute all programs in numerical order.
 
-
-|filename                        |
-|:-------------------------------|
-|06_qcew/01_regressions_table.do |
-|06_qcew/02_01_cluster_loop.do   |
-|06_qcew/02_02_cluster_loop.do   |
-|06_qcew/03_01_cluster_graphs.do |
-|06_qcew/03_02_cutoff_graphs.do  |
-|06_qcew/zz_bartik_merge.do      |
+<table>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> filename </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 06_qcew/01_regressions_table.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 06_qcew/02_01_cluster_loop.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 06_qcew/02_02_cluster_loop.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 06_qcew/03_01_cluster_graphs.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 06_qcew/03_02_cutoff_graphs.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 06_qcew/zz_bartik_merge.do </td>
+  </tr>
+</tbody>
+</table>
 
 The complete sequence of programs ran in about 36 hours.
 
@@ -447,56 +523,187 @@ Required data are commuting zones, and various ADH-related data listed earlier.
 
 Programs prefixed with `00` prepare the data:
 
-
-|filename                             |
-|:------------------------------------|
-|07_adh/00_01_census_creation.do      |
-|07_adh/00_02_ctyindustry_creation.do |
-|07_adh/00_03_IPW_creation.do         |
-|07_adh/00_04_cbp_readin.do           |
-|07_adh/00_05_subset_qcewdata.do      |
-|07_adh/00_06_subset_seerpop.do       |
-|07_adh/00_07_mergecounty.do          |
-|07_adh/00_08_cz_merge.do             |
+<table>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> filename </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 07_adh/00_01_census_creation.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 07_adh/00_02_ctyindustry_creation.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 07_adh/00_03_IPW_creation.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 07_adh/00_04_cbp_readin.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 07_adh/00_05_subset_qcewdata.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 07_adh/00_06_subset_seerpop.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 07_adh/00_07_mergecounty.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 07_adh/00_08_cz_merge.do </td>
+  </tr>
+</tbody>
+</table>
 
 #### Analysis programs
 
 The remaining programs generate the analysis described in the manuscript, and output tables and figures as per [the list below](#lot). Programs with non-numeric prefixes are called by other programs, and should not be run separately. Scripts (`*.sh`) are for convenience, and are not necessary - simply execute all programs in numerical order.
 
-
-|filename                       |
-|:------------------------------|
-|07_adh/01_table3.do            |
-|07_adh/02_01_cutoff_loop.do    |
-|07_adh/02_02_overall_loop.do   |
-|07_adh/03_01_cutoff_graphs.do  |
-|07_adh/03_02_overall_graphs.do |
-|07_adh/zz_aggregatedata.do     |
-|07_adh/zz_ctymerge.do          |
+<table>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> filename </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 07_adh/01_table3.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 07_adh/02_01_cutoff_loop.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 07_adh/02_02_overall_loop.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 07_adh/03_01_cutoff_graphs.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 07_adh/03_02_overall_graphs.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 07_adh/zz_aggregatedata.do </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 07_adh/zz_ctymerge.do </td>
+  </tr>
+</tbody>
+</table>
 
 The complete sequence of programs ran in about 36 hours.
 
 ## List of tables and programs {#lot}
 
-
-|Figure/Table #   |Title                                                       |Program                         |Output file                                                                                                                                          |
-|:----------------|:-----------------------------------------------------------|:-------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------|
-|Figure 1 – left  |Replication of Commuting Zones from TS: County Mapping      |09_maps_paper.sas               |commutingzones.png                                                                                                                                   |
-|Figure 1 – right |Replication of Commuting Zones from TS: County Mapping      |02_clusters.sas                 |1990_replicationmap.png                                                                                                                              |
-|Figure 2         |Effect of Cluster Height on Number of Clusters              |04_figures2_3.do                |numclus_cutoff.pdf                                                                                                                                   |
-|Figure 3         |Cluster Height and Share Workers Commuting Between Clusters |04_figures2_3.do                |flows_cutoff.pdf                                                                                                                                     |
-|Figure 4         |Results from Re-sampling Commuting Flows                    |05_03_bootstrap_graphs_new.do   |numclusters_jtw1990.pdf meanclussize_jtw1990.pdf mismatch_jtw1990.pdf                                                                                |
-|Figure 5         |Differences in Effect Based on Cluster Cutoff               |06_qcew/03_02_cutoff_graphs.do  |cutoff_bartik.pdf                                                                                                                                    |
-|Figure 6         |Distribution based on Realizations of CZs                   |06_qcew/03_01_cluster_graphs.do |beta_bartik_distribution.pdf tdistribution_bartik.pdf                                                                                                |
-|Figure 7         |Differences in Effect Based on Cluster Cutoff               |07_adh/03_01_cutoff_graphs.do   |cutoff_1990.png cutoff_iqr_1990.png                                                                                                                  |
-|Figure 8         |Distribution of Effect, 1990-2000                           |07_adh/03_02_overall_graphs.do  |1990_distribution.png 1990_tstat_distribution.png                                                                                                    |
-|Table 1          |Replication of TS1990 Commuting Zones: Summary Statistics   |NA                              |NA                                                                                                                                                   |
-|Table 2          |Effect of Labor Demand on Unemployment Receipt              |06_qcew/01_regressions_table.do |06_qcew/01_regressions_table.log                                                                                                                     |
-|Table 3          |China Syndrome Replication and Comparison, 1990-2000        |07_adh/01_table3.do             |07_adh/01_table3.log                                                                                                                                 |
-|Figure A1        |Clusters in California at Incremental Height Cutoffs        |08_map_inset.sas                |california_clustermap_800_inset6.png california_clustermap_880_inset6.png california_clustermap_1000_inset6.png california_clustermap_960_inset6.png |
-|Figure A2        |Hierarchical Clustering, Cutoff = 0.945                     |09_maps_paper.sas               |jtw1990_highcutoff                                                                                                                                   |
-|Table A1 (4)     |Summary Statistics of Ratio of MOE to Flows                 |NA                              |NA                                                                                                                                                   |
-|Table A2 (5)     |Summary Statistics for empirical example                    |NA                              |NA                                                                                                                                                   |
+<table>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Figure/Table # </th>
+   <th style="text-align:left;"> Title </th>
+   <th style="text-align:left;"> Program </th>
+   <th style="text-align:left;"> Output file </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Figure 1 – left </td>
+   <td style="text-align:left;"> Replication of Commuting Zones from TS: County Mapping </td>
+   <td style="text-align:left;"> 09_maps_paper.sas </td>
+   <td style="text-align:left;"> commutingzones.png </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Figure 1 – right </td>
+   <td style="text-align:left;"> Replication of Commuting Zones from TS: County Mapping </td>
+   <td style="text-align:left;"> 02_clusters.sas </td>
+   <td style="text-align:left;"> 1990_replicationmap.png </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Figure 2 </td>
+   <td style="text-align:left;"> Effect of Cluster Height on Number of Clusters </td>
+   <td style="text-align:left;"> 04_figures2_3.do </td>
+   <td style="text-align:left;"> numclus_cutoff.pdf </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Figure 3 </td>
+   <td style="text-align:left;"> Cluster Height and Share Workers Commuting Between Clusters </td>
+   <td style="text-align:left;"> 04_figures2_3.do </td>
+   <td style="text-align:left;"> flows_cutoff.pdf </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Figure 4 </td>
+   <td style="text-align:left;"> Results from Re-sampling Commuting Flows </td>
+   <td style="text-align:left;"> 05_03_bootstrap_graphs_new.do </td>
+   <td style="text-align:left;"> numclusters_jtw1990.pdf  meanclussize_jtw1990.pdf  mismatch_jtw1990.pdf </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Figure 5 </td>
+   <td style="text-align:left;"> Differences in Effect Based on Cluster Cutoff </td>
+   <td style="text-align:left;"> 06_qcew/03_02_cutoff_graphs.do </td>
+   <td style="text-align:left;"> cutoff_bartik.pdf </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Figure 6 </td>
+   <td style="text-align:left;"> Distribution based on Realizations of CZs </td>
+   <td style="text-align:left;"> 06_qcew/03_01_cluster_graphs.do </td>
+   <td style="text-align:left;"> beta_bartik_distribution.pdf  tdistribution_bartik.pdf </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Figure 7 </td>
+   <td style="text-align:left;"> Differences in Effect Based on Cluster Cutoff </td>
+   <td style="text-align:left;"> 07_adh/03_01_cutoff_graphs.do </td>
+   <td style="text-align:left;"> cutoff_1990.png  cutoff_iqr_1990.png </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Figure 8 </td>
+   <td style="text-align:left;"> Distribution of Effect, 1990-2000 </td>
+   <td style="text-align:left;"> 07_adh/03_02_overall_graphs.do </td>
+   <td style="text-align:left;"> 1990_distribution.png  1990_tstat_distribution.png </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Table 1 </td>
+   <td style="text-align:left;"> Replication of TS1990 Commuting Zones: Summary Statistics </td>
+   <td style="text-align:left;"> 02_01_clusters.sas </td>
+   <td style="text-align:left;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Table 2 </td>
+   <td style="text-align:left;"> Effect of Labor Demand on Unemployment Receipt </td>
+   <td style="text-align:left;"> 06_qcew/01_regressions_table.do </td>
+   <td style="text-align:left;"> 06_qcew/  01_regressions_table.log </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Table 3 </td>
+   <td style="text-align:left;"> China Syndrome Replication and Comparison, 1990-2000 </td>
+   <td style="text-align:left;"> 07_adh/01_table3.do </td>
+   <td style="text-align:left;"> 07_adh/ 01_table3.log </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Figure A1 </td>
+   <td style="text-align:left;"> Clusters in California at Incremental Height Cutoffs </td>
+   <td style="text-align:left;"> 08_map_inset.sas </td>
+   <td style="text-align:left;"> california_clustermap_800_inset6.png california_clustermap_880_inset6.png california_clustermap_1000_inset6.png california_clustermap_960_inset6.png </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Figure A2 </td>
+   <td style="text-align:left;"> Hierarchical Clustering, Cutoff = 0.945 </td>
+   <td style="text-align:left;"> 09_maps_paper.sas </td>
+   <td style="text-align:left;"> jtw1990_highcutoff </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Table A1 (4) </td>
+   <td style="text-align:left;"> Summary Statistics of Ratio of MOE to Flows </td>
+   <td style="text-align:left;"> 05_01_flows.do </td>
+   <td style="text-align:left;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Table A2 (5) </td>
+   <td style="text-align:left;"> Summary Statistics for empirical example </td>
+   <td style="text-align:left;"> 06_qcew/01_regressions_table.do </td>
+   <td style="text-align:left;"> NA </td>
+  </tr>
+</tbody>
+</table>
 
 
 ## References

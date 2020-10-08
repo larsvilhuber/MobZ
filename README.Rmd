@@ -12,7 +12,9 @@ output:
     df_print: paged
     lib_dir: _aux/libs
   pdf_document:
+    keep_tex: yes
     toc: yes
+    extra_dependencies: ["array","pdflscape","float","colortbl"]
 editor_options:
   chunk_output_type: console
 bibliography: [data.bib]
@@ -471,7 +473,15 @@ The complete sequence of programs ran in about 36 hours.
 ```{r list_of_tables_figures,include=TRUE,cache=FALSE}
 code_check <- read_excel(file.path(basepath,"code-check.xlsx"),
                          sheet = "Code", skip = 10, n_max = 19)
-code_check %>% kable()
+if ( knitr::is_html_output()) {
+  code_check %>% kable()
+}
+if ( knitr::is_latex_output()) {
+  code_check %>% kable("latex",booktabs = T) %>% 
+    column_spec(2,"12em") %>% 
+    column_spec(4,"20em") %>%
+    kable_styling(latex_options=c("striped","scale_down")) 
+}
 ```
 
 
