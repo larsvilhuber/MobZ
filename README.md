@@ -23,6 +23,9 @@ bibliography: [data.bib]
 
 
 
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.597961.svg)](https://doi.org/10.5281/zenodo.597961)
+
 This README describes the data inputs and processing stream for our paper "*Recalculating ... : How Uncertainty in Local Labor Market Definitions Affects Empirical Findings*". 
 
 Data Availability and Provenance Statements

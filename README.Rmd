@@ -35,6 +35,13 @@ source(file.path(aux,"global-libraries.R"),echo=TRUE)
 config <- config::get()
 ```
 
+
+```{r ,include=TRUE,results='asis'}
+if (knitr::is_html_output()) {
+cat("[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.597961.svg)](https://doi.org/10.5281/zenodo.597961)")
+}
+```
+
 This README describes the data inputs and processing stream for our paper "*`r config$papertitle`*". 
 
 Data Availability and Provenance Statements
